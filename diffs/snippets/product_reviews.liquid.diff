@@ -1,0 +1,11 @@
+REPLACE
+{% include 'product_review_form' review: new_review %}
+WITH
+{% include 'product_review_form' %}
+END
+
+REPLACE
+{% capture reviews_path %}{{product.url}}/reviews{% endcapture %}
+{% paginate product.approved_reviews by 5 remote: true, path: reviews_path %}
+WITH
+END

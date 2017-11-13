@@ -1,0 +1,46 @@
+REPLACE
+{% form 'edit_logo', context_name: 'f', for: 'logo' %}
+WITH
+{% form 'logo_upload', logo %}
+END
+
+REPLACE
+{{ logo.image_url
+WITH
+{{ form.image_url
+END
+
+REPLACE
+{% form_field "f.error", "file" %}
+WITH
+{% if form.errors contains 'file' %}
+  <span class="error">{{ form.errors['file'] }}</span>
+{% endif %}
+END
+
+REPLACE
+{% form_field "f.hidden_field", "image_cache" %}
+WITH
+END
+
+REPLACE
+{% form_field "f.label", "name", "logo name :" %}
+{% form_field "f.text_field", "name",  { "placeholder" : "logo name" } %}
+{% form_field "f.error", "name" %}
+WITH
+<label class="control-label" for="logo_name">logo name:</label>
+<input type="text" name="logo[name]" placeholder="logo name" value="{{ form.name }}"/>
+{% if form.errors contains 'name' %}
+  <span class="error">{{ form.errors['name'] }}</span>
+{% endif %}
+END
+
+REPLACE
+{% form_field "f.check_box", "remove_whitespace" %}
+{% form_field "f.label", "remove_whitespace", "remove whitespace", {"class" : "control-label"} %}
+WITH
+<label class="control-label">
+  <input name="logo[remove_whitespace]" type="checkbox" value="true" {% if form.remove_whitespace? %}checked="checked"{% endif %}/>
+  remove whitespace
+</label>
+END

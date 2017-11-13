@@ -1,0 +1,38 @@
+REPLACE
+{{ 'address_updater.js' | asset_url | script_tag }}
+WITH
+END
+
+REPLACE
+{{ 'reflective_view.js' | asset_url | script_tag }}
+WITH
+END
+
+REPLACE
+{{ 'product_price_updater_callback.js' | asset_url | script_tag }}
+WITH
+END
+
+REPLACE_OR_IGNORE
+ wishlist_enabled
+WITH
+ shop.wishlist_enabled?
+END
+
+REPLACE_OR_IGNORE
+{% form 'search', context_name: 'f', url: '/products' %}
+WITH
+{% form 'search' %}
+END
+
+REPLACE_OR_IGNORE
+{% form_field 'f.text_field', 'keyword', { "class": "input-text clearHint", "placeholder": "Search", "value": "" }  %}
+WITH
+<input type="text" name="s[keyword]" class="input-text clearHint" placeholder="Search"/>
+END
+
+REPLACE_OR_IGNORE
+{% form_field 'f.submit', '', { "class": "button" } %}
+WITH
+<input type="submit" value="" class="button">
+END

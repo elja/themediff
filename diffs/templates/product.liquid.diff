@@ -1,0 +1,39 @@
+REPLACE
+<div class="line-items-reflective-view">
+WITH
+{% form 'populate_product' %}
+  <div class="line-items-reflective-view">
+END
+
+REPLACE
+{% form 'populate_product', context_name: 'f' %}
+{% include 'line_item_hidden_fields' %}
+WITH
+END
+
+REPLACE_BLOCK
+{% if line_items.size == 1 %}
+ANY
+{% endif %}
+WITH
+{% if product.product_options_enabled? == false or product.options_or_groups.multiple_quantity == empty %}
+  <span class="stock" id="stock"></span>
+  <table class="product-quantity">
+    <tfoot>
+    <tr>
+      <th colspan='2'>Quantity</th>
+      <td id="quantity">
+        <input type="text" data-type="quantity" class="amount"
+               name="product[quantity]" value="{{ form.quantity | default: 0 }}"/>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+{% endif %}
+END
+
+REPLACE
+{% include 'product_summary', product: product, line_items: line_items %}
+WITH
+{% include 'product_summary' %}
+END

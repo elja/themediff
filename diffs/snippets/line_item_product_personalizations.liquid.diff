@@ -1,0 +1,46 @@
+REPLACE_OR_IGNORE
+<input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
+WITH
+<input id="artifi-data" type="hidden" name="product[artifi_data]" value="{{ form.artifi_data }}"/>
+<input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
+END
+
+REPLACE_BLOCK
+{% if product.enable_product_personalization? and line_items[0].product_personalizations != empty %}
+ANY
+{% endif %}
+WITH
+{% if product.product_personalizations_enabled? %}
+  <div class="prod_option_block">
+    <h3>Product Personalizations</h3>
+    <div class="product-personalization">
+      {% for personalization in product.personalizations %}
+        <h4>{% include 'modifier' title: personalization.title, amount: personalization.amount %}</h4>
+
+        {% for input in personalization.inputs %}
+          <div class='form-item'>
+            <label for="input_{{ input.id }}">{{ input.label }}{% if input.required? %} *{% endif %}</label>
+
+            {% if input.text_area? %}
+              <textarea name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                        id="input_{{ input.id }}"
+                        data-type="product-personalization">{{ form.personalizations[personalization.id][input.id].value }}</textarea>
+            {% else %}
+              <input type="text" value="{{ form.personalizations[personalization.id][input.id].value }}"
+                     name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                     id="input_{{ input.id }}" class="input-text"
+                     data-type="product-personalization"/>
+            {% endif %}
+
+            {% if form.personalizations[personalization.id][input.id].errors %}
+              <span class="error" data-type="product-personalization-error">
+                {{ form.personalizations[personalization.id][input.id].errors | default_errors }}
+              </span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+END

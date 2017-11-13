@@ -1,0 +1,77 @@
+OVERWRITE
+<div class="input string required">
+  <label class="string required control-label" for="first_name"><abbr title="required">*</abbr> First name</label>
+  <input class="string required" id="first_name" name="website_user[first_name]" size="50" type="text" value="{{ form.first_name }}">
+  {% if form.errors contains 'first_name' %}
+    <span class="error">{{ form.errors['first_name'] }}</span>
+  {% endif %}
+</div>
+
+<div class="input string required">
+  <label class="string required control-label" for="last_name"><abbr title="required">*</abbr> Last name</label>
+  <input class="string required" id="last_name" name="website_user[last_name]" size="50" type="text" value="{{ form.last_name }}">
+  {% if form.errors contains 'last_name' %}
+    <span class="error">{{ form.errors['last_name'] }}</span>
+  {% endif %}
+</div>
+
+<div class="input string required">
+  <label class="string required control-label" for="username"><abbr title="required">*</abbr> Username</label>
+  <input class="string required" id="username" name="website_user[username]" size="50" type="text" value="{{ form.username }}">
+  {% if form.errors contains 'username' %}
+    <span class="error">{{ form.errors['username'] }}</span>
+  {% endif %}
+</div>
+
+<div class="input string required">
+  <label class="string required control-label" for="email"><abbr title="required">*</abbr> E-Mail</label>
+  <input class="string required" id="email" name="website_user[email]" size="50" type="text" value="{{ form.email }}">
+  {% if form.errors contains 'email' %}
+    <span class="error">{{ form.errors['email'] }}</span>
+  {% endif %}
+</div>
+
+{% if shop.slack_integration_enabled? %}
+  <div class="input string required">
+    <label class="string required control-label" for="slack_handle"><abbr title="required">*</abbr> Slack handle</label>
+    <input class="string required" id="slack_handle" name="website_user[slack_handle]" size="50" type="text" value="{{ form.slack_handle }}">
+    {% if form.errors contains 'slack_handle' %}
+      <span class="error">{{ form.errors['slack_handle'] }}</span>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if shop.custom_user_fields_enabled? %}
+  {% for field in form.custom_user_fields %}
+    <div class="fields">
+      {% include 'custom_user_field', field: field %}
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% if shop.active_group_passcode? %}
+  <div class="input string">
+    <label class="string control-label" for="group_passcode">Group passcode</label>
+    <input class="string" id="group_passcode" name="website_user[group_passcode]" size="50" type="text" value="{{ form.group_passcode }}">
+    {% if form.errors contains 'group_passcode' %}
+      <span class="error">{{ form.errors['group_passcode'] }}</span>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="input string">
+  <label class="string control-label" for="password">Password</label>
+  <input class="string" id="password" name="website_user[password]" size="50" type="password">
+  {% if form.errors contains 'password' %}
+    <span class="error">{{ form.errors['password'] }}</span>
+  {% endif %}
+</div>
+
+<div class="input string">
+  <label class="string control-label" for="password_confirmation">Re-enter password</label>
+  <input class="string" id="password_confirmation" name="website_user[password_confirmation]" size="50" type="password">
+  {% if form.errors contains 'password_confirmation' %}
+    <span class="error">{{ form.errors['password_confirmation'] }}</span>
+  {% endif %}
+</div>
+END

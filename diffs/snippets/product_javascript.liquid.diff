@@ -1,0 +1,4 @@
+REPLACE
+new ReflectiveView.View(#{.+});
+WITH
+END

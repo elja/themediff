@@ -1,0 +1,33 @@
+REPLACE
+{% form 'wishlist_update', context_name: 'f' %}
+WITH
+{% form 'wishlist' %}
+END
+
+REPLACE_OR_IGNORE
+order.line_items != empty
+WITH
+order.line_items_count > 0
+END
+
+REPLACE
+order.line_items.size
+WITH
+order.line_items_count
+END
+
+REPLACE
+order.item_with_setup_charge_total
+WITH
+order.cart_total
+END
+
+REPLACE
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'line_items' %}
+  {% include 'wishlist_line_item_fields' %}
+{% endform_block %}
+WITH
+{% for line_item in wishlist.line_items %}
+  {% include 'line_item_fields', line_item: line_item, wishlist_item: true %}
+{% endfor %}
+END

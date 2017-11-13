@@ -1,0 +1,232 @@
+{% assign order = order_history_item %}
+{% assign split_item_exists = 0 %}
+
+<tr>
+    <td class="date">{{ order.completed_at }}</td>
+    <td class="order-number">order #{{ order.order_id }}</td>
+    <td class="shipped">{{ order.status | upcase }}</td>
+    <td>
+        <a href="javascript:void(0)" class="view-details">view order details</a>
+        <a href="javascript:void(0)" class="hide-details">hide order details</a>
+    </td>
+    <td class="price">{{ order.grand_total | points_or_currency }}</td>
+</tr>
+
+<tr class="details">
+    <td colspan="5">
+        <div class="details-block">
+            <div class="details-top">
+                <div>
+                    <div class="details-top-main clrfix">
+                        <table class="item_table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Order Details</th>
+                                    <th class="quantity">Qty.</th>
+                                        {% for line_item in order.line_items %}
+                                            {% if line_item.split_items != empty  %}
+                                                {% assign split_item_exists = split_item_exists | plus: 1 %}
+                                            {% endif  %}
+                                        {% endfor%}
+
+                                        {% if split_item_exists > 0 %}
+                                            <th class="">Split Shipments</th>
+                                        {% endif %}
+                                    <th>Item Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for line_item in order.line_items %}
+                                <tr>
+                                    {% assign product = line_item.product %}
+                                    <td><img src="{{ product.primary_image.thumb_url }}"/></td>
+                                    <td class="product-info">
+                                        <p class="sub-option product-title">
+                                            {{ product.name }}
+                                        </p>
+
+                                        <p class="sub-option">
+                                            <span class="sub-option-name">SKU#</span>
+                                            <span class="sub-option-value">{{ line_item.final_sku }}</span>
+                                        </p>
+
+                                        {% for sub_option in line_item.product_sub_options %}
+                                            <p class="sub-option">
+                                                <span class="sub-option-name">{{ sub_option.product_option.friendly_name }}{% if sub_option.product_option.in_group? %} ({{ sub_option.product_option.group_name }}) {% endif %}:</span>
+                                                <span class="sub-option-value">{{ sub_option.name }} {% if sub_option.amount > 0 %}<b>({{ sub_option.amount | points_or_currency }})</b>{% endif %}</span>
+                                            </p>
+                                        {% endfor %}
+
+                                        {% if line_item.logo %}
+                                            <p class="sub-option logo">
+                                                <span class="sub-option-name logo-name logo-title">Logo: </span>
+                                                <span class="sub-option-name logo-name">{{ line_item.logo.name }}</a>
+                                            </p>
+                                        {% endif %}
+
+                                        {% if line_item.setup_charge and line_item.setup_charge > 0 %}
+                                            <p class="sub-option">
+                                                Setup Charge: {{ line_item.setup_charge | points_or_currency }}
+                                            </p>
+                                        {% endif %}
+
+                                        {% for product_personalization in line_item.product_personalizations %}
+                                            <p class="product-personalization">
+                                            <span class="title"
+                                                  style="font-weight: bold;">{{ product_personalization.title }}
+                                                ({{ product_personalization.amount | points_or_currency }})</span>
+                                                <br>
+                                                {% for attribute in product_personalization.product_personalization_attributes %}
+                                                    <span class="attribute-key">{{ attribute.key }}:</span>
+                                                    {% if attribute.value != empty %}
+                                                        <span class="attribute-value">{{ attribute.value | join: ', ' }}</span>
+                                                    {% else %}
+                                                        <span class="attribute-value not-specified">&lt;not specified&gt;</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </p>
+                                        {% endfor %}
+                                    </td>
+                                    <td class="quantity">{% if line_item.quantity > 0 %} Qty. {{ line_item.quantity }}{% endif %}</td>
+                                    {% if split_item_exists > 0 %}
+                                        {% if line_item.split_items != empty %}
+                                            <td class="split-shipments">
+                                                {% for split_item in line_item.split_items %}
+                                                    {% include 'split_item_shipment' with split_item %}
+                                                {% endfor %}
+                                            </td>
+                                        {% else %}
+                                            <td>&nbsp;</td>
+                                        {% endif %}
+                                    {% endif %}
+                                    <td><span>{{ line_item.total_price | points_or_currency }}</span></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="clrfix padding">
+                {% assign address = order.shipping_address %}
+                <div class="details-block-item">
+                    <div>
+                        <h6>Shipping address</h6>
+                        <p>{{ address.company }}</p>
+                        <p>{{ address.first_name }} {{ address.last_name }}</p>
+                        <p>{{ address.first_address }}</p>
+                        <p>{{ address.second_address }}</p>
+                        <p>{{ address.city }}{% if address.state != empty %}, {{ address.state }}{% endif %} {{ address.zip }}</p>
+                        <p>{{ address.country }}</p>
+                    </div>
+                    <div>
+                        {% if order.shipment %}
+                            <h6>Shipping method</h6>
+                            <p>{{ order.shipment_friendly_name }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6>Tracking number</h6>
+                        <p>
+                            {% if order.shipment.tracking_number %}
+                                {{ order.shipment.tracking_number }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% assign address = order.billing_address %}
+                <div class="details-block-item">
+                    <div>
+                        <h6>Billing address</h6>
+                        <p>{{ address.company }}</p>
+                        <p>{{ address.first_name }} {{ address.last_name }}</p>
+                        <p>{{ address.first_address }}</p>
+                        <p>{{ address.second_address }}</p>
+                        <p>{{ address.city }}{% if address.state != empty %}, {{ address.state }}{% endif %} {{ address.zip }}</p>
+                        <p>{{ address.country }}</p>
+                    </div>
+                    {% if order.payments != empty %}
+                        <div>
+                            <h6>Billing methods</h6>
+                            {% render_payment_template order.payments %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% if order.has_promotional_adjustments? or order.has_balance_adjustments? %}
+                    <div class="details-block-item">
+                        <h6>Promotions</h6>
+                        <table class="promotions">
+                            {% if order.has_promotional_adjustments? %}
+                                <tr>
+                                    <th>Coupons:</th>
+                                    <td>{{ order.promo_total | points_or_currency }}</td>
+                                </tr>
+                            {% endif %}
+
+                            {% if order.has_balance_adjustments? %}
+                                <tr>
+                                    <th>Balance:</th>
+                                    <td>{{ order.balance_total | points_or_currency }}</td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                {% endif %}
+
+                <div class="details-block-item amount-area">
+                    <table>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td>{{ order.item_total | points_or_currency }}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping & Handling</th>
+                            <td>{{ order.shipment_rate | points_or_currency }}</td>
+                        </tr>
+
+                        {% if order.total_setup_charge > 0 %}
+                            <tr>
+                                <th>Total Setup Charge</th>
+                                <td>{{ order.total_setup_charge | points_or_currency }}</td>
+                            </tr>
+                        {% endif %}
+
+                        {% if order.has_custom_data_collections? %}
+                            <tr>
+                                <th>{{ cart_options.custom_data_collections_name }} total</th>
+                                <td>{{ order.custom_data_collections_total | points_or_currency }}</td>
+                            </tr>
+                        {% endif %}
+
+                        <tr class="sep-line">
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>Total before Tax</th>
+                            <td>{{ order.before_tax_total | points_or_currency }}</td>
+                        </tr>
+                        <tr>
+                            <th>Sales Tax</th>
+                            <td>{{ order.total_tax | points_or_currency }}</td>
+                        </tr>
+                        <tr class="sep-line">
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th><strong>Grand total</strong></th>
+                            <td><strong>{{ order.grand_total | points_or_currency }}</strong></td>
+                        </tr>
+
+                    </table>
+                </div>
+                {% if order.custom_data_collections != blank %}
+                    <div class="order-history-separator"></div>
+                    {% include 'custom_data_attributes' order: order %}
+                {% endif %}
+            </div>
+        </div>
+    </td>
+</tr>

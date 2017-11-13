@@ -1,0 +1,8 @@
+REPLACE
+{% include "registration_form" %}
+WITH
+{% form 'registration' %}
+  {% include "registration_form", form: form %}
+  <input type="submit" class="btn custom_btn custom-button btn-green" value="Create account">
+{% endform %}
+END

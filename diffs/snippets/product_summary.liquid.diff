@@ -1,0 +1,78 @@
+OVERWRITE
+{% if form.variants.size > 1 %}
+  <table class="product-summary">
+    <thead>
+      <tr><th colspan="4">Summary</th></tr>
+    </thead>
+    <tbody>
+      {% for variant in form.variants %}
+        {% if variant.quantity > 0 %}
+          <tr>
+            <th class="name" colspan="2">{{ variant.name }}</th>
+            <td class="quantity">{{ variant.quantity }}</td>
+            <td class="price">{{ variant.total_price | points_or_currency }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+      <tr></tr>
+      <tr>
+        <th class="name" colspan="2">total quantity:</th>
+        <td class="quantity">{{ form.summary.total_quantity }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      {% if product.has_setup_charge? %}
+        <tr class="setup-charge">
+          <th style="padding-top: 10px;" colspan="3">setup charge:</th>
+          <td style="padding-top: 10px;">
+            {{ product.setup_charge | points_or_currency }}
+          </td>
+        </tr>
+      {% endif %}
+
+      <tr class="discounted-price-per-item">
+        <th style="padding-top: 10px;" colspan="3">item price:</th>
+        <td style="padding-top: 10px;">
+          {{ form.summary.item_price | points_or_currency }}
+        </td>
+      </tr>
+
+      <tr class="total">
+        <th style="padding-top: 10px;" colspan="3">total:</th>
+        <td style="padding-top: 10px;">{{ form.summary.total_price | points_or_currency }}</td>
+      </tr>
+    </tfoot>
+  </table>
+{% else %}
+  <table class="product-summary">
+    <tfoot>
+      {% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
+        <tr>
+          <th class='minimum-order-quantity-help' colspan='4'>
+            {% include 'quantity_limits_message', product: product %}
+          </th>
+        </tr>
+      {% endif %}
+
+      <tr class="discounted-price-per-item">
+        <th colspan="2" style="padding-top: 10px;">item price:</th>
+        <td style="padding-top: 10px;">
+          {{ form.summary.item_price | points_or_currency }}
+        </td>
+      </tr>
+
+      {% if product.has_setup_charge? %}
+        <tr class="setup-charge">
+          <th colspan="2" style="padding-top: 10px;">setup charge:</th>
+          <td style="padding-top: 10px;">{{ product.setup_charge | points_or_currency }}</td>
+        </tr>
+      {% endif %}
+
+      <tr class="total">
+        <th colspan="2">total:</th>
+        <td style="padding-top: 10px;">{{ form.summary.total_price | points_or_currency }}</td>
+      </tr>
+    </tfoot>
+  </table>
+{% endif %}
+END

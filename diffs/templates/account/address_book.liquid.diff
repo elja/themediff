@@ -1,0 +1,53 @@
+REPLACE
+{% for address in current_user.addresses %}
+WITH
+{% for address in address_book %}
+END
+
+REPLACE_BLOCK
+{% form 'account_address', for: address, remote: true %}
+ANY
+{% endform %}
+WITH
+{% form 'address', address %}
+  {% include 'address_form', form: form %}
+  <input type="submit" value="Save Changes" class="btn save-address"/>
+{% endform %}
+
+<a href="{{ address | account_address_url }}" class="btn delete-address" data-confirm="Are you sure?" data-method="delete">Delete Address</a>
+END
+
+REPLACE_BLOCK
+<div class="address-role-form">
+ANY
+</div>
+WITH
+END
+
+REPLACE_BLOCK
+{% form 'account_address' %}
+ANY
+{% endform %}
+WITH
+{% form 'new_address' %}
+  {% include 'address_form', form: form %}
+  <input type="submit" class="btn custom-button btn-blue" value="Add new address"/>
+{% endform %}
+END
+
+REPLACE_BLOCK
+<script>
+ANY
+</script>
+WITH
+<script>
+  $(function () {
+    $('.address-list form').each(function(index, form) {
+      new CountrySelectController(
+        $(form).find('.country select'),
+        $(form).find('.state select')
+      );
+    });
+  });
+</script>
+END

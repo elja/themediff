@@ -1,0 +1,11 @@
+REPLACE
+store.
+WITH
+shop.
+END
+
+REPLACE
+site.
+WITH
+shop.
+END

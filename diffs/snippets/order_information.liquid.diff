@@ -1,0 +1,26 @@
+REPLACE
+{{ cart_options.custom_data_collections_name }}
+WITH
+{{ shop.custom_data_collections_name }}
+END
+
+REPLACE_BLOCK
+{% for sub_option in line_item.product_sub_options %}
+ANY
+{% endfor %}
+WITH
+{% for choice in line_item.choices %}
+  {% if choice.sub_option %}
+    <p class="sub-option">
+      <span class="sub-option-name">{{ choice.option.friendly_name }}{% if choice.has_group? %} ({{ choice.group.name }}) {% endif %}:</span>
+      <span class="sub-option-value">{% include 'modifier', title: choice.sub_option.name, modifier: choice.amount %}</span>
+    </p>
+  {% endif %}
+{% endfor %}
+END
+
+REPLACE_OR_IGNORE
+order.promo_total < 0
+WITH
+order.promo_total > 0
+END

@@ -1,0 +1,11 @@
+REPLACE
+<form id="openid_form" method='post' action="{{ openid_session_url }}">
+WITH
+{% form 'openid_login' %}
+END
+
+REPLACE
+</form>
+WITH
+{% endform %}
+END

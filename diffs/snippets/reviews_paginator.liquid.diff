@@ -1,0 +1,11 @@
+REPLACE
+{{ paginate.first.remote }}
+WITH
+{% if paginate.ajax %}data-remote="true"{% endif %}
+END
+
+REPLACE
+{{ paginate.next.remote }}
+WITH
+{% if paginate.ajax %}data-remote="true"{% endif %}
+END

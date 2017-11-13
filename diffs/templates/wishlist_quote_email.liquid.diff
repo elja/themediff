@@ -1,0 +1,26 @@
+REPLACE
+{% if product.primary_image %}{{ product.primary_image.thumb_url }}{% else %}{{ 'no-image.jpg' | asset_url }}{% endif %}
+WITH
+{% if line_item.image %}{{ line_item.image.thumb_url }}{% else %}{{ 'no-image.jpg' | asset_url }}{% endif %}
+END
+
+REPLACE_BLOCK
+{% for sub_option in line_item.product_sub_options %}
+ANY
+{% endfor %}
+WITH
+{% for choice in line_item.choices %}
+  {% if choice.sub_option %}
+    <p class="sub-option">
+      <span class="sub-option-name">{{ choice.option.friendly_name }}{% if choice.has_group? %} ({{ choice.group.name }}) {% endif %}:</span>
+      <span class="sub-option-value">{% include 'modifier', title: choice.sub_option.name, modifier: choice.amount %}</span>
+    </p>
+  {% endif %}
+{% endfor %}
+END
+
+REPLACE
+{{ wishlist.grand_total | points_or_currency }}
+WITH
+{{ wishlist.cart_total | points_or_currency }}
+END

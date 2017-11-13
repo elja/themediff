@@ -1,0 +1,5 @@
+REPLACE
+{% form 'search', preserve_search: true %}
+WITH
+{% form 'search', products_search %}
+END

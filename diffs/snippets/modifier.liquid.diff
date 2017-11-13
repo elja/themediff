@@ -1,0 +1,3 @@
+OVERWRITE
+{{ title }}{% if amount and amount != 0 %}<span class="modifier"> ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }})</span>{% endif %}
+END

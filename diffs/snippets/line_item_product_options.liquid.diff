@@ -1,0 +1,190 @@
+REPLACE
+product.enable_product_options?
+WITH
+product.product_options_enabled?
+END
+
+REPLACE
+product.ordered_modifications != empty
+WITH
+product.options_or_groups != empty
+END
+
+REPLACE
+{% for modification in product.ordered_modifications %}
+    {% if modification.group? %}
+        {% include 'product_option_group' with modification %}
+    {% elsif modification.option? %}
+        {% include 'product_option' with modification %}
+    {% endif %}
+{% endfor %}
+WITH
+{% for option_or_group in product.options_or_groups %}
+    {% if option_or_group.group? %}
+        {% include 'product_option_group' with option_or_group %}
+    {% elsif option_or_group.option? %}
+        {% include 'product_option' with option_or_group %}
+    {% endif %}
+{% endfor %}
+END
+
+REPLACE
+{% if product.has_multiple_quantity_options? %}
+WITH
+{% if product.options_or_groups.multiple_quantity != empty %}
+END
+
+REPLACE
+{% if product.multiple_quantity_options.size == 1 %}
+    {% assign col = product.multiple_quantity_options[0] %}
+
+    <div class="multiple-quantity-product-option">
+        <label>{{ col.friendly_name }}</label>
+
+        {% for sub_option in col.sub_options %}
+            {% assign index = forloop.index0 %}
+
+            <div class="product-sub-option">
+                {% assign amount = sub_option.amount %}
+
+                <label>{{ sub_option.name }}{% if amount and amount != 0 %} ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }}){% endif %}:</label>
+
+                <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                <span class="stock" data-index="{{ index }}"></span>
+            </div>
+        {% endfor %}
+    </div>
+{% elsif product.multiple_quantity_options.size == 2 %}
+    {% assign index = 0 %}
+
+    {% assign col = product.multiple_quantity_options[0] %}
+    {% assign row = product.multiple_quantity_options[1] %}
+
+    <div class="multiple-quantity-product-option">
+        {% assign cols_in_table = 4 %}
+        {% assign steps = col.sub_options.size | divided_by: cols_in_table %}
+
+        {% if steps < 1 %}{% assign steps = 1 %}{% endif %}
+
+        {% for step in (0..steps) %}
+            {% assign row_offset = step | times: cols_in_table  %}
+            {% assign step_offset = step | times: row.sub_options.size | times: cols_in_table %}
+
+            <table class="multiple-quantity-grid">
+                {% for sub_y in row.sub_options %}
+                    {% assign y_index = forloop.index0 %}
+
+                    {% if y_index == 0 %}
+                        <tr>
+                            <th></th>
+                            {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                {% assign amount_x = sub_x.amount %}
+                                <th>{{ sub_x.name }}{% if amount_x != 0 %} ({% if amount_x > 0 %}+{% endif %}{{ amount_x | points_or_currency }}){% endif %}</th>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                            {% assign x_index = forloop.index0 %}
+                            {% assign index = x_index | times: row.sub_options.size | plus: y_index | plus: step_offset %}
+
+                            {% if x_index == 0 %}
+                                {% assign amount_y = sub_y.amount %}
+                                <th>{{ sub_y.name }}{% if amount_y != 0 %} ({% if amount_y > 0 %}+{% endif %}{{ amount_y | points_or_currency }}){% endif %}</th>
+                            {% endif %}
+
+                            <td>
+                                <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                                <span class="stock" data-index="{{ index }}"></span>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+{% else %}
+    Not Implemented
+{% endif %}
+WITH
+{% if product.options_or_groups.multiple_quantity.size == 1 %}
+  {% assign option = product.options_or_groups.multiple_quantity[0] %}
+
+  <div class="multiple-quantity-product-option">
+      <label>{{ option.friendly_name }}</label>
+
+      {% for sub_option in option.sub_options %}
+        <div class="product-sub-option">
+          <label for="qnt_{{ sub_option.id }}">
+            {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}
+          </label>
+
+          <input type="text" class="quantity" data-type="quantity"
+                 name="product[grid][{{ sub_option.id }}][quantity]"
+                 value="{{ form.grid[sub_option.id].quantity | default: 0 }}">
+
+          <span class="stock" id="stock_{{ sub_option.id }}"></span>
+        </div>
+      {% endfor %}
+  </div>
+{% elsif product.options_or_groups.multiple_quantity.size == 2 %}
+  {% assign col = product.options_or_groups.multiple_quantity[0] %}
+  {% assign row = product.options_or_groups.multiple_quantity[1] %}
+
+  <div class="multiple-quantity-product-option">
+      {% assign cols_in_table = 4 %}
+      {% assign steps = col.sub_options.size | divided_by: cols_in_table %}
+
+      {% if steps < 1 %}{% assign steps = 1 %}{% endif %}
+
+      {% for step in (0..steps) %}
+          {% assign row_offset = step | times: cols_in_table  %}
+          {% assign step_offset = step | times: row.sub_options.size | times: cols_in_table %}
+
+          <table class="multiple-quantity-grid">
+              {% for sub_y in row.sub_options %}
+                  {% if forloop.index0 == 0 %}
+                      <tr>
+                          <th></th>
+                          {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                            <th>{% include 'modifier', title: sub_x.name, amount: sub_x.amount %}</th>
+                          {% endfor %}
+                      </tr>
+                  {% endif %}
+
+                  <tr>
+                      {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                          {% if forloop.index0 == 0 %}
+                              <th>{% include 'modifier', title: sub_y.name, amount: sub_y.amount %}</th>
+                          {% endif %}
+
+                          <td>
+                            <input type="text" class="quantity" data-type="quantity"
+                                   name="product[grid][{{ sub_x.id }}][{{ sub_y.id }}][quantity]"
+                                   value="{{ form.grid[sub_x.id][sub_y.id].quantity | default: 0 }}">
+
+                            <span class="stock" id="stock_{{ sub_x.id }}_{{ sub_y.id }}"></span>
+                          </td>
+                      {% endfor %}
+                  </tr>
+              {% endfor %}
+          </table>
+      {% endfor %}
+  </div>
+{% endif %}
+END
+
+REPLACE
+{% if product.quantity_limits_message %}
+    <div class='minimum-order-quantity-help'>
+        {{ product.quantity_limits_message }}
+    </div>
+{% endif %}
+WITH
+{% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
+  <div class='minimum-order-quantity-help'>
+    {% include 'quantity_limits_message', product: product %}
+  </div>
+{% endif %}
+END

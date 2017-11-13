@@ -1,0 +1,152 @@
+REPLACE_BLOCK
+{% form_block 'f.association', context_name: 'contact', object_name: 'billing_contact' %}
+ANY
+{% endform_block %}
+WITH
+<div class="form-item">
+    <label for="checkout_address_last_name">last name</label>
+    <input type="text"
+           value="{{ form.last_name.value }}"
+           name="checkout[address][last_name]"
+           id="checkout_address_last_name"
+           class="input-text last_name"
+           placeholder="last name" />
+
+  {% for error in form.last_name.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+END
+
+REPLACE_BLOCK
+{% form_block 'f.association', context_name: 'address', object_name: 'billing_address' %}
+ANY
+{% endform_block %}
+WITH
+<div class="form-item">
+    <label for="checkout_address_company">company</label>
+    <input type="text"
+           value="{{ form.company.value }}"
+           name="checkout[address][company]"
+           id="checkout_address_company"
+           class="input-text company"
+           placeholder="company" />
+
+  {% for error in form.company.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+    <label for="checkout_address_first_address">address</label>
+    <input type="text"
+           value="{{ form.first_address.value }}"
+           name="checkout[address][first_address]"
+           id="checkout_address_first_address"
+           class="input-text first_address"
+           placeholder="address line 1" />
+
+  {% for error in form.first_address.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+
+    <input type="text"
+           value="{{ form.second_address.value }}"
+           name="checkout[address][second_address]"
+           id="checkout_address_second_address"
+           class="input-text second_address"
+           placeholder="address line 2" />
+
+  {% for error in form.second_address.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+    <label for="checkout_address_city">city</label>
+    <input type="text"
+           value="{{ form.city.value }}"
+           name="checkout[address][city]"
+           id="checkout_address_city"
+           class="input-text city"
+           placeholder="city" />
+
+  {% for error in form.city.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+  <label for="checkout_address_country">country</label>
+  <div class='select-wrapper country'>
+    <select name="checkout[address][country]" id="checkout_address_country">
+      {% country_select_options selected: form.country.value %}
+    </select>
+  </div>
+
+  {% for error in form.country.errors %}
+    <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+  <label for="checkout_address_state">state</label>
+  <div class='select-wrapper state'>
+    <select name="checkout[address][state]" id="checkout_address_state">
+      {% state_select_options country: form.country.value, selected: form.state.value %}
+    </select>
+  </div>
+
+  {% for error in form.state.errors %}
+    <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+    <label for="checkout_address_zip">zip code</label>
+    <input type="text"
+           value="{{ form.zip.value }}"
+           name="checkout[address][zip]"
+           id="checkout_address_zip"
+           class="input-text zip"
+           placeholder="zip code" />
+
+  {% for error in form.zip.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+END
+
+REPLACE_BLOCK
+{% form_block 'f.association', context_name: 'contact', object_name: 'billing_contact' %}
+ANY
+{% endform_block %}
+WITH
+<div class="form-item">
+    <label for="checkout_address_email">email</label>
+    <input type="text"
+           value="{{ form.email.value }}"
+           name="checkout[address][email]"
+           id="checkout_address_email"
+           class="input-text email"
+           placeholder="email" />
+
+  {% for error in form.email.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+
+<div class="form-item">
+    <label for="checkout_address_phone">phone</label>
+    <input type="text"
+           value="{{ form.phone.value }}"
+           name="checkout[address][phone]"
+           id="checkout_address_phone"
+           class="input-text phone"
+           placeholder="phone" />
+
+  {% for error in form.phone.errors %}
+      <span class="error">{{ error }}</span>
+  {% endfor %}
+</div>
+END

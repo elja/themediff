@@ -1,0 +1,55 @@
+<style>
+	.sign-up { display: none; }
+</style>
+<div class="login-from-cart">
+    <div class="clrfix">
+        <div class="item-area login checkout-sign-in">
+            <h1>
+                Log In
+            </h1>
+            <div class="item-area-content">
+                {% include "login" %}
+            </div>
+        </div>
+        <div class="item-area create-account">
+            <h1>
+                New Account
+            </h1>
+            <div class="item-area-content">
+                {% form 'create_checkout_account', context_name: 'f' %}
+                {{ form.errors | default_errors }}
+
+                {% form_field 'f.input', 'first_name' %}
+                {% form_field 'f.input', 'last_name' %}
+                {% form_field 'f.input', 'username' %}
+                {% form_field 'f.input', 'email', { "required": true } %}
+                {% if shop.active_group_passcode? %}
+                    {% form_field 'f.input', 'group_passcode' %}
+                {% endif %}
+                {% form_field 'f.input', 'password' %}
+                {% form_field 'f.input', 'password_confirmation' %}
+
+                {% form_field 'f.submit', 'create account', {"class": "btn custom_btn custom-button btn-tradewind"} %}
+                {% endform %}
+            </div>
+        </div>
+        {% if cart_options.allow_guest_checkout %}
+        <div class="item-area continue-as-guest">
+            <h1>
+                Continue as Guest
+            </h1>
+            <div class="itema-area-content">
+                <!-- p>
+                    Some brief instructions outlining the guest checkout procedures / policies.
+                </p -->
+
+                {% form 'guest_checkout', context_name: 'f' %}
+                {% form_field 'f.input', 'customer_email', { "label": "email address", "required": true } %}
+
+                <input type="submit" value="continue as guest" class="btn custom_btn custom-button btn-tradewind"/>
+                {% endform %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>

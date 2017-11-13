@@ -1,0 +1,42 @@
+OVERWRITE
+<div class='product-option-wrapper form-item'>
+    <label>{{ product_option.friendly_name }}{% if product_option.required? %} *{% endif %}</label>
+    <div class="select-area {% if product_option.show_as_thumbs? %}thumbnail{% endif %}">
+        <select data-type="product-option"
+                data-name="{{ product_option.friendly_name }}"
+                name="product[options][{{ product_option.id }}][sub_option]"
+                class="msdropdown-select">
+
+            <option value='' {% if product_option.show_as_thumbs? %}style="visibility:hidden; display: list-item;"{% endif %}>
+                not specified
+            </option>
+
+            {% for sub_option in product_option.sub_options %}
+                    <option data-name="{{ sub_option.name }}"
+                            {% if sub_option.thumb_url %}
+                            data-image="{{ sub_option.thumb_url }}"
+                            {% elsif product_option.show_as_thumbs? %}
+                            data-image="{{ 'product-image-preview/no_thumb.png' | asset_url }}"
+                            {% endif %}
+                            {% if sub_option.large_url %}
+                            data-new-image="{{ sub_option.large_url }}"
+                            {% endif %}
+                            {% if form.options[product_option.id].sub_option == sub_option.id %}
+                            selected
+                            {% endif %}
+                            value="{{ sub_option.id }}">
+                      {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}
+                    </option>
+            {% endfor %}
+        </select>
+
+      {% if form.options[product_option.id].errors %}
+          <span class="error" data-type="product-option-error">
+            {{ form.options[product_option.id].errors | default_errors }}
+          </span>
+      {% endif %}
+    </div>
+
+    <div class="clear"></div>
+</div>
+END

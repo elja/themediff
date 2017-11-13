@@ -1,0 +1,11 @@
+REPLACE
+{% form 'search', context_name: 'f', preserve_search: true %}
+WITH
+{% form 'search', products_search %}
+END
+
+REPLACE
+{% form_field 'f.text_field', 'keyword', { "value": "", "placeholder": "search within" }  %}
+WITH
+<input type="text" name="s[keyword]" placeholder="search within"/>
+END

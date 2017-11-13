@@ -1,0 +1,41 @@
+REPLACE
+{% form 'add_product_review', context_name: 'f', for: review, remote: 'true' %}
+WITH
+{% form 'product_review', ajax: true %}
+END
+
+REPLACE
+{% form_field 'f.label', 'title', 'Title' %}
+{% form_field 'f.text_field', 'title', { "class": "input-text title", "placeholder": "review title" }%}
+{% form_field 'f.error', 'title' %}
+WITH
+<label class="control-label" for="title">Title</label>
+<input class="input-text title" id="title" placeholder="review title" name="review[title]" size="50" type="text" value="{{ form.title }}">
+{% if form.errors contains 'title' %}
+  <span class="error">{{ form.errors['title'] }}</span>
+{% endif %}
+END
+
+REPLACE
+{% form_field 'f.label', 'stars', 'Rate product' %}
+<div class="rating-stars"></div>
+{% form_field 'f.error', 'stars' %}
+WITH
+<label class="control-label" for="stars">Rate product</label>
+<div class="rating-stars"></div>
+{% if form.errors contains 'stars' %}
+  <span class="error">{{ form.errors['stars'] }}</span>
+{% endif %}
+END
+
+REPLACE
+{% form_field 'f.label', 'body', 'Your review' %}
+{% form_field 'f.text_area', 'body', { "class": "input-text body", "placeholder": "review text" }%}
+{% form_field 'f.error', 'body' %}
+WITH
+<label class="string control-label" for="body">Body</label>
+<textarea id="body" name="review[body]" class="input-text body">{{ form.body }}</textarea>
+{% if form.errors contains 'body' %}
+  <span class="error">{{ form.errors['body'] }}</span>
+{% endif %}
+END
