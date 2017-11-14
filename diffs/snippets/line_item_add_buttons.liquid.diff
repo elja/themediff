@@ -1,27 +1,29 @@
-REPLACE
+REPLACE_OR_IGNORE
 store.
 WITH
 shop.
 END
 
-REPLACE
+REPLACE_OR_IGNORE
 site.
 WITH
 shop.
 END
 
 REPLACE
-{% if wishlist_enabled %}
+wishlist_enabled
 WITH
-{% if shop.wishlist_enabled? %}
+shop.wishlist_enabled?
 END
 
-REPLACE_BLOCK
-{% if request_sample_enabled %}
-ANY
-{% endif %}
+REPLACE_OR_IGNORE
+request_sample_enabled
 WITH
-{% if shop.request_sample_enabled? %}
-    <input type="submit" data-url="{{ product | request_sample_url }}" id="request-sample" value="Request Sample" class="btn"/>
-{% endif %}
+shop.request_sample_enabled?
+END
+
+REPLACE_OR_IGNORE
+{{ product.url }}/request_sample
+WITH
+{{ product | request_sample_url }}
 END

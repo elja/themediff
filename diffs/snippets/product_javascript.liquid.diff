@@ -1,4 +1,4 @@
 REPLACE
-new ReflectiveView.View(#{.+});
+new ReflectiveView.View(#{[^)]+});
 WITH
 END

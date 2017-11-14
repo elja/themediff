@@ -1,10 +1,10 @@
-REPLACE
+REPLACE_OR_IGNORE
 store.
 WITH
 shop.
 END
 
-REPLACE
+REPLACE_OR_IGNORE
 site.
 WITH
 shop.

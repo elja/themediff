@@ -1,9 +1,12 @@
 require 'pathname'
+require 'ostruct'
 
 class Diff
   STOP_WORD = 'END'
   CONTENT_STOP = 'WITH'
   KEYWORDS = ['OVERWRITE', 'REPLACE', 'REPLACE_BLOCK', 'REPLACE_OR_IGNORE']
+
+  attr_reader :changes
 
   def self.parse(path)
     new(path).parse!
@@ -18,7 +21,7 @@ class Diff
   end
 
   def relative_path
-    @template_path ||= Pathname.new(@path).relative_path_from(self.class.root_path)
+    @template_path ||= Pathname.new(@path).relative_path_from(self.class.root_path).sub(/\.diff\z/, '')
   end
 
   def parse!
@@ -28,22 +31,29 @@ class Diff
 
       puts "Parsing: #{relative_path}"
 
-      data = File.read(@path)
-      data.each_line do |line|
-        line = line.strip
-        next if line.length == 0
+      data = File.open(@path)
+      data.readlines.each do |line|
+        token = line.rstrip
+        next if token.length == 0
 
-        if KEYWORDS.include?(line.strip)
+        if KEYWORDS.include?(token)
           match = true
-          change = { type: line, match: '', replace: '' }
-        elsif line == 'WITH'
+          change = OpenStruct.new(
+            type: token,
+            path: relative_path,
+            match: '',
+            replace: ''
+          )
+        elsif token == 'WITH'
           match = false
-        elsif line == STOP_WORD
+        elsif token == STOP_WORD
           @changes << change
         else
-          match ? change[:match] << line : change[:replace] << line
+          match ? change.match << line : change.replace << line
         end
       end
+
+      raise "There's no changes in '#{relative_path}'" if @changes.size == 0
     end
   end
 

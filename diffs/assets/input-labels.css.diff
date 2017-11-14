@@ -1,9 +1,0 @@
-REPLACE_OR_IGNORE
-.checkout-main .shipping .form-item .second-address,
-.checkout-main .address .form-item .second-address
-WITH
-.checkout-main .shipping .form-item .second-address,
-.checkout-main .address .form-item .second-address,
-.checkout-main .shipping .form-item .second_address,
-.checkout-main .address .form-item .second_address
-END

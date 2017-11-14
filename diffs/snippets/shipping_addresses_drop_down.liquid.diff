@@ -1,5 +1,5 @@
 REPLACE
-available_billing_addresses
+available_shipping_addresses
 WITH
 form.available_addresses
 END

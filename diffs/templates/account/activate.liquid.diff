@@ -12,16 +12,16 @@ WITH
   {{ form.errors | default_errors }}
 
   <div class="form-item">
-    <label class="string required control-label" for="password"><abbr title="required">*</abbr> Password</label>
-    <input class="string required input-text" id="password" placeholder="password" name="website_user[password]" size="50" type="password">
+    <label class="string required control-label" for="website_user_password"><abbr title="required">*</abbr> Password</label>
+    <input class="string required input-text" id="website_user_password" placeholder="password" name="website_user[password]" size="50" type="password">
     {% if form.errors contains 'password' %}
       <span class="error">{{ form.errors['password'] }}</span>
     {% endif %}
   </div>
 
   <div class="form-item">
-    <label class="string required control-label" for="password_confirmation"><abbr title="required">*</abbr> Password Confirmation</label>
-    <input class="string required input-text" id="password_confirmation" placeholder="password confirmation" name="website_user[password_confirmation]" size="50" type="password">
+    <label class="string required control-label" for="website_user_password_confirmation"><abbr title="required">*</abbr> Password Confirmation</label>
+    <input class="string required input-text" id="website_user_password_confirmation" placeholder="password confirmation" name="website_user[password_confirmation]" size="50" type="password">
     {% if form.errors contains 'password_confirmation' %}
       <span class="error">{{ form.errors['password_confirmation'] }}</span>
     {% endif %}

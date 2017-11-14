@@ -1,0 +1,6 @@
+.bundle
+.rvmrc
+.ruby-gemset
+.ruby-version
+.idea
+vendor/cache

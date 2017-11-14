@@ -1,12 +1,12 @@
+require_relative 'match_replace'
+
 class Merger
-
-
   def initialize(theme_root)
     @theme_root = Pathname.new(theme_root)
     @files = []
-    @conflicts = []
 
-    Dir[File.join(@theme_root, '**', '*')].each do |path|
+    search_path = File.join(@theme_root, '**', '*')
+    Dir.glob(search_path).each do |path|
       @files << {
         full_path: path,
         relative_path: Pathname.new(path).relative_path_from(@theme_root)
@@ -16,21 +16,10 @@ class Merger
 
   def merge!(diff)
     file = @files.detect { |f| f[:relative_path] == diff.relative_path }
+    content = file ? File.read(file[:full_path]) : ''
 
-    unless file
-      @conflicts << "File: #{diff.relative_path} no found!"
-      return false
-    end
-
-    content = File.read(file[:full_path])
-
-    diff.changes.each do |change|
-      case change.type
-      when 'OVERWRITE'
-      when 'REPLACE_BLOCK'
-      when 'REPLACE_OR_IGNORE'
-      when 'REPLACE'
-      end
+    MatchReplace.new(content).tap do |matcher|
+      diff.changes.each { |change| matcher.match_replace!(change) }
     end
   end
 end
