@@ -13,9 +13,10 @@ class MatchReplace
   BLOCK_ANY = /\bANY\b/
   REGEXP_PART = /\#{([^\}]+)\}/
 
-  attr_reader :conflicts, :result
+  attr_reader :conflicts, :path, :result
 
-  def initialize(content)
+  def initialize(path, content)
+    @path = path
     @content = content
     @result = @content.dup
 

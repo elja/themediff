@@ -1,24 +1,7 @@
-REPLACE_BLOCK
-{% form 'create_checkout_account', context_name: 'f' %}
-ANY
-{% endform %}
-WITH
-{% form 'checkout_registration' %}
-  {% include 'registration_form', form: form %}
-  <input type="submit" value="create account" class="btn custom_btn custom-button btn-tradewind"/>
-{% endform %}
-END
-
 REPLACE
 cart_options.allow_guest_checkout
 WITH
 shop.guest_checkout_allowed?
-END
-
-REPLACE
-{% form 'guest_checkout', context_name: 'f' %}
-WITH
-{% form 'guest_checkout' %}
 END
 
 REPLACE

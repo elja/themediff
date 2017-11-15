@@ -1,9 +1,0 @@
-OVERWRITE
-{% form 'apply_gift_certificate' %}
-    <div class="input string optional">
-      <input name="gift_certificate" placeholder="enter certificate id" size="50" type="text"/>
-    </div>
-
-    <input class="btn custom_btn indent_btn custom-button small" name="commit" type="submit" value="Apply">
-{% endform %}
-END

@@ -1,28 +1,4 @@
 REPLACE
-{% form 'wishlist_update', context_name: 'f' %}
-WITH
-{% form 'wishlist' %}
-END
-
-REPLACE_OR_IGNORE
-wishlist.line_items != empty
-WITH
-wishlist.line_items_count > 0
-END
-
-REPLACE
-wishlist.line_items.size
-WITH
-wishlist.line_items_count
-END
-
-REPLACE
-wishlist.item_with_setup_charge_total
-WITH
-wishlist.cart_total
-END
-
-REPLACE
 {% form_block 'f.fields_for', context_name: 'ff', object_name: 'line_items' %}
   {% include 'wishlist_line_item_fields' %}
 {% endform_block %}

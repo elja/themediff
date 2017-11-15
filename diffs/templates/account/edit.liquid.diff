@@ -1,113 +1,25 @@
-REPLACE_BLOCK
-{% form 'account_edit', context_name: 'f' %}
-ANY
-{% endform %}
+REPLACE_OR_IGNORE
+custom_user_fields_enabled
 WITH
-{% form 'user' %}
-  {{ form.errors | default_errors }}
+shop.custom_user_fields_enabled?
+END
 
-  <div class="form-item">
-    <label class="string required control-label" for="first_name"><abbr title="required">*</abbr> First name</label>
-    <input class="string required input-text" id="first_name" name="website_user[first_name]" size="50" type="text" value="{{ form.first_name }}">
-    {% if form.errors contains 'first_name' %}
-      <span class="error">{{ form.errors['first_name'] }}</span>
-    {% endif %}
-  </div>
+REPLACE_OR_IGNORE
+slack_integration_enabled
+WITH
+shop.slack_integration_enabled?
+END
 
-  <div class="form-item">
-    <label class="string required control-label" for="last_name"><abbr title="required">*</abbr> Last name</label>
-    <input class="string required input-text" id="last_name" name="website_user[last_name]" size="50" type="text" value="{{ form.last_name }}">
-    {% if form.errors contains 'last_name' %}
-      <span class="error">{{ form.errors['last_name'] }}</span>
-    {% endif %}
-  </div>
-
-  <div class="form-item">
-    <label class="string required control-label" for="email"><abbr title="required">*</abbr> E-Mail</label>
-    <input class="string required input-text" id="email" name="website_user[email]" size="50" type="text" value="{{ form.email }}">
-    {% if form.errors contains 'email' %}
-      <span class="error">{{ form.errors['email'] }}</span>
-    {% endif %}
-  </div>
-
-  {% if shop.slack_integration_enabled? %}
-    <div class="input string required">
-      <label class="string required control-label" for="slack_handle"><abbr title="required">*</abbr> Slack handle</label>
-      <input class="string required input-text" id="slack_handle" name="website_user[slack_handle]" size="50" type="text" value="{{ form.slack_handle }}">
-      {% if form.errors contains 'slack_handle' %}
-        <span class="error">{{ form.errors['slack_handle'] }}</span>
-      {% endif %}
-    </div>
-  {% endif %}
-
-  <div class="form-item">
-    <label class="string required control-label" for="username"><abbr title="required">*</abbr> Username</label>
-    {% if form.integrated? %}
-      <input class="string required input-text" id="username" disabled="disabled" size="50" type="text" value="{{ form.username }}">
-    {% else %}
-      <input class="string required input-text" id="username" name="website_user[username]" size="50" type="text" value="{{ form.username }}">
-    {% endif %}
-
-    {% if form.errors contains 'username' %}
-      <span class="error">{{ form.errors['username'] }}</span>
-    {% endif %}
-  </div>
-
-  {% if shop.custom_user_fields_enabled? %}
-    {% for field in form.custom_user_fields %}
-      <div class="fields">
-        {% include 'custom_user_field', field: field %}
-      </div>
+REPLACE_OR_IGNORE
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'custom_field_values' %}
+    {% for field in f.liquid_object.custom_fields_for_account %}
+        {% include "custom_user_field", field: field %}
     {% endfor %}
-  {% endif %}
-
-  <div class="form-item">
-    <label class="string control-label" for="phone">Phone</label>
-    <input class="string input-text" id="phone" name="website_user[phone]" size="50" type="text" value="{{ form.phone }}">
-    {% if form.errors contains 'phone' %}
-      <span class="error">{{ form.errors['phone'] }}</span>
-    {% endif %}
+{% endform_block %}
+WITH
+{% for field in form.custom_user_fields %}
+  <div class="fields">
+    {% include 'custom_user_field', field: field %}
   </div>
-
-  <div class="input string required">
-    <label class="string required control-label" for="current_password"><abbr title="required">*</abbr> Current password</label>
-    {% if current_user.integrated? %}
-      <input class="string required input-text" id="current_password" disabled="disabled" size="50" type="password">
-    {% else %}
-      <input class="string required input-text" id="current_password" name="website_user[current_password]" size="50" type="password">
-    {% endif %}
-
-    {% if form.errors contains 'current_password' %}
-      <span class="error">{{ form.errors['current_password'] }}</span>
-    {% endif %}
-  </div>
-
-  <div class="input string required">
-    <label class="string required control-label" for="password"><abbr title="required">*</abbr> New password</label>
-    {% if current_user.integrated? %}
-      <input class="string required input-text" id="password" disabled="disabled" size="50" type="password">
-    {% else %}
-      <input class="string required input-text" id="password" name="website_user[password]" size="50" type="password">
-    {% endif %}
-
-    {% if form.errors contains 'password' %}
-      <span class="error">{{ form.errors['password'] }}</span>
-    {% endif %}
-  </div>
-
-  <div class="input string required">
-    <label class="string required control-label" for="password_confirmation"><abbr title="required">*</abbr> Re-enter new password</label>
-    {% if current_user.integrated? %}
-      <input class="string required input-text" id="password_confirmation" disabled="disabled" size="50" type="password">
-    {% else %}
-      <input class="string required input-text" id="password_confirmation" name="website_user[password_confirmation]" size="50" type="password">
-    {% endif %}
-
-    {% if form.errors contains 'password_confirmation' %}
-      <span class="error">{{ form.errors['password_confirmation'] }}</span>
-    {% endif %}
-  </div>
-
-  <input type="submit" value="Save changes" class="btn custom_btn custom-button btn-green"/>
-{% endform %}
+{% endfor %}
 END

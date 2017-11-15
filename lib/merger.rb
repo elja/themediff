@@ -18,7 +18,7 @@ class Merger
     file = @files.detect { |f| f[:relative_path] == diff.relative_path }
     content = file ? File.read(file[:full_path]) : ''
 
-    MatchReplace.new(content).tap do |matcher|
+    MatchReplace.new(diff.relative_path, content).tap do |matcher|
       diff.changes.each { |change| matcher.match_replace!(change) }
     end
   end

@@ -8,4 +8,5 @@ REPLACE
 {% capture reviews_path %}{{product.url}}/reviews{% endcapture %}
 {% paginate product.approved_reviews by 5 remote: true, path: reviews_path %}
 WITH
+{% paginate product.reviews by 5, ajax: true %}
 END

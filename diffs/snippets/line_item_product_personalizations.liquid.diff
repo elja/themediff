@@ -2,7 +2,7 @@ REPLACE_OR_IGNORE
 <input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
 WITH
 <input id="artifi-data" type="hidden" name="product[artifi_data]" value="{{ form.artifi_data }}"/>
-<input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
+<input id='artifi-customize' type="button" name="artifi_customize" value="Customize" class="btn"/>
 END
 
 REPLACE_BLOCK
