@@ -1,136 +1,65 @@
-
+{% form_block 'f.association', context_name: 'contact', object_name: 'shipping_contact' %}
 <div class="form-item">
-    <label for="website_order_shipping_contact_attributes_first_name">first name</label>
-    <input type="text"
-       value="{{ form.first_name.value }}"
-       name="checkout[address][first_name]"
-       id="website_order_shipping_contact_attributes_first_name"
-       class="input-text first-address"
-       placeholder="first name" />
-    {% for error in form.first_name.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'contact.label', 'first_name', 'first name' %}
+    {% form_field 'contact.text_field', 'first_name', { "class": "input-text first-name", "placeholder": "first name" }%}
+    {% form_field 'contact.error', 'first_name' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_contact_attributes_last_name">first name</label>
-    <input type="text"
-       value="{{ form.last_name.value }}"
-       name="checkout[address][last_name]"
-       id="website_order_shipping_contact_attributes_last_name"
-       class="input-text last-name"
-       placeholder="last name"/>
-    {% for error in form.last_name.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'contact.label', 'last_name', 'last name' %}
+    {% form_field 'contact.text_field', 'last_name', { "class": "input-text last-name", "placeholder": "last name" }%}
+    {% form_field 'contact.error', 'last_name' %}
 </div>
+{% endform_block %}
 
-
-
+{% form_block 'f.association', context_name: 'address', object_name: 'shipping_address' %}
 
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_company">company</label>
-    <input type="text"
-       value="{{ form.company.value }}"
-       name="checkout[address][company]"
-       id="website_order_shipping_contact_attributes_company"
-       class="input-text company"
-       placeholder="company"/>
-    {% for error in form.company.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.label', 'company', 'company' %}
+    {% form_field 'address.text_field', 'company', { "class": "input-text company", "placeholder": "company" }%}
+    {% form_field 'address.error', 'company' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_first_address">address</label>
-    <input type="text"
-       value="{{ form.first_address.value }}"
-       name="checkout[address][first_address]"
-       id="website_order_shipping_address_attributes_first_address"
-       class="input-text first-address"
-       placeholder="address line 1" />
-    {% for error in form.first_address.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
-    <input type="text"
-         value="{{ form.second_address.value }}"
-         name="checkout[address][second_address]"
-         id="website_order_shipping_address_attributes_second_address"
-         class="input-text second-address"
-         placeholder="address line 2" />
-    {% for error in form.second_address.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.label', 'first_address', 'address' %}
+    {% form_field 'address.text_field', 'first_address',  { "class": "input-text first-address", "placeholder": "address line 1"} %}
+    {% form_field 'address.error', 'first_address' %}
+    {% form_field 'address.text_field', 'second_address', { "class": "input-text second-address", "placeholder": "address line 2"} %}
+    {% form_field 'address.error', 'second_address' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_city">city</label>
-    <input type="text"
-         value="{{ form.city.value }}"
-         name="checkout[address][city]"
-         id="website_order_shipping_address_attributes_city"
-         class="input-text city"
-         placeholder="city"/>
-    {% for error in form.city.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.label', 'city', 'city' %}
+    {% form_field 'address.text_field', 'city', { "class": "input-text city", "placeholder": "city" }%}
+    {% form_field 'address.error', 'city' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_country">country</label>
+    {% form_field 'address.label', 'country', 'country' %}
     <div class='select-wrapper country'>
-        <select name="checkout[address][country]" id="website_order_shipping_address_attributes_country">
-  {% country_select_options selected: form.country.value %}
-</select>
+        {% form_field 'address.country_select', 'country' %}
     </div>
-    {% for error in form.country.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.error', 'country' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_state">state</label>
+    {% form_field 'address.label', 'state', 'state' %}
     <div class='select-wrapper state'>
-        <select name="checkout[address][state]" id="website_order_shipping_address_attributes_state">
-  {% state_select_options selected: form.state.value %}
-</select>
+        {% country_state_select order.shipping_address, input_name: 'state', form: address %}
     </div>
-    {% for error in form.state.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.error', 'state' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_address_attributes_zip">zip code</label>
-    <input type="text"
-         value="{{ form.zip.value }}"
-         name="checkout[address][zip]"
-         id="website_order_shipping_address_attributes_zip"
-         class="input-text zip"
-         placeholder="zip code" />
-    {% for error in form.zip.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'address.label', 'zip', 'zip code' %}
+    {% form_field 'address.text_field', 'zip', { "class": "input-text zip", "placeholder": "zip code"} %}
+    {% form_field 'address.error', 'zip' %}
 </div>
+{% endform_block %}
 
-
-
+{% form_block 'f.association', context_name: 'contact', object_name: 'shipping_contact' %}
 <div class="form-item">
-    <label for="website_order_shipping_contact_attributes_email">email</label>
-    <input type="text"
-         value="{{ form.email.value }}"
-         name="checkout[address][email]"
-         id="website_order_shipping_contact_attributes_email"
-         class="input-text email"
-         placeholder="email" />
-    {% for error in form.email.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'contact.label', 'email', 'email' %}
+    {% form_field 'contact.text_field', 'email', { "class": "input-text email", "placeholder": "email" }%}
+    {% form_field 'contact.error', 'email' %}
 </div>
 <div class="form-item">
-    <label for="website_order_shipping_contact_attributes_phone">phone</label>
-    <input type="text"
-         value="{{ form.phone.value }}"
-         name="checkout[address][phone]"
-         id="website_order_shipping_contact_attributes_phone"
-         class="input-text phone"
-         placeholder="phone" />
-    {% for error in form.phone.errors %}
-  <span class="error">{{ error }}</span>
-{% endfor %}
+    {% form_field 'contact.label', 'phone', 'phone' %}
+    {% form_field 'contact.text_field', 'phone', { "class": "input-text phone", "placeholder": "phone" }%}
+    {% form_field 'contact.error', 'phone' %}
 </div>
-
+{% endform_block %}

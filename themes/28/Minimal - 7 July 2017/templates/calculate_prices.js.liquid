@@ -2,9 +2,7 @@
 
 $('.product-summary').replaceWith('{{ product_summary_html | escape_javascript }}');
 
-{% for variant in form.variants %}
-	var stockSpan = $("#{{ variant.stock_key }}");
-	stockSpan.toggleClass('in-stock', {{ variant.in_stock? }});
-	stockSpan.toggleClass('out-of-stock', !{{ variant.in_stock? }});
-	stockSpan.text('{{ variant.stock_message | escape_javascript }}');
+{% for line_item in line_items %}
+	{% capture stock_message_html %}{% include "stock_message", line_item: line_item, index: forloop.index0 %}{% endcapture %}
+  $('span.stock[data-index="{{forloop.index0}}"]').replaceWith('{{ stock_message_html | escape_javascript }}');
 {% endfor %}

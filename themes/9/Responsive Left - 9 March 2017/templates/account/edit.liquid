@@ -32,12 +32,12 @@
         {% form_field 'f.error', 'username' %}
     </div>
 
-    {% if shop.custom_user_fields_enabled? %}
-        {% for field in form.custom_user_fields %}
-  <div class="fields">
-    {% include 'custom_user_field', field: field %}
-  </div>
-{% endfor %}
+    {% if custom_user_fields_enabled %}
+        {% form_block 'f.fields_for', context_name: 'ff', object_name: 'custom_field_values' %}
+            {% for field in f.liquid_object.custom_fields_for_account %}
+                {% include "custom_user_field", field: field %}
+            {% endfor %}
+        {% endform_block %}
     {% endif %}
 
     <div class="form-item">

@@ -2,9 +2,7 @@ require 'pathname'
 require 'ostruct'
 
 class Diff
-  STOP_WORD = 'END'
-  CONTENT_STOP = 'WITH'
-  KEYWORDS = ['OVERWRITE', 'REPLACE', 'REPLACE_BLOCK', 'REPLACE_OR_IGNORE']
+  KEYWORDS = ['OVERWRITE', 'REPLACE', 'REPLACE_ANY', 'REPLACE_BLOCK', 'REPLACE_OR_IGNORE', 'ENSURE_NO']
 
   attr_reader :changes
 
@@ -42,11 +40,16 @@ class Diff
             type: token,
             path: relative_path,
             match: '',
+            matches: [],
             replace: ''
           )
         elsif token == 'WITH'
           match = false
-        elsif token == STOP_WORD
+        elsif token == 'OR'
+          change.matches << change.match
+          change.match = ''
+        elsif token == 'END'
+          change.matches << change.match
           @changes << change
         else
           match ? change.match << line : change.replace << line

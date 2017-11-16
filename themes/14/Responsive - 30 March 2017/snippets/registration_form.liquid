@@ -6,12 +6,12 @@
 {% form_field 'f.input', 'username' %}
 {% form_field 'f.input', 'email', { "required" : true }  %}
 
-{% if shop.custom_user_fields_enabled? %}
-  {% for field in form.custom_user_fields %}
-  <div class="fields">
-    {% include 'custom_user_field', field: field %}
-  </div>
-{% endfor %}
+{% if custom_user_fields_enabled %}
+  {% form_block 'f.fields_for', context_name: 'ff', object_name: 'custom_field_values' %}
+    {% for field in f.liquid_object.custom_fields_for_registration %}
+      {% include 'custom_user_field', field: field %}
+    {% endfor %}
+  {% endform_block %}
 {% endif %}
 
 {% if shop.active_group_passcode? %}

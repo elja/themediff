@@ -1,7 +1,7 @@
-REPLACE
-{{ cart_options.custom_data_collections_name }}
+REPLACE_OR_IGNORE
+cart_options.custom_data_collections_name
 WITH
-{{ shop.custom_data_collections_name }}
+shop.custom_data_collections_name
 END
 
 REPLACE_BLOCK

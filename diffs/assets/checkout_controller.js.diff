@@ -1,24 +1,13 @@
 REPLACE
 function CheckoutController(state, contactJson, addressJson) {
+#{[\S\s]+}
+this.initialize();
+}
 WITH
 function CheckoutController(state) {
-END
-
-REPLACE
-var contactJson = $.parseJSON(contactJson) || {};
-var addressJson = $.parseJSON(addressJson) || {};
-WITH
-END
-
-REPLACE
-this.addressJson = $.extend(addressJson, {
-    "first_name": contactJson.firstName,
-    "last_name": contactJson.lastName,
-    "email": contactJson.email,
-    "phone": contactJson.phone
-});
-WITH
-END
+  this.state = state;
+  this.initialize();
+}
 
 REPLACE
 self.prepareShippingMethods();

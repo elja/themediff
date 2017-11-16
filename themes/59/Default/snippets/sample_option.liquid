@@ -1,18 +1,17 @@
 <div class='product-option-wrapper'>
     <label>{{ sample_option.friendly_name }}{% if sample_option.required? %} *{% endif %}</label>
+
     <div class="select-area">
         <select name="request_sample[choices][{{ sample_option.id }}]" class="msdropdown-select">
             <option value=''>not specified</option>
             {% for sub_option in sample_option.sub_options %}
-                <option value='{{ sub_option.id }}' {% if form.options[sample_option.id].sub_option == sub_option.id %}selected{% endif %}{% if sub_option.thumb_url %}data-image="{{ sub_option.thumb_url }}"{% endif %} {% if sub_option.large_url %}data-new-image="{{ sub_option.large_url }}"{% endif %}>
+                <option value='{{ sub_option.id }}' {% if product.selected_options[sample_option.id] == sub_option.id %} selected {% endif %}{% if sub_option.thumb_url %}data-image="{{ sub_option.thumb_url }}"{% endif %} {% if sub_option.large_url %}data-new-image="{{ sub_option.large_url }}"{% endif %}>
                     {{ sub_option.name }}
                 </option>
             {% endfor %}
         </select>
     </div>
-  {% if form.options[sample_option.id].errors %}
-      <span class="error">
-        {{ form.options[sample_option.id].errors | default_errors }}
-      </span>
-  {% endif %}
+
+    {% capture error_key %}option_{{ sample_option.id }}{% endcapture %}
+    <span class="error">{{ product.error_messages[error_key] | first }}</span>
 </div>

@@ -21,7 +21,7 @@
           <td><b>Quantity</b></td>
           <td>Base Price</td>
         </tr>
-        {% for quantity_discount in product.quantity_discounts %}
+        {% for quantity_discount in quantity_discounts %}
         <tr>
           <td>{{ quantity_discount.quantity }}</td>
           <td>{{ quantity_discount.price | points_or_currency }}</td>

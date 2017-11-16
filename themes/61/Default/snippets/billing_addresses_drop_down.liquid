@@ -1,9 +1,9 @@
-{% if form.available_addresses != empty %}
+{% if available_billing_addresses != empty %}
   <div class="form-item form-select">
     <div class="clrfix"><div>
       <select name="billing_address_id" class="big-select address-dropdown">
         <option value='-1' selected="selected" disabled>choose address...</option>
-        {% for address in form.available_addresses %}
+        {% for address in available_billing_addresses %}
           <option value="{{ address.id }}">{{ address.nickname }}</option>
         {% endfor %}
       </select>

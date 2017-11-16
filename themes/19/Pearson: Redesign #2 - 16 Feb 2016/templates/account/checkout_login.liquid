@@ -31,7 +31,7 @@
                 {% endform %}
             </div>
         </div>
-        {% if shop.guest_checkout_allowed? %}
+        {% if cart_options.allow_guest_checkout %}
         <div class="item-area continue-as-guest">
             <h1>
                 Continue as Guest
@@ -42,13 +42,7 @@
                 </p -->
 
                 {% form 'guest_checkout', context_name: 'f' %}
-                <div class="input string required">
-  <label class="string required control-label" for="customer_email"><abbr title="required">*</abbr> Email address</label>
-  <input class="string required" id="customer_email" name="guest[email]" type="text" value="{{ form.email }}">
-  {% if form.errors contains 'email' %}
-    <span class="error">{{ form.errors['email'] }}</span>
-  {% endif %}
-</div>
+                {% form_field 'f.input', 'customer_email', { "label": "email address", "required": true } %}
 
                 <input type="submit" value="continue as guest" class="btn custom_btn custom-button btn-tradewind"/>
                 {% endform %}

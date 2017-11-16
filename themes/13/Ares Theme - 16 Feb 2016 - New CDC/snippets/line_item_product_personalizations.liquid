@@ -1,30 +1,21 @@
-{% if product.product_personalizations_enabled? %}
-  <div class="prod_option_block">
-    <h3>Product Personalizations</h3>
+{% if product.enable_product_personalization? and line_item.product_personalizations != empty %}
+<div class="prod_option_block">
+    <h3>Personalize Your Gift</h3>
     <div class="product-personalization">
-      {% for personalization in product.personalizations %}
-        <h4>{% include 'modifier' title: personalization.title, amount: personalization.amount %}</h4>
-        {% for input in personalization.inputs %}
-          <div class='form-item'>
-            <label for="input_{{ input.id }}">{{ input.label }}{% if input.required? %} *{% endif %}</label>
-            {% if input.text_area? %}
-              <textarea name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
-                        id="input_{{ input.id }}"
-                        data-type="product-personalization">{{ form.personalizations[personalization.id][input.id].value }}</textarea>
-            {% else %}
-              <input type="text" value="{{ form.personalizations[personalization.id][input.id].value }}"
-                     name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
-                     id="input_{{ input.id }}" class="input-text"
-                     data-type="product-personalization"/>
-            {% endif %}
-            {% if form.personalizations[personalization.id][input.id].errors %}
-              <span class="error" data-type="product-personalization-error">
-                {{ form.personalizations[personalization.id][input.id].errors | default_errors }}
-              </span>
-            {% endif %}
-          </div>
+        {% for form in line_item.product_personalizations %}
+        {% capture personalization_path %}product[{{ line_item_index }}]{% endcapture %}
+        {% render_product_personalization_form form, attributes_path: "product[]" %}
+        <h4>{{ form.title }}{% if form.amount > 0 %} ({% if form.amount > 0 %}+{% endif %}{{ form.amount | points_or_currency }}){% endif %}</h4>
+        {{ form.hidden_fields }}
+        {% for input in form.inputs %}
+        <div class='form-item'>
+            {{ input.hidden_fields }}
+            <label for='{{ input.label_for }}'>{{ input.label }}{% if input.required? %} *{% endif %}</label>
+            {% render_product_personalization_input input, {"data-id": "{{input.form_input_id}}", "data-type": "product-personalization"} %}
+        </div>
         {% endfor %}
-      {% endfor %}
+        {% endrender_product_personalization_form %}
+        {% endfor %}
     </div>
-  </div>
+</div>
 {% endif %}

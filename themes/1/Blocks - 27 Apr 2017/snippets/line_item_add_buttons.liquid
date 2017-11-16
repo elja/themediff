@@ -4,13 +4,13 @@
         <br/>
     {% endif %}
 
-    {% if shop.wishlist_enabled? %}
+    {% if wishlist_enabled %}
         <input type="submit" name="add_to_wishlist" value="Add to Wishlist" class="btn"/>
         <br/>
     {% endif %}
 
-    {% if shop.request_sample_enabled? %}
-        <input type="submit" data-url="{{ product | request_sample_url }}" id="request-sample" class="btn"
+    {% if request_sample_enabled %}
+        <input type="submit" data-url="{{ product.url }}/request_sample" id="request-sample" class="btn"
                value="Request Sample"/>
     {% endif %}
 </div>

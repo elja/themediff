@@ -40,9 +40,9 @@
       <span class="item-quantity">Quantity</span>
     </div>
 	  
-      {% for line_item in order.line_items %}
-    {% include 'line_item_fields', line_item: line_item %}
-  {% endfor %}
+    {% form_block 'f.fields_for', context_name: 'ff', object_name: 'line_items' %}
+    {% include 'line_item_fields' %}
+    {% endform_block %}
 
     <div class="zip-input">
       <!--

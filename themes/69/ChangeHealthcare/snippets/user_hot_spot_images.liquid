@@ -1,4 +1,4 @@
-{% if shop.custom_try_it_on_upload_enabled? or user_hot_spot_preview_images != empty %}
+{% if shop.custom_try_it_on_upload_enabled? or hot_spot_preview_images != empty %}
 <div class="content-block account-faces">
     <h2>
         Your Faces<span>click to delete a face</span>
@@ -8,7 +8,7 @@
         <a class="nav next"></a>
         <div class="images-scrollable">
             <div class="account-images images items">
-                {% for image in user_hot_spot_preview_images %}
+                {% for image in hot_spot_preview_images %}
                 <div class='user-hot-spot-image' id='{{ image | dom_id }}'>
                     <img src="{{ image.thumb_url}}" />
                     <a href='{{ image | delete_hot_spot_preview_image_url }}' class="delete-image" data-method='delete' data-remote ='true'></a>

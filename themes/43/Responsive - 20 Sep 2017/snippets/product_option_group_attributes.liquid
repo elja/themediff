@@ -1,8 +1,8 @@
 <div class="product-group">
     <h3>{{ group.name }}</h3>
     <div class="attributes">
-        {% for choice in choices %}
-            {% include 'product_option_attributes' option: choice.option, sub_option: choice.sub_option %}
+        {% for option in group.product_options %}
+            {% include 'product_option_attributes' option: option, line_item: line_item %}
         {% endfor %}
     </div>
 </div>

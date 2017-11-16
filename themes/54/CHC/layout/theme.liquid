@@ -29,7 +29,7 @@
   {{ 'jquery.treeview.js' | asset_url | script_tag }}
   {{ 'flowplayer.js' | asset_url | script_tag }}
   {{ 'scripts.js' | asset_url | script_tag }}
-  
+  {{ 'address_updater.js' | asset_url | script_tag }}
   {{ 'chosen.jquery.min.js' | asset_url | script_tag }}
   {{ 'lightbox.js' | asset_url | script_tag }}
   {{ 'product_body_clicker.js' | asset_url | script_tag }}
@@ -62,9 +62,9 @@
   {{ 'backbone/models/hot_spot.js' | asset_url | script_tag }}
   {{ 'backbone/models/hot_spot_preview_image.js' | asset_url | script_tag }}
 
-  
+  {{ 'reflective_view.js' | asset_url | script_tag }}
   {{ 'product_price_updater.js' | asset_url | script_tag }}
-  
+  {{ 'product_price_updater_callback.js' | asset_url | script_tag }}
 
 
   {{ 'jquery-file-uploader/jquery.ui.widget.js' | asset_url | script_tag }}
@@ -202,7 +202,7 @@
 						
          {% category_navigation full:true %} 
 						<script>$('#top-menu ul.level-0 ');</script>
-						{% if current_user and shop.wishlist_enabled? %}
+						{% if current_user and wishlist_enabled %}
                   <script>$('#top-menu ul.level-0 ').append("<li><a href='{{ wishlist_url }}' class='cart'><i class='fa fa-heart'></i> ( {{ wishlist.line_items.size }} items )</a></li>");</script>
                 {% endif %}
 
@@ -241,10 +241,10 @@
                 <!-- SEARCH FEATURE -->
                 {% if shop.catalog_enabled? and settings.search_on %}
                   <div id="search" class="search-wrapper">
-                    {% form 'search' %}
+                    {% form 'search', context_name: 'f', url: '/products' %}
                     <div class="search clrfix">
-                      <input type="text" name="s[keyword]" class="input-text clearHint" placeholder="Search"/>
-                      <input type="submit" value="" class="button">
+                      {% form_field 'f.text_field', 'keyword', { "class": "input-text clearHint", "placeholder": "Search", "value": "" }  %}
+                      {% form_field 'f.submit', '', { "class": "button" } %}
                     </div>
                     {% endform %}
                   </div>

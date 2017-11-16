@@ -11,10 +11,10 @@ shop.slack_integration_enabled?
 END
 
 REPLACE_OR_IGNORE
-{% form_block 'f.fields_for', context_name: 'ff', object_name: 'custom_field_values' %}
-    {% for field in f.liquid_object.custom_fields_for_account %}
-        {% include "custom_user_field", field: field %}
-    {% endfor %}
+{% form_block #{['"]}f.fields_for#{['"]}, context_name: #{['"]}ff#{['"]}, object_name: #{['"]}custom_field_values#{['"]} %}
+  {% for field in f.liquid_object.custom_fields_for_registration %}
+    {% include #{['"]}custom_user_field#{['"]}#{,?} field: field %}
+  {% endfor %}
 {% endform_block %}
 WITH
 {% for field in form.custom_user_fields %}

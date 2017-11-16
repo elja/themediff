@@ -26,11 +26,9 @@
 
                                     <label>{{ sub_option.name }}{% if amount and amount != 0 %} ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }}){% endif %}:</label>
 
-                                    <input type="text" class="quantity" data-type="quantity"
-       name="product[grid][{{ sub_option.id }}][quantity]"
-       value="{{ form.grid[sub_option.id].quantity | default: 0 }}">
-<span class="stock" id="stock_{{ sub_option.id }}"></span>
-</div>
+                                    <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                                    <span class="stock" data-index="{{ index }}"></span>
+                                </div>
                             {% endfor %}
                         </div>
                         {% elsif product.multiple_quantity_options.size == 2 %}
@@ -74,11 +72,9 @@
                                                 {% endif %}
 
                                                 <td>
-  <input type="text" class="quantity" data-type="quantity"
-         name="product[grid][{{ sub_x.id }}][{{ sub_y.id }}][quantity]"
-         value="{{ form.grid[sub_x.id][sub_y.id].quantity | default: 0 }}">
-  <span class="stock" id="stock_{{ sub_x.id }}_{{ sub_y.id }}"></span>
-</td>
+                                                    <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                                                    <span class="stock" data-index="{{ index }}"></span>
+                                                </td>
                                             {% endfor %}
                                         </tr>
                                     {% endfor %}
@@ -89,11 +85,11 @@
                         Not Implemented
                     {% endif %}
 
-                    {% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
-  <div class='minimum-order-quantity-help'>
-    {% include 'quantity_limits_message', product: product %}
-  </div>
-{% endif %}
+                    {% if product.quantity_limits_message %}
+                        <div class='minimum-order-quantity-help'>
+                            {{ product.quantity_limits_message }}
+                        </div>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>

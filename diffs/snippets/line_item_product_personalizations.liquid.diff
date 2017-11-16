@@ -6,7 +6,7 @@ WITH
 END
 
 REPLACE_BLOCK
-{% if product.enable_product_personalization? and line_items[0].product_personalizations != empty %}
+{% if product.enable_product_personalization?#{.*}%}
 ANY
 {% endif %}
 WITH

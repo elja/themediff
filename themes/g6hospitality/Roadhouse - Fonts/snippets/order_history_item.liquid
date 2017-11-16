@@ -92,18 +92,23 @@
                         </div>
                         {% endif %}
                     </div>
-                    {% if order.coupons != empty %}
+                    {% if order.has_promotional_adjustments? or order.has_balance_adjustments? %}
                     <div class="details-block-item">
                         <h6>Promotions</h6>
                         <table class="promotions">
-                            {% if order.coupons != empty %}
+                            {% if order.has_promotional_adjustments? %}
                             <tr>
                                 <th>Coupons:</th>
                                 <td>{{ order.promo_total | points_or_currency }}</td>
                             </tr>
                             {% endif %}
 
-                            
+                            {% if order.has_balance_adjustments? %}
+                            <tr>
+                                <th>Balance:</th>
+                                <td>{{ order.balance_total | points_or_currency }}</td>
+                            </tr>
+                            {% endif %}
                         </table>
                     </div>
                     {% endif %}
@@ -128,7 +133,7 @@
 
                             {% if order.has_custom_data_collections? %}
                             <tr>
-                                <th>{{ shop.custom_data_collections_name }} total</th>
+                                <th>{{ cart_options.custom_data_collections_name }} total</th>
                                 <td>{{ order.custom_data_collections_total | points_or_currency }}</td>
                             </tr>
                             {% endif %}

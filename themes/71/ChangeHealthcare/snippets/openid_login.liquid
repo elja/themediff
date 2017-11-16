@@ -6,14 +6,14 @@
             {% endfor %}
         {% else %}
             <p>or login with OpenID</p>
-            {% form 'openid_login' %}
+            <form id="openid_form" method='post' action="{{ openid_session_url }}">
                 <div class="form-item">
                     <label for="openid-url">OpenID URL</label>
                     <input class="input-text" id="openid-url" name="openid_url" type="text">
                 </div>
 
                 <input type="submit" class="btn custom_btn btn-green" value="Login"/>
-            {% endform %}
+            </form>
         {% endif %}
     </div>
 {% endif %}

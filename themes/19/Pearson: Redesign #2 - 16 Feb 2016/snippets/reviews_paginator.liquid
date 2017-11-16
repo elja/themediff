@@ -1,12 +1,12 @@
 <div class="reviews-paginator">
     <div class="next">
         {% if paginate.next %}
-            <div id="more" class="pagination-nav"><a href="{{ paginate.next.url }}" {% if paginate.ajax %}data-remote="true"{% endif %}>more reviews...</a></div>
+            <div id="more" class="pagination-nav"><a href="{{ paginate.next.url }}" {{ paginate.next.remote }}>more reviews...</a></div>
         {% endif %}
     </div>
     <div class="first">
         {% unless paginate.first_page %}
-            <div id="less" class="pagination-nav" ><a href="{{ paginate.first.url }}" {% if paginate.ajax %}data-remote="true"{% endif %}>less reviews...</a></div>
+            <div id="less" class="pagination-nav" ><a href="{{ paginate.first.url }}" {{ paginate.first.remote }}>less reviews...</a></div>
         {% endunless %}
     </div>
 </div>

@@ -9,7 +9,7 @@
             <label>Write a Review:</label>
 
         </div>
-        {% include 'product_review_form' %}
+        {% include 'product_review_form' review: new_review %}
     </div>
     {% endif %}
     <div class="product-reviews">
@@ -23,7 +23,8 @@
         </div>
         <div class="horizontal-separator">
         </div>
-        {% paginate product.reviews by 5, ajax: true %}
+        {% capture reviews_path %}{{product.url}}/reviews{% endcapture %}
+        {% paginate product.approved_reviews by 5 remote: true, path: reviews_path %}
         {% for review in paginate.collection %}
         {% include 'product_review' review: review %}
         {% endfor %}

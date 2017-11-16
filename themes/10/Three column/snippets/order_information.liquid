@@ -138,7 +138,7 @@
                     <td colspan="2">
                         <p>
                             <strong>
-                                {% if shop.custom_data_collections_name %}{{ shop.custom_data_collections_name }}:{% endif %}
+                                {% if cart_options.custom_data_collections_name %}{{ cart_options.custom_data_collections_name }}:{% endif %}
                             </strong>
                         </p>
 
@@ -221,14 +221,13 @@
 							<span class="sub-option-name">SKU#</span> <span class="sub-option-value">{{ line_item.final_sku }}</span>
                         </p>
 						
-                        {% for choice in line_item.choices %}
-  {% if choice.sub_option %}
-    <p class="sub-option">
-      <span class="sub-option-name">{{ choice.option.friendly_name }}{% if choice.has_group? %} ({{ choice.group.name }}) {% endif %}:</span>
-      <span class="sub-option-value">{% include 'modifier', title: choice.sub_option.name, modifier: choice.amount %}</span>
-    </p>
-  {% endif %}
-{% endfor %}
+                        {% for sub_option in line_item.product_sub_options %}
+                        <p class="sub-option">
+                            <span class="sub-option-name">{{ sub_option.product_option.friendly_name }}{% if sub_option.product_option.in_group? %} ({{ sub_option.product_option.group_name }}) {% endif %}:</span>
+                            <span class="sub-option-value">{{ sub_option.name }} {% if sub_option.amount > 0 %}<b>({{
+                                sub_option.amount | points_or_currency }})</b>{% endif %}</span>
+                        </p>
+                        {% endfor %}
 						
                         {% if line_item.logo %}
                         <p class="sub-option logo">
@@ -344,7 +343,7 @@
 					</td>
 				</tr>
 				
-				{% if order.promo_total > 0 or true %}
+				{% if order.promo_total < 0 or true %}
 				<tr class="calculation-item">
 					<td class="title" colspan=3>
 						<p>Coupon Savings:</p>
