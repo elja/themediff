@@ -1,0 +1,324 @@
+{% capture checkout_page_content %}
+<div class="checkout-main">
+{% form 'checkout', context_name: 'f', for: 'order' %}
+
+
+{% assign custom_data_state_passed = order.state | state_passed: 'custom_data_collection' %}
+{% if order.has_custom_data_collections? %}
+<div class="content-item custom-data-collection">
+    <h2>
+        {{ cart_options.custom_data_collections_name }}
+    </h2>
+
+    {% if custom_data_state_passed %}
+		<div class="edit-checkout-container btn_2">
+			<a href="/checkout/custom_data_collection" class="edit-custom-data-collection"><i class="fa fa-pencil-square-o"></i> edit</a>
+		</div>
+    {% endif %}
+
+    <div class="checkout-cols clrfix">
+        {% if order.state == 'custom_data_collection' %}
+			{% for form in order.custom_data_collections %}
+			<div class='custom-data-collection'>
+				{% render_custom_data_collection_form form %}
+				<h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}</h4>
+				{{ form.hidden_fields }}
+				<div class='form-item'>
+					{% for input in form.inputs %}
+					{{ input.hidden_fields }}
+					<label for='{{ input.label_for }}'>{{ input.label }}{% if input.required? %} *{% endif %}</label>
+					{% render_custom_data_collection_input input %}
+					{% endfor %}
+				</div>
+				{% endrender_custom_data_collection_form %}
+			</div>
+			{% endfor %}
+
+		<div style="clear: left">
+			<input type="submit" value="Continue" class="btn button green-button"/>
+		</div>
+
+        {% else %}
+        	{% include 'custom_data_attributes' order: order %}
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="content-item shipping">
+    <h2>
+        Shipping
+    </h2>
+
+	{% assign address_step_passed = order.state | state_passed: 'address' %}
+    {% if custom_data_state_passed %}
+		{% if address_step_passed %}
+			<div class="edit-checkout-container btn_2">
+				<a href="/checkout/address" class="edit-shipping"><i class="fa fa-pencil-square-o"></i> edit</a>
+			</div>
+		{% endif %}
+
+    	<div class="checkout-cols clrfix">
+        <div class="contact">
+            <h4>
+                Shipping contact
+            </h4>
+            {% if order.state == 'address' %}
+				{% form_block 'f.fields_for', context_name: 'ff', object_name: 'shipping_contact' %}
+					{% include 'contact_fields' %}
+				{% endform_block %}
+            {% elsif address_step_passed %}
+	            {% include 'contact_preview', contact: order.shipping_contact %}
+            {% endif %}
+        </div>
+        <div class="address">
+            <h4>
+                Shipping address
+            </h4>
+            {% if order.state == 'address' %}
+				{% include 'shipping_addresses_drop_down' %}
+				{% form_block 'f.association', context_name: 'ff', object_name: 'shipping_address' %}
+					{% include 'address_fields' %}
+				{% endform_block %}
+            {% elsif address_step_passed %}
+            	{% include 'address_preview', address: order.shipping_address %}
+            {% endif %}
+
+            {% if order.state == 'address' %}
+				{% if current_user %}
+					<label class="form-checkbox"><input type="checkbox" name="website_order[save_to_shipping_address]" {% if order.save_to_shipping_address %}checked{% endif %}/>save my address information</label>
+				{% endif %}
+
+				<input type="submit" value="Next Step" class="btn custom_btn custom-button check_btn btn-white"/>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="content-item shipping">
+    <h2>
+        Shipping Method
+    </h2>
+	{% assign delivery_state_passed = order.state | state_passed: 'delivery' %}
+    {% if address_step_passed %}
+        {% if delivery_state_passed %}
+            <div class="edit-checkout-container btn_2">
+                <a href="/checkout/delivery" class="edit-shipping"><i class="fa fa-pencil-square-o"></i>edit </a>
+            </div>
+        {% endif %}
+
+        <div class="checkout-cols clrfix">
+            <div class="method {% if order.state == 'delivery' %}ready-to-select{%endif%}">
+                <h4>
+                    Shipping method
+                </h4>
+                {% if order.state == 'delivery' %}
+                <div class="form-radio">
+                    {% for shipment in shipments %}
+                        <label class="{% unless shipment.available %}unavailable{% endunless %}">
+                            <input type="radio" name="shipping_method" value="{{ shipment.shipment_id }}"/>
+                            {{ shipment.name | truncate: 25 }} ({{ shipment.price | points_or_currency }})
+                        </label>
+                    {% endfor %}
+
+                    {% for error in shipment_errors %}
+                        <p class="shipment-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+				{% elsif delivery_state_passed %}
+					<div>
+						<p class="truncated">
+							{{ order.shipment.shipment_friendly_name }}
+						</p>
+					</div>
+                {% endif %}
+
+                {% if order.state == 'delivery' %}
+                	<input type="submit" value="Continue" class="btn button green-button"/>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="content-item payment">
+    <h2>
+        Payment
+    </h2>
+    {% if delivery_state_passed %}
+		{% assign payment_state_passed = order.state | state_passed: 'payment' %}
+		{% if payment_state_passed %}
+			<div class="edit-checkout-container btn_2">
+				<a href="/checkout/payment" class="edit-payment"><i class="fa fa-pencil-square-o"></i> edit</a>
+			</div>
+		{% endif %}
+
+    	<div class="checkout-cols clrfix">
+        {% if order.billing_contact and order.billing_contact.name.length != 0 %}
+			<div class="contact">
+				<h4>
+					Billing contact
+				</h4>
+				{% if order.state == 'payment' %}
+					<label class="form-checkbox">
+						{% form_field 'f.check_box', 'use_same_as_shipping_contact', { "id": "same-as-shipping-contact" } %}
+						<label for="same-as-shipping-contact">same as shipping contact</label>
+					</label>
+
+					{% form_block 'f.fields_for', context_name: 'ff', object_name: 'billing_contact' %}
+						{% include 'contact_fields' %}
+					{% endform_block %}
+				{% elsif payment_state_passed %}
+					{% include 'contact_preview', contact: order.billing_contact %}
+				{% endif %}
+			</div>
+        {% endif %}
+
+        {% if order.billing_address and order.billing_address.first_address.length != 0 %}
+			<div class="address">
+				<h4>
+					Billing address
+				</h4>
+				{% if order.state == 'payment' %}
+					<label class="form-checkbox">
+						{% form_field 'f.check_box', 'use_same_as_shipping_address', { "id": "same-as-shipping-address" } %}
+						<label for="same-as-shipping-address">same as shipping address</label>
+					</label>
+
+					{% include 'billing_addresses_drop_down' %}
+
+					{% form_block 'f.fields_for', context_name: 'ff', object_name: 'billing_address' %}
+						{% include 'address_fields' %}
+					{% endform_block %}
+
+					{% if current_user %}
+						<label class="form-checkbox"><input type="checkbox" name="website_order[save_to_billing_address]" {% if order.save_to_billing_address %}checked{% endif %}/>save my address information</label>
+					{% endif %}
+				{% elsif payment_state_passed %}
+					{% include 'address_preview', address: order.billing_address %}
+				{% endif %}
+			</div>
+		{% endif %}
+
+        <div class="method">
+            {% if order.state == 'payment' %}
+				<h4>
+					Billing method
+				</h4>
+				<div class="form-radio">
+					{% for payment_method in shop.available_payment_methods %}
+						{% render_payment_method_checkbox payment_method %}
+					{% endfor %}
+				</div>
+
+				{% for payment_method in shop.available_payment_methods %}
+					{% render_payment_method_template payment_method %}
+				{% endfor %}
+
+				<div class="form-item promotions">
+					{% form_field 'f.label', 'coupon_code' %}
+					{% form_field 'f.text_field', 'coupon_code', { "class": "input-text promo-code clearHint", "placeholder": "promotional code" } %}
+					{% form_field 'f.submit', 'Apply', { "name": "apply_coupon_code", "class": "btn-apply button" } %}
+					{% form_field 'f.submit', '', { "id": "update_coupon_code", "name": "update_coupon_code", "style": "display: none;" } %}
+					{% form_block 'f.fields_for', context_name: 'ff', object_name: 'promotion_adjustments' %}
+					{% form_field 'ff.link_to_remove', '', { "class": "remove-promotion" } %}
+					<span title="{{ ff.object.note }}" class="coupon-note">{{ ff.object.note }}</span>
+					({{ ff.object.amount | points_or_currency }})
+					{% endform_block %}
+				</div>
+				{% if current_user %}
+					<div class="form-item">
+						{% form_field 'f.label', 'gift_certificate' %}
+						{% form_field 'f.text_field', 'gift_certificate', { "class": "input-text gift-certificate clearHint", "placeholder": "gift certificate" } %}
+						{% form_field 'f.submit', 'Apply', { "name": "apply_gift_certificate", "class": "btn-apply button" } %}
+					</div>
+					<!--<p class="balance-info">
+						You have
+						<span style="color: red;">{{ current_user.balance | points_or_currency }}</span>
+						in your balance
+					</p>
+					<label class="form-checkbox" for='website_order_use_balance'>{% form_field 'f.check_box', 'use_balance' %}use my account balance</label>-->
+				{% endif %}
+
+				<input type="submit" value="Continue" class="btn button green-button"/>
+            {% elsif payment_state_passed %}
+				<h4>
+					Billing method
+				</h4>
+
+				{% render_payment_template order.payments %}
+				{% render_adjustments_template %}
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if order.budget_order? and current_user.has_budgets? %}
+<div class="content-item shipping">
+    <h2>
+        Cost Codes
+    </h2>
+
+	{% assign budget_state_passed = order.state | state_passed: 'budget' %}
+    {% if budget_state_passed %}
+		<div class="edit-checkout-container btn_2">
+		  <a href="/checkout/budget" class="edit-budget"><i class="fa fa-pencil-square-o"></i>edit </a>
+		</div>
+    {% endif %}
+
+    {% if order.state == 'budget' %}
+    <div class="checkout-cols clrfix">
+	  <div>
+		  <h4>Code Selection</h4>
+
+		  <div class="form-radio">
+			{% if current_user.budget_optional? %}
+			<label>
+			  <input type="radio" name="website_order[budget_id]" value="" {% if order.budget_id == blank %} checked="checked" {% endif %}/>
+			  No Budget
+			</label>
+			{% endif %}
+
+			{% for budget in current_user.budgets %}
+			<label {% if budget.allow_negative? == false and order.grand_total > budget.balance %} class="low-budget" {% endif %}>
+			  <input type="radio"
+					 name="website_order[budget_id]"
+					 value="{{ budget.id }}"
+					 {% if budget.allow_negative? == false and order.grand_total > budget.balance %} disabled="disabled" {% endif %}
+					 {% if order.budget_id == budget.id %} checked="checked" {% endif %}
+			  />
+			  {{ budget.name }}<!-- ({{ budget.balance | points_or_currency }})-->
+			</label>
+			{% endfor %}
+		  </div>
+	  </div>
+    </div>
+    <input type="submit" value="Continue" class="btn button green-button"/>
+	{% elsif budget_state_passed %}
+		<div>
+	        <p class="truncated">
+				{% if order.budget %}
+					{{ order.budget.name }} ({{ order.budget.code }})
+				{% else %}
+					No Budget
+				{% endif %}
+            </p>
+        </div>
+	{% endif %}
+</div>
+{% endif %}
+
+{% endform %}
+</div>
+{% endcapture %}
+{% include 'checkout_page' with checkout_page_content, order: order %}
+<script>
+    $(function () {
+                var checkoutController = new CheckoutController('{{ order.state }}', {{ order.shipping_contact.json_attributes }}, {{ order.shipping_address.json_attributes }});
+                $('div.checkout-main').data('checkoutController', checkoutController);
+            }
+    );
+</script>

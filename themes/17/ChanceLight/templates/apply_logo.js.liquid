@@ -1,0 +1,9 @@
+$(function(){
+  var dialog = $(".view-logos");
+  var imageContainer = dialog.find(".logo-preview-area");
+  imageContainer.find(".image-wrapper img").attr("src",
+    {% if image_src %}"{{ (image_src | escape_javascript) }}"{% else %}"{{ product_image.view_logo_preview_url | escape_javascript}}"{% endif %}
+  ).on('load', function() {
+    imageContainer.hideLoading();
+  });
+});

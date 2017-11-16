@@ -1,0 +1,184 @@
+<div class="slippry_wrapper">
+<div class="column">
+	<div class="col_1">
+		{{ 'col_bg.jpg' | asset_url |img_tag | link_to: settings.text-box-image-link }}
+		<!--<div class="column_text">
+			
+	Find Pearson branded merchandise for your next event.
+			<a href="/products?s%5Bf%5D%5Bc%5D%5B%5D=%2FAll+Products"><button>View Products</button></a>
+		</div>-->
+	
+	</div>
+	<div class="col_2">
+    <ol id="slippry_slideshow">
+        {% if settings.show_carousel_item_1 %}
+        <li>
+            {% if settings.carousel_item_1_link != empty %}
+            {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt | link_to: settings.carousel_item_1_link }}
+            {% else %}
+            {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_1_header }}</h1>
+                <br><h2>{{ settings.slide_1_caption }}</h2>
+                <br><a href="{{ settings.slide_1_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+        {% if settings.show_carousel_item_2 %}
+        <li>
+            {% if settings.carousel_item_2_link != empty %}
+            {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt | link_to: settings.carousel_item_2_link }}
+            {% else %}
+            {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_2_header }}</h1>
+                <br><h2>{{ settings.slide_2_caption }}</h2>
+                <br><a href="{{ settings.slide_2_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+
+        </li>
+        {% endif %}
+        {% if settings.show_carousel_item_3 %}
+        <li>
+            {% if settings.carousel_item_3_link != empty %}
+            {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt | link_to: settings.carousel_item_3_link }}
+            {% else %}
+            {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_3_header }}</h1>
+                <br><h2>{{ settings.slide_3_caption }}</h2>
+                <br><a href="{{ settings.slide_3_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+		{% if settings.show_carousel_item_4 %}
+        <li>
+            {% if settings.carousel_item_4_link != empty %}
+            {{ 'carousel-item-04.jpg' | asset_url | img_tag: settings.carousel_item_4_alt | link_to: settings.carousel_item_4_link }}
+            {% else %}
+            {{ 'carousel-item-04.jpg' | asset_url | img_tag: settings.carousel_item_4_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+               <!-- <h1>{{ settings.slide_4_header }}</h1>
+                <br><h2>{{ settings.slide_4_caption }}</h2>-->
+                <br><a href="{{ settings.slide_4_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+		{% if settings.show_carousel_item_5 %}
+        <li>
+            {% if settings.carousel_item_5_link != empty %}
+            {{ 'carousel-item-05.jpg' | asset_url | img_tag: settings.carousel_item_5_alt | link_to: settings.carousel_item_5_link }}
+            {% else %}
+            {{ 'carousel-item-05.jpg' | asset_url | img_tag: settings.carousel_item_5_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_5_header }}</h1>
+                <br><h2>{{ settings.slide_5_caption }}</h2>
+                <br><a href="{{ settings.slide_5_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+		{% if settings.show_carousel_item_6 %}
+        <li>
+            {% if settings.carousel_item_6_link != empty %}
+            {{ 'carousel-item-06.jpg' | asset_url | img_tag: settings.carousel_item_6_alt | link_to: settings.carousel_item_6_link }}
+            {% else %}
+            {{ 'carousel-item-06.jpg' | asset_url | img_tag: settings.carousel_item_6_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_6_header }}</h1>
+                <br><h2>{{ settings.slide_6_caption }}</h2>
+                <br><a href="{{ settings.slide_6_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+    </ol>
+	</div>
+	</div>
+    <div class="slideshow_boxes clrfix">
+        {% if settings.show_carousel_item_1 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_1_header }}</h1>
+            <p>{{ settings.slide_1_paragraph }}</p>
+            <a href="{{ settings.slide_1_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+
+        {% if settings.show_carousel_item_2 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_2_header }}</h1>
+            <p>{{ settings.slide_2_paragraph }}</p>
+            <a href="{{ settings.slide_2_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+
+        {% if settings.show_carousel_item_3 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_3_header }}</h1>
+            <p>{{ settings.slide_3_paragraph }}</p>
+            <a href="{{ settings.slide_3_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<div class="row clrfix">
+    <div class="col col_3">
+        <div class="inner">
+            <a href="">
+                {% if settings.homepage_box_top_link != empty %}
+                    {{ 'BOX_LEFT.jpg' | asset_url | img_tag | link_to: settings.homepage_box_top_link }}
+                    {% else %}
+                    {{ 'BOX_LEFT.jpg' | asset_url | img_tag }}
+                {%endif%}
+            </a>
+        </div>
+    </div>
+
+    <div class="col col_3 margin">
+        <div class="inner">
+            <a href="">
+                {% if settings.homepage_box_bottom_link != empty %}
+                    {{ 'BOX_MIDDLE.jpg' | asset_url | img_tag | link_to: settings.homepage_box_middle_link }}
+                    {% else %}
+                    {{ 'BOX_MIDDLE.jpg' | asset_url | img_tag }}
+                {%endif%}
+            </a>
+        </div>
+    </div>
+
+    <div class="col col_3">
+        <div class="inner">
+            <a href="">
+                {% if settings.homepage_box_bottom_link != empty %}
+                    {{ 'BOX_RIGHT.jpg' | asset_url | img_tag | link_to: settings.homepage_box_bottom_link }}
+                    {% else %}
+                    {{ 'BOX_RIGHT.jpg' | asset_url | img_tag }}
+                {%endif%}
+            </a>
+        </div>
+    </div>
+</div>

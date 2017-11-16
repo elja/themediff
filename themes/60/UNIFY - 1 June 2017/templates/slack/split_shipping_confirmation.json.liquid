@@ -1,0 +1,76 @@
+{
+    "mrkdwn": true,
+    "text": "*Order #{{ order.order_id }} Shipped* \n Your order from {{ store.name | escape_json }} has been shipped, click <{{ login_url }}|here> to login and review your order.",
+    "attachments": [
+        {
+            "fallback": "",
+            "color": "#354149",
+            "title": "Shipping Information",
+            "fields": [
+                {
+                    "title": "Item Name",
+                    "value": "{{ line_item.name | escape_json }}",
+                    "short": false
+                },
+                {% capture item_description %}
+                    SKU# {{ line_item.final_sku | escape_json }}\n
+                    {% for sub_option in line_item.product_sub_options %}
+                        {{ sub_option.product_option.friendly_name | escape_json }}{% if sub_option.product_option.in_group? %} ({{ sub_option.product_option.group_name | escape_json }}) {% endif %}:
+                        {{ sub_option.name | escape_json }} {% if sub_option.amount > 0 %}({{sub_option.amount | points_or_currency }}){% endif %}
+                        \n
+                    {% endfor %}
+                    {% if line_item.logo %}
+                        Logo: {{ line_item.logo.name | escape_json }}\n
+                    {% endif %}
+                    {% if line_item.setup_charge and line_item.setup_charge > 0 %}
+                        Setup Charge: {{ line_item.setup_charge | points_or_currency }}\n
+                    {% endif %}
+                    {% for product_personalization in line_item.product_personalizations %}
+                      {{ product_personalization.title | escape_json }} ({{ product_personalization.amount | points_or_currency }})\n
+                      {% for attribute in product_personalization.product_personalization_attributes %}
+                      {{ attribute.key | escape_json }}:
+                      {% if attribute.value != empty %}
+                        {{ attribute.value | join: ', ' | escape_json }}
+                      {% else %}
+                          &lt;not specified&gt;
+                      {% endif %}
+                      \n
+                      {% endfor %}
+                    {% endfor %}
+                {% endcapture %}
+                {
+                    "title": "Description",
+                    "value": "{{ item_description | strip_newlines }}",
+                    "short": true
+                },
+                {
+                    "title": "Quantity",
+                    "value": "{{ split_item.quantity }}",
+                    "short": true
+                },
+                {
+                    "title": "Ship Date",
+                    "value": "{{ split_item.ship_date }}",
+                    "short": true
+                },
+                {
+                    "title": "Shipping Method",
+                    "value": "{{ split_item.shipment_friendly_name | escape_json }}",
+                    "short": true
+                },
+                {% if split_item.tracking_number != empty %}
+                    {
+                        "title": "Tracking Number",
+                        "value": "{{ split_item.tracking_number | escape_json }}",
+                        "short": true
+                    },
+                {% endif %}
+                {
+                    "title": "Shipping State",
+                    "value": "{{ split_item.state | escape_json }}",
+                    "short": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+<script type="text/javascript">
+  $(function () {
+    
+
+    // dirty hack for update custom select
+    $('.line-items-reflective-view, .total-info').find('select').trigger('change');
+
+    var priceUpdaterOptions = {
+      url: '{{ product | product_url }}' + '/calculate_prices',
+      //success: updateProductPrice,
+      error: function () {
+        console.log('error');
+      },
+      triggersContainerSelector: '.line-items-reflective-view, .total-info',
+      submitDelay: 100
+    };
+    var priceUpdater = new ProductPriceUpdater.UpdateHandler(priceUpdaterOptions);
+    priceUpdater.triggerUpdate();
+
+    $('table.product-summary input.amount, table.product-quantity input.amount, .product-options .multiple-quantity-product-option input.quantity').spinner({
+      min: 0,
+      stop: function () {
+        $(this).change();
+      }
+    });
+  });
+
+  (function () {
+    var po = document.createElement('script');
+    po.type = 'text/javascript';
+    po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(po, s);
+  })();
+
+  (function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  $(function () {
+    setup_carousels('.featured-products .product .image-carousel');
+    bind_product_body_clicker('.featured-products', '.product');
+
+    bindProductImagePreview();
+    bindProductLogosPreview({{ product.id }});
+  });
+</script>

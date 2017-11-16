@@ -1,0 +1,15 @@
+/*--------------------*/
+/* NAVIGATION */
+/*--------------------*/
+@media(min-width: 661px){
+	#header .top-area > .right {
+	    width: calc(100% - 300px);
+	    margin-top: 23px;
+	}
+
+	#top-menu > ul.level-0{
+		display: inline;
+	}
+}
+
+

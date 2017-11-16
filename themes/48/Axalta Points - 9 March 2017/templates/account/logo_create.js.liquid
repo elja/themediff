@@ -1,0 +1,19 @@
+{% capture logo_form %}
+{% include "logo_form" %}
+{% endcapture %}
+
+{% capture logo_html %}
+{% include "logo", logo: logo %}
+{% endcapture %}
+
+(function () {
+    var dialogForm = $("{{ logo_form | escape_javascript }}");
+    var controller = $('div.logos-container').data('controller');
+    var isValid = {{ logo.valid? }};
+var logoJson, logoHtml;
+{% if logo.valid? %}
+logoJson =  {{ logo | json }};
+logoHtml = "{{ logo_html | escape_javascript }}";
+{% endif %}
+controller.onCreateAction(isValid, dialogForm, logoJson, logoHtml);
+}).call(this);

@@ -1,0 +1,29 @@
+<div class="add-to-cart-area">
+	
+	{% if product.sku contains "NOD" %}
+		<a href="mailto:jennifer.feigenbaum@epromos.com" class="btn" style="display: block; color: #7a6f7a;">Contact Jennifer Feigenbaum</a>
+	{% if shop.store_enabled? %}
+	<div style="visibility: hidden;">
+			<input  type="submit" name="add_to_cart"  value="Add to Cart" disabled class="btn"/>
+			<br>
+	</div>
+		{% endif %}
+		<style>
+			.product-quantity{
+				display: none;	
+			}
+		</style>
+	
+	
+
+	{% else %}
+		{% if shop.store_enabled? %}
+			<input type="submit" name="add_to_cart" value="Add to Cart" class="btn"/>
+			<br>
+		{% endif %}
+
+		{% if wishlist_enabled %}
+			<input type="submit" name="add_to_wishlist" value="Add to Wishlist" class="btn"/>
+		{% endif %}
+	{% endif %}
+</div>

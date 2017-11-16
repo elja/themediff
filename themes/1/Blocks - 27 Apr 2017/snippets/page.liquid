@@ -1,0 +1,34 @@
+<div id="content" class="content-page">
+    <div class="content-main clrfix">
+        {% if shop.catalog_enabled? %}
+            {% include 'page_with_active_ecommerce' with page.content %}
+        {% else %}
+		    {% if settings.show_content_box != false %}
+            <div class="col_4 col">
+            	<!-- BOX 1 -->
+            	<div class="box">
+                	{{ settings.box_1_content }}
+            	</div>
+
+            	<!-- BOX 2 -->
+            	<div class="box">
+                	{{ settings.box_2_content }}
+            	</div>
+            </div>
+
+       		<div class="col col_8">
+            	{{ page.content }}
+        	</div>
+		    {% else %}
+		        {{ page.content }}
+		    {% endif %}
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(function () {
+                setup_carousels('.featured-products .product .image-carousel');
+                bind_product_body_clicker('.featured-products', '.product');
+            }
+    );
+</script>

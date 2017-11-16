@@ -1,0 +1,18 @@
+{% capture input_name %}website_user[custom_field_values][{{field.id}}]{% endcapture %}
+{% capture input_id %}website_user_custom_field_values_{{field.id}}{% endcapture %}
+{% if field.required? %}
+  {% assign required_class = 'required' %}
+{% else %}
+  {% assign required_class = 'optional' %}
+{% endif %}
+
+<div class="input string {{ required_class }}">
+<label class="string {{ required_class }} control-label" for="{{ input_id }}">
+  {% if field.required? %}<abbr title="required">*</abbr>{% endif %}
+  {{ field.name }}
+</label>
+<input class="string {{ required_class }}" id="{{ input_id }}" name="{{ input_name }}" value="{{ field.value }}" size="50" type="text">
+{% if field.errors and field.errors contains 'value' %}
+  <span class="error">{{ field.errors['value'] }}</span>
+{% endif %}
+</div>

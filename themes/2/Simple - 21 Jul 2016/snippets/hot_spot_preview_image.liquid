@@ -1,0 +1,6 @@
+<div class="image-wrapper right-arrow item {% if image.custom? %} user-preview-image {% endif %}" data-image='{{ image.front_url | escape_javascript }}' id='{{ image | dom_id }}' data-id="{{ image.id }}">
+    <img src="{{ image.thumb_url | escape_javascript }}" />
+    {% if image.deletable? %}
+    <a href='{{ image | delete_hot_spot_preview_image_url }}' class="delete-image" data-method='delete' data-remote ='true'></a>
+    {% endif %}
+</div>

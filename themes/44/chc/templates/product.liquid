@@ -1,0 +1,80 @@
+<div class="product-page clrfix">
+  {% if settings.show_breadcrumbs %}
+    {% include 'breadcrumbs_section' %}
+  {% endif %}
+
+  <div class="product-page-main">
+    {% include 'product_header' %}
+    <div class="product-wrapper clrfix">
+      <div class="product-left-section clrfix">
+        <div class="product-info clrfix">
+          <div class="product-gallery">
+            <div class="gallery-main">
+              <div class="main-img" data-id="{{ product.primary_image.id }}">
+                {% try_it_on product %}
+                {% view_logos product %}
+
+                {% include 'product_primary_image' %}
+              </div>
+              {% include 'product_images_gallery' %}
+            </div>
+            <!--{% include 'social_share' %}-->
+          </div>
+        </div>
+
+        <div class="product-additional-info clrfix">
+          {% include 'product_reviews' %}
+        </div>
+      </div>
+
+      <div class="product-right-section clrfix">
+        <div class="product-info clrfix">
+          {% assign line_item = line_items.first %}
+
+          <div class="line-items-reflective-view">
+            {% include 'line_item_logos' %}
+            {% include 'line_item_product_options' %}
+            {% include 'line_item_product_personalizations' %}
+          </div>
+
+          {% form 'populate_product', context_name: 'f' %}
+          {% include 'line_item_hidden_fields' %}
+
+          <div class="total-info clrfix">
+            {% include 'line_item_add_buttons' %}
+
+            {% unless product.has_multiple_quantity_option? %}
+              {% include 'stock_message', line_item: line_items.first %}
+              <table class="product-quantity">
+                <tfoot>
+                <tr>
+                  <th colspan='2'>Quantity</th>
+                  <td id="quantity">
+                    <input type="text" data-id data-type="quantity" class="amount" value="{{ line_item.quantity }}">
+                  </td>
+                </tr>
+                </tfoot>
+              </table>
+            {% endunless %}
+
+            {% include 'product_summary', product: product, line_items: line_items %}
+          </div>
+          {% endform %}
+        </div>
+
+        <div class="product-additional-info clrfix">
+          {% include 'product_info_tabs' %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'product_recently_viewed_products' %}
+</div>
+
+{% include 'product_related_products' %}
+
+<div id="fb-root">
+</div>
+
+{% include 'product_javascript' %}

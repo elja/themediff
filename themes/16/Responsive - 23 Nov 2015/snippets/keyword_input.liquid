@@ -1,0 +1,15 @@
+{% form 'search', products_search %}
+<div class="keyword clrfix">
+    <input type="text" name="s[keyword]" placeholder="search within"/>
+</div>
+{% endform %}
+
+<script>
+    $(function () {
+        $('.keyword input').on('keypress', function (event) {
+            if (event.keyCode == 13) {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+</script>

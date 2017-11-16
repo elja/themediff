@@ -1,0 +1,22 @@
+<div id="content" class="content-page two-col">
+  <h1>{{ section_title }}</h1>
+  <div class="content-main clrfix">
+   <div class="account-nav-menu">
+    <ul>
+      <li class="{% if template_name == 'account_dashboard' %}selected{% endif %}"><a href="{{ account_dashboard_url }}">Dashboard</a></li>
+      {% if shop.store_enabled? %}<li class="{% if template_name == 'order_history' %}selected{% endif %}"><a href="{{ order_history_url }}">Order history</a></li>{% endif %}
+      <li class="{% if template_name == 'account_edit' %}selected{% endif %}"><a href="{{ edit_account_url }}">Account settings</a></li>
+      {% if shop.store_enabled? %}<li class="{% if template_name == 'address_book' %}selected{% endif %}"><a href="{{ address_book_url }}">Address book</a></li>{% endif %}
+     <!-- {% if shop.store_enabled? %}<li class="{% if template_name == 'account_balance' %}selected{% endif %}"><a href="{{ account_balance_url }}">{% if shop.points_store? %}Points{% else %}Account{% endif %} balance</a></li>{% endif %}-->
+      {% if shop.catalog_enabled? and shop.custom_logos_upload_enabled? or current_user.logos.size != 0 %}<li class="{% if template_name == 'account_logos' %}selected{% endif %}"><a href="{{  logos_url }}">Logos</a></li>{% endif %}
+      {% if shop.budget_enabled? and current_user.has_budgets? %}<li class="{% if template_name == 'budget_info' %}selected{% endif %}"><a href="{{ budget_info_url }}">Budget information</a></li>{% endif %}
+    </ul>
+  </div>
+  <div class="main" id="account-main">
+    <div class="content-area">
+      <!--<img src="img/dd2ha.jpg" />-->
+      {{ account_page }}
+    </div>
+  </div>
+</div>
+</div>

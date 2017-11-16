@@ -1,0 +1,8 @@
+{% capture product_summary_html %}{% include "product_summary" %}{% endcapture %}
+
+$('.product-summary').replaceWith('{{ product_summary_html | escape_javascript }}');
+
+{% for line_item in line_items %}
+	{% capture stock_message_html %}{% include "stock_message", line_item: line_item, index: forloop.index0 %}{% endcapture %}
+  $('span.stock[data-index="{{forloop.index0}}"]').replaceWith('{{ stock_message_html | escape_javascript }}');
+{% endfor %}

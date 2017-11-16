@@ -1,0 +1,127 @@
+{% if shop.artifi_enabled? and product.artifi_enabled? %}
+	<style>
+		.ui-dialog {
+			position: absolute;
+		}
+
+		#artifi-customize {
+			padding: 7px;
+			text-transform: uppercase;
+			font-size: 14px;
+			width: 140px;
+			font-weight: normal;
+		}
+	</style>
+
+	<div class="prod_option_block">
+		<h3>Product Personalizations</h3>
+		<div class="product-personalization">
+			<input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
+		</div>
+	</div>
+
+	<div class="artifi-dialog"><div id="artifi-container"></div></div>
+
+	<script>
+      $(function() {
+        var $artifiDialog = $('.artifi-dialog');
+
+        var receiveArtifiMessage = function(event) {
+          var origin = event.origin || event.originalEvent.origin;
+          if (!Artifi.isValidArtifiDomain(origin)) return;
+
+          var origEvent = event.originalEvent;
+          var eventObj = JSON.parse(origEvent.data);
+          var action = eventObj.action;
+
+          switch (action) {
+            case Artifi.Constant.addToCart: {
+              var data = eventObj.data;
+
+              $.each(data.attributes, function(i, hash) {
+                $.each(hash, function(key, value) {
+                  var $option = $('select[data-type=product-option]').filter('[data-name="' + key + '"]');
+                  $option.find('option[data-name="' + value + '"]').attr('selected', 'selected');
+                  $option.trigger('change');
+                });
+              });
+
+              changePrimaryImage(data.savedDesignStandardImages[0]);
+
+              $('input.artifi-data').val(JSON.stringify(data));
+              $artifiDialog.dialog('close');
+            }
+          };
+        };
+
+        $('#artifi-customize').on('click', function(event) {
+          event.preventDefault();
+
+          if ($artifiDialog.hasClass('ui-dialog-content')) {
+            return $artifiDialog.dialog('open');
+          }
+
+          $artifiDialog.dialog({
+            dialogClass: 'front-dialog',
+            modal: true,
+            draggable: false,
+            resizable: false,
+            appendTo: '#wrapper',
+            width: 1000,
+            height: 800,
+            zIndex: 4500,
+            create: function(event, ui) {
+              $(window).on('message', receiveArtifiMessage);
+
+              var artifiVars = {
+                productCode: "{{ product.artifi_product_code }}",
+                websiteId: "{{ shop.artifi_config.website_id }}",
+                webApiclientKey: "{{ shop.artifi_config.api_key }}",
+                divId: "artifi-container",
+                width: 1000,
+                height: 680,
+                isGuest: {% if current_user %} false {% else %} true {% endif %},
+                userId: "{{ session_token }}"
+              };
+
+              var productCustomization = $('input.artifi-data:first').val();
+
+              if (productCustomization != '') {
+                try {
+                  var json = JSON.parse(productCustomization);
+                  artifiVars['designId'] = json['custmizeProductId'];
+                }
+                catch (e) {
+                  console.log("can't parse artifi customizations", e);
+                }
+              }
+
+              Artifi.Initialize(artifiVars);
+            }
+          });
+        });
+      });
+	</script>
+{% endif %}
+
+{% if product.enable_product_personalization? and line_items[0].product_personalizations != empty %}
+	<div class="prod_option_block">
+		<h3>Product Personalizations</h3>
+		<div class="product-personalization">
+            {% for form in line_items[0].product_personalizations %}
+                {% capture personalization_path %}product[0]{% endcapture %}
+                {% render_product_personalization_form form, attributes_path: "product[]" %}
+				<h4>{{ form.title }}{% if form.amount > 0 %} ({% if form.amount > 0 %}+{% endif %}{{ form.amount | points_or_currency }}){% endif %}</h4>
+                {{ form.hidden_fields }}
+                {% for input in form.inputs %}
+					<div class='form-item'>
+                        {{ input.hidden_fields }}
+						<label for='{{ input.label_for }}'>{{ input.label }}{% if input.required? %} *{% endif %}</label>
+                        {% render_product_personalization_input input, {"data-id": "{{input.form_input_id}}", "data-type": "product-personalization"} %}
+					</div>
+                {% endfor %}
+                {% endrender_product_personalization_form %}
+            {% endfor %}
+		</div>
+	</div>
+{% endif %}

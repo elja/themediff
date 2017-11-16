@@ -1,0 +1,39 @@
+{% assign account_section_title = 'Address Book' %}
+{% capture account_page_content %}
+    <div class="content-block">
+        <h2>Your Addresses</h2>
+        <ul class="address-list clrfix">
+            {% for address in address_book %}
+                <li class="existing-address">
+                    {% form 'address', address %}
+  {% include 'address_form', form: form %}
+  <input type="submit" value="Save Changes" class="btn save-address"/>
+{% endform %}
+<a href="{{ address | account_address_url }}" class="btn delete-address" data-confirm="Are you sure?" data-method="delete">Delete Address</a>
+                </li>
+                {% capture address_index %}{{ forloop.index | modulo: 3 }}{% endcapture %}
+                {% if address_index == '0' %}
+                    <div class='clear'></div>
+                {% endif %}
+            {% endfor %}
+            
+            <li>
+                {% form 'new_address' %}
+  {% include 'address_form', form: form %}
+  <input type="submit" class="btn custom-button btn-blue" value="Add new address"/>
+{% endform %}
+            </li>
+        </ul>
+    </div>
+    <script>
+  $(function () {
+    $('.address-list form').each(function(index, form) {
+      new CountrySelectController(
+        $(form).find('.country select'),
+        $(form).find('.state select')
+      );
+    });
+  });
+</script>
+{% endcapture %}
+{% include 'account_page' with account_page_content, section_title: account_section_title %}

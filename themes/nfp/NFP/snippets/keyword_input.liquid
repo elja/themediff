@@ -1,0 +1,15 @@
+{% form 'search', context_name: 'f', preserve_search: true %}
+<div class="keyword clrfix">
+    {% form_field 'f.text_field', 'keyword', { "value": "", "placeholder": "search within" }  %}
+</div>
+{% endform %}
+
+<script>
+    $(function () {
+        $('.keyword input').on('keypress', function (event) {
+            if (event.keyCode == 13) {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+</script>

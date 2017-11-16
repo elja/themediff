@@ -1,0 +1,9 @@
+{% include 'update_breadcrumbs' %}
+{% unless page.is_home_page %}
+{% if settings.show_breadcrumbs %}
+{% include 'breadcrumbs_section' %}
+	
+{% endif %}
+
+{% endunless %}
+{{ page.content }}

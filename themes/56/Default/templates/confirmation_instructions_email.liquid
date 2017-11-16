@@ -1,0 +1,5 @@
+<p>Hello {{ user.name }},</p>
+<p>We have created a new account for you at: {{ site.name }}</p>
+<p>Your username is: {{ user.username }}</p>
+<p>To use your new account, you'll need to activate it and set a password. To do so, please {{ 'confirm' | link_to: confirmation_url }} your account.</p>
+<p>Thank you!</p>

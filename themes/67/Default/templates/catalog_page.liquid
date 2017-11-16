@@ -1,0 +1,6 @@
+{% include 'update_breadcrumbs' %}
+{% unless page.is_home_page %}
+  {% include 'breadcrumbs_section' page: page %}
+{% endunless %}
+
+{% include 'page' with page %}

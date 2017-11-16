@@ -1,0 +1,137 @@
+{% if shop.artifi_enabled? and product.artifi_enabled? %}
+	<style>
+		.ui-dialog {
+			position: absolute;
+		}
+
+		#artifi-customize {
+			padding: 7px;
+			text-transform: uppercase;
+			font-size: 14px;
+			width: 140px;
+			font-weight: normal;
+		}
+	</style>
+
+	<div class="prod_option_block">
+		<h3>Product Personalizations</h3>
+		<div class="product-personalization">
+			<input id="artifi-data" type="hidden" name="product[artifi_data]" value="{{ form.artifi_data }}"/>
+<input id='artifi-customize' type="button" name="artifi_customize" value="Customize" class="btn"/>
+		</div>
+	</div>
+
+	<div class="artifi-dialog"><div id="artifi-container"></div></div>
+
+	<script>
+      $(function() {
+        var $artifiDialog = $('.artifi-dialog');
+
+        var receiveArtifiMessage = function(event) {
+          var origin = event.origin || event.originalEvent.origin;
+          if (!Artifi.isValidArtifiDomain(origin)) return;
+
+          var origEvent = event.originalEvent;
+          var eventObj = JSON.parse(origEvent.data);
+          var action = eventObj.action;
+
+          switch (action) {
+            case Artifi.Constant.addToCart: {
+              var data = eventObj.data;
+
+              $.each(data.attributes, function(i, hash) {
+                $.each(hash, function(key, value) {
+                  var $option = $('select[data-type=product-option]').filter('[data-name="' + key + '"]');
+                  $option.find('option[data-name="' + value + '"]').attr('selected', 'selected');
+                  $option.trigger('change');
+                });
+              });
+
+              changePrimaryImage(data.savedDesignStandardImages[0]);
+
+              $('input.artifi-data').val(JSON.stringify(data));
+              $artifiDialog.dialog('close');
+            }
+          };
+        };
+
+        $('#artifi-customize').on('click', function(event) {
+          event.preventDefault();
+
+          if ($artifiDialog.hasClass('ui-dialog-content')) {
+            return $artifiDialog.dialog('open');
+          }
+
+          $artifiDialog.dialog({
+            dialogClass: 'front-dialog',
+            modal: true,
+            draggable: false,
+            resizable: false,
+            appendTo: '#wrapper',
+            width: 1000,
+            height: 800,
+            zIndex: 4500,
+            create: function(event, ui) {
+              $(window).on('message', receiveArtifiMessage);
+
+              var artifiVars = {
+                productCode: "{{ product.artifi_product_code }}",
+                websiteId: "{{ shop.artifi_config.website_id }}",
+                webApiclientKey: "{{ shop.artifi_config.api_key }}",
+                divId: "artifi-container",
+                width: 1000,
+                height: 680,
+                isGuest: {% if current_user %} false {% else %} true {% endif %},
+                userId: "{{ session_token }}"
+              };
+
+              var productCustomization = $('input.artifi-data:first').val();
+
+              if (productCustomization != '') {
+                try {
+                  var json = JSON.parse(productCustomization);
+                  artifiVars['designId'] = json['custmizeProductId'];
+                }
+                catch (e) {
+                  console.log("can't parse artifi customizations", e);
+                }
+              }
+
+              Artifi.Initialize(artifiVars);
+            }
+          });
+        });
+      });
+	</script>
+{% endif %}
+
+{% if product.product_personalizations_enabled? %}
+  <div class="prod_option_block">
+    <h3>Product Personalizations</h3>
+    <div class="product-personalization">
+      {% for personalization in product.personalizations %}
+        <h4>{% include 'modifier' title: personalization.title, amount: personalization.amount %}</h4>
+        {% for input in personalization.inputs %}
+          <div class='form-item'>
+            <label for="input_{{ input.id }}">{{ input.label }}{% if input.required? %} *{% endif %}</label>
+            {% if input.text_area? %}
+              <textarea name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                        id="input_{{ input.id }}"
+                        data-type="product-personalization">{{ form.personalizations[personalization.id][input.id].value }}</textarea>
+            {% else %}
+              <input type="text" value="{{ form.personalizations[personalization.id][input.id].value }}"
+                     name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                     id="input_{{ input.id }}" class="input-text"
+                     data-type="product-personalization"/>
+            {% endif %}
+            {% if form.personalizations[personalization.id][input.id].errors %}
+              <span class="error" data-type="product-personalization-error">
+                {{ form.personalizations[personalization.id][input.id].errors | default_errors }}
+              </span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

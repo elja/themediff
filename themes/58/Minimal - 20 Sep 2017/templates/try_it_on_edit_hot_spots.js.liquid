@@ -1,0 +1,35 @@
+$(function(){
+
+    {% capture hot_spot_type_html %}
+        {% case hot_spot_type.name %}
+            {% when "eyewear" %}
+                {% include "try_it_on_eyewear" %}
+            {% else %}
+            {% endcase %}
+    {% endcapture %}
+
+    $(".try-it-on-dialog").find(".hot-spot-setting-container").html("{{ hot_spot_type_html | escape_javascript }}");
+
+    var hotSpotTypeContainer = $(".try-it-on-dialog");
+
+    hotSpotTypeContainer.find(".hotspot-images").block({message:null});
+
+    var imageContainer = hotSpotTypeContainer.find(".hot-spot-image-container");
+    imageContainer.find("img").attr("src", "{{ hot_spot_preview_image.preview_url | escape_javascript  }}");
+
+    {% include "try_it_on_update_hot_spots.js" %}
+
+    $(".hot-spot-setting-container .action-buttons .action-button").bind("click", function(e){
+        var container = hotSpotTypeContainer.find(".try-it-on-preview-area");
+        container.showLoading();
+    });
+
+    $(".hot-spot-setting-container .actions.action-buttons .apply-hotspots").bind("click", function(e){
+        var url = $(this).attr("href");
+        var container = $("#try-it-on-tab .hot-spot-setting-container");
+        hotSpotImage.sendRequest("GET", url, container);
+        return false;
+    });
+
+
+});

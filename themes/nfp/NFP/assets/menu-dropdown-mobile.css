@@ -1,0 +1,17 @@
+@media screen and (max-width: 660px){
+
+	.category-navigation .container ul.level-0 > li > ul.level-1.active{
+		display: block!important;
+		border-top: 1px solid #CCC!important;
+		width: 100%!important;
+	}
+
+	.category-navigation .container ul ul.level-1 > li{
+		padding: 10px!important;
+		border-bottom: 1px solid #CCC!important;
+	}
+	.category-navigation .container ul.level-0 > li > ul.level-1{
+		display:none!important;
+	}
+
+}

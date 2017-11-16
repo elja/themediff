@@ -1,0 +1,82 @@
+ {% if order.item_total  > current_user.balance  %}
+	<div class="notify-error">
+		<p>Checkout process failed.  Your cart does not qualify for the amount of points you have available to cover your purchase.  </p>
+	</div>
+ {% endif %}
+<div class="cart-page">
+  <h1>
+    Shopping Cart
+  </h1>
+
+  {% form 'update_cart', context_name: 'f' %}
+  <div id="cart-top" class="clrfix">
+    <div class="cart-buttons-container">
+
+      {% if order.line_items != empty %}
+
+      <a href="#" class="btn_2 empty-cart custom-button">Clear Cart</a>
+
+      <span>or</span>
+
+      {% endif %}
+
+      {% assign most_recently_viewed_product = recently_viewed_products.first %}
+      {% if most_recently_viewed_product %}
+      <a href="{{ most_recently_viewed_product | product_url }}" class="btn_2 continue-shopping custom-button">Continue Shopping</a>
+      {% else %}
+      <a href="{{ root_url }}" class="btn_2 continue-shopping custom-button">Continue Shopping</a>
+      {% endif %}
+
+    </div>
+
+    <div class="cart-total clrfix">
+      <div class="subtotal">
+        Subtotal ({{ order.line_items.size }} items) : <span>{{ order.item_with_setup_charge_total | points_or_currency }}</span>
+      </div>
+	  {% if order.item_total  > current_user.balance  %}
+      	<input type="submit" name="checkout" class="btn button" value="Checkout" onclick="submitForm()" disabled/>
+		{% else %}
+		<input type="submit" name="checkout" class="btn button" value="Checkout" onclick="submitForm()" />
+	  {% endif %}
+    </div>
+  </div>
+
+  <div class="shopping-cart">
+    {% if order.line_items != empty %}
+    <div class="cart-header clrfix">
+      <span class="item-details">Item Details</span>
+      <span class="item-price">Total</span>
+      <span class="item-quantity">Quantity</span>
+    </div>
+	  
+      {% for line_item in order.line_items %}
+    {% include 'line_item_fields', line_item: line_item %}
+  {% endfor %}
+
+    <div class="zip-input">
+      <!--
+      <label>enter your zip code for updated shipping rates</label>
+      <input type="text" class="custom-input-text clearHint with-hint" value="zip" rel="zip"/>
+      -->
+    </div>
+    <div id="cart-subtotal" class="clrfix">
+      <div class="cart-total clrfix">
+        <div class="subtotal">
+          Subtotal ({{ order.line_items.size }} items) : <span>{{ order.item_with_setup_charge_total | points_or_currency }}</span>
+        </div>
+		{% if order.item_total  > current_user.balance  %}
+			  <input type="submit" name="checkout" class="btn button" value="Checkout" disabled/>
+          {% else %}	
+		  	<input type="submit" name="checkout" class="btn button" value="Checkout"/>
+     	{% endif %}
+		</div>
+    </div>
+
+    {% else %}
+    <p class="empty_cart">
+      The cart is empty!
+    </p>
+    {% endif %}
+  </div>
+  {% endform %}
+</div>

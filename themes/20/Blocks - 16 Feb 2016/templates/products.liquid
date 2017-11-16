@@ -1,0 +1,56 @@
+<div id="content" class="content-page">
+    {% include 'update_breadcrumbs' %}
+    {% include 'breadcrumbs_section' %}
+
+	{% paginate products_search by 20 %}
+	{% include "filtering" %}
+	
+	<div class="content-block products filtering-results">
+        {% include 'sort' %}
+        <p class='info'>We found {{ products_search.total | pluralize: 'item', 'items' }}</p>
+        {% include 'current_filters' %}
+        {% include 'current_keywords' %}
+	</div>
+	<div class="two_column">
+		<div class="col1">
+		<div id="category-navigation" class="category-navigation">
+			<h2 style="text-transform:uppercase">Product Categories</h2>
+             {% category_navigation full:true %}  <!-- TOP LEVEL CATEGORIES ONLY -->
+      </div>
+		</div>
+		<div class="col2">
+		<div class="product-list flo">
+			
+			{% include "product" with paginate.collection %}
+			{% include "paginator", paginate: paginate %}
+		</div>
+		</div>
+	</div>
+
+        {% include 'product_list_js' %}
+	</div>
+	{% endpaginate %}
+
+<style>
+	@media (min-width:660px) {
+	.two_column {position:relative; margin-top:10px; border-top:1px solid #e5e5e5; padding-top:10px;}
+	.two_column .col1 {width:20%!important; float:left!important;}
+	.two_column .col2 {width:80%!important; float:left!important;}
+	}
+	
+	
+	.two_column .col1, .two_column .col2 {width:100%; float:none;}
+	.category-navigation ul.level-0 > li > a:after {
+    display:none;
+	}
+	@media (max-width:660px) {
+.category-navigation ul ul.level-1 li {
+    padding: 0px;
+    display: block;
+}
+	ul.level-0 {
+    text-align: center;
+}
+	}
+</style>
+

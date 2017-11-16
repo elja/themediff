@@ -1,0 +1,15 @@
+{% if shop.filtering_active %}
+<div id="filter-button">Filter <i class="fa fa-chevron-down"></i></div>
+<div class="sidebar filtering" id="filter-system">
+  {% include 'keyword_input' %}
+  {% include 'filter_rule' with filter_rules %}
+	<div class="clear"></div>
+</div>
+
+<script>
+	$(document).ready(function(){
+       	$('.filter-rule ul').addClass('unvis');
+	 	$('.filter-rule h4').addClass('closed');
+    });
+</script>
+{% endif %}

@@ -1,0 +1,12 @@
+{
+    "mrkdwn": true,
+    "attachments": [
+        {
+            "fallback": "",
+            "attachment_type": "default",
+            "title": "Order #{{ order.order_id }} Approved",
+            "text": "Your order from {{ store.name | escape_json }} has been approved, click <{{ login_url }}|here> to login and review your order.",
+            "color": "#da0300"
+        }
+    ]
+}

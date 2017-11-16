@@ -1,0 +1,8 @@
+{% capture review_content %}
+    {% include 'product_review_preview', review: review %}
+{% endcapture %}
+
+var review = $("{{ review_content | escape_javascript }}");
+var reviewController = $('div.product-reviews-container').data('productReviewsController');
+
+reviewController.showReviewPreview(review);

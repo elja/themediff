@@ -1,0 +1,103 @@
+
+          
+          <ul class="bxslider">
+			{% if settings.show_home_1%}
+			  <li>
+				 <div id="home">
+					<div class="wrapper">
+							<div class="row clrfix">
+								<div class="col col_2">
+									<h1>{{ settings.home_header }}</h1>
+									<p>
+										{{ settings.home_text }}
+									</p>
+								</div>
+								<div class="col col_2">
+									{{ 'home-product.png' | asset_url | img_tag | link_to: setting.home_product_link }}
+								</div>
+							</div>
+						</div>
+					</div>
+			  </li>
+			  {% endif %}
+			  {% if settings.show_home_2%}
+			   <li>
+				 <div id="home_2">
+					<div class="wrapper">
+						<div class="row clrfix">
+							<div class="col2 col_2_2">
+								<h1>{{ settings.home_header2 }}</h1>
+								<p>
+									{{ settings.home_text2 }}
+								</p>
+							</div>
+							<div class="col2 col_2_2">
+								{{ 'home-product2.png' | asset_url | img_tag | link_to: setting.home_product_link2 }}
+							</div>
+						</div>
+					</div>
+				</div>
+			  </li>
+			  {% endif %}
+                {% if settings.show_carousel_item_1 %}
+                <li>
+                    {% if settings.carousel_item_1_link != empty %}
+                    {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt | link_to: settings.carousel_item_1_link }}
+                    {% else %}
+                    {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt }}
+                    {%endif%}
+                    {% if settings.carousel_item_1_alt.size != 0 %}
+                   <div class="carousel-item-caption"><span>{{ settings.carousel_item_1_alt }}</span></div>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if settings.show_carousel_item_2 %}
+                <li>
+                    {% if settings.carousel_item_2_link != empty %}
+                    {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt | link_to: settings.carousel_item_2_link }}
+                    {% else %}
+                    {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt }}
+                    {%endif%}
+                    {% if settings.carousel_item_2_alt.size != 0 %}
+                      <div class="carousel-item-caption"><span>{{ settings.carousel_item_2_alt }}</span></div>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if settings.show_carousel_item_3 %}
+                <li>
+                    {% if settings.carousel_item_3_link != empty %}
+                    {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt | link_to: settings.carousel_item_3_link }}
+                    {% else %}
+                    {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt }}
+                    {%endif%}
+                    {% if settings.carousel_item_3_alt.size != 0 %}
+					  <div class="carousel-item-caption"><span>{{ settings.carousel_item_3_alt }}</span></div>
+					{% endif %}
+                </li>
+                {% endif %}
+                {% if settings.show_carousel_item_4 %}
+                <li>
+                    {% if settings.carousel_item_4_link != empty %}
+                    {{ 'carousel-item-04.jpg' | asset_url | img_tag: settings.carousel_item_4_alt | link_to: settings.carousel_item_4_link }}
+                    {% else %}
+                    {{ 'carousel-item-04.jpg' | asset_url | img_tag: settings.carousel_item_4_alt }}
+                    {%endif%}
+                    {% if settings.carousel_item_4_alt.size != 0 %}
+					  <div class="carousel-item-caption"><span>{{ settings.carousel_item_4_alt }}</span></div>
+					{% endif %}
+                </li>
+                {% endif %}
+                {% if settings.show_carousel_item_5 %}
+                <li>
+                    {% if settings.carousel_item_5_link != empty %}
+                    {{ 'carousel-item-05.jpg' | asset_url | img_tag: settings.carousel_item_5_alt | link_to: settings.carousel_item_5_link }}
+                    {% else %}
+                    {{ 'carousel-item-05.jpg' | asset_url | img_tag: settings.carousel_item_5_alt }}
+                    {%endif%}
+                    {% if settings.carousel_item_5_alt.size != 0 %}
+					  <div class="carousel-item-caption"><span>{{ settings.carousel_item_5_alt }}</span></div>
+					{% endif %}
+                </li>
+                {% endif %}
+            </ul>
+        

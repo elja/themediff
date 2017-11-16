@@ -1,0 +1,233 @@
+{
+    "mrkdwn": true,
+    "text": "*Order #{{ order.order_id }} Pending Approval*\nThis order has been sent to you to approve or deny. Please use the buttons below to make your choice.",
+    "attachments": [
+        {
+            "fallback": "",
+            "color": "#354149",
+            "fields": [
+                {
+                    "value": "<{{ approve_order_url }}|Approve>",
+                    "short": true
+                },
+                {
+                    "value": "<{{ deny_order_url }}|Deny>",
+                    "short": true
+                }
+            ]
+        },
+        {
+            "fallback": "",
+            "color": "#354149",
+            "title": "Order Information",
+            "fields": [
+                {
+                    "value": "Order Number: {{ order.order_id }}\nDate: {{ order.completed_at | date: "%a, %b %d, %Y  %I:%M%p (%Z)" }}\nTotal: {{ order.grand_total | points_or_currency }}",
+                    "short": true
+                },
+                {
+                    "value": " Ordered By: {{ order.best_customer_name | escape_json }}\nShipping method: {{ order.shipment_friendly_name | escape_json }}{% if order.shipment and order.shipment.tracking_number and order.shipment.tracking_number != empty %}\nTracking number: {{ order.shipment.tracking_number | escape_json }}{% endif %}",
+                    "short": true
+                },
+                {% capture shipped_to %}
+                    {{ order.shipping_contact.name | escape_json }}\n
+                    {% if order.shipping_address.company != empty %}
+                        {{ order.shipping_address.company | escape_json }}\n
+                    {% endif %}
+                    {{ order.shipping_address.first_address | escape_json }}\n
+                    {% if order.shipping_address.second_address != empty %}
+                        {{ order.shipping_address.second_address | escape_json }}\n
+                    {% endif %}
+                    {{ order.shipping_address.city | escape_json }},
+                    {% if order.shipping_address.state != empty %}
+                        {{ order.shipping_address.state | escape_json }},
+                    {% endif %}
+                    {{ order.shipping_address.zip | escape_json }}\n
+                    {{ order.shipping_address.country | escape_json }}\n
+                    {{ order.shipping_contact.email | escape_json }}\n
+                    {{ order.shipping_contact.phone | escape_json }}\n
+                {% endcapture %}
+                {
+                    "title": "Shipped To:",
+                    "value": "{{ shipped_to | strip_newlines }}",
+                    "short": true
+                },
+                {% capture billed_to %}
+                    {{ order.billing_contact.name | escape_json }}\n
+                    {% if order.billing_address.company != empty %}
+                        {{ order.billing_address.company | escape_json }}\n
+                    {% endif %}
+                    {{ order.billing_address.first_address | escape_json }}\n
+                    {% if order.billing_address.second_address != empty %}
+                        {{ order.billing_address.second_address | escape_json }}\n
+                    {% endif %}
+                    {{ order.billing_address.city | escape_json }},
+                    {% if order.billing_address.state != empty %}
+                        {{ order.billing_address.state | escape_json }},
+                    {% endif %}
+                    {{ order.billing_address.zip | escape_json }}\n
+                    {{ order.billing_address.country | escape_json }}\n
+                    {{ order.billing_contact.email | escape_json }}\n
+                    {{ order.billing_contact.phone | escape_json }}\n
+                {% endcapture %}
+                {
+                    "title": "Billed To:",
+                    "value": "{{ billed_to | strip_newlines }}",
+                    "short": true
+                },
+                {% for custom_data_collection in order.custom_data_collections %}
+                    {% capture cdc %}
+                        {% for attribute in custom_data_collection.custom_data_attributes %}
+                            {{ attribute.key | escape_json }}:
+                            {% if attribute.value != empty %}
+                                {{ attribute.value | join: ', ' | escape_json }}
+                            {% else %}
+                                &lt;not specified&gt;
+                            {% endif %}
+                            \n
+                        {% endfor %}
+                    {% endcapture %}
+                    {
+                        "title": "{{ custom_data_collection.title | escape_json }} {% if custom_data_collection.amount > 0 %}({{ custom_data_collection.amount | points_or_currency }}){% endif %}",
+                        "value": "{{ cdc | strip_newlines }}",
+                        "short": false
+                    },
+                {% endfor %}
+                {}
+            ]
+        },
+        {% for line_item in order.line_items %}
+        {% assign product = line_item.product %}
+        {% capture details %}
+            SKU# {{ line_item.final_sku | escape_json }}\n
+            {% for sub_option in line_item.product_sub_options %}
+                {{ sub_option.product_option.friendly_name | escape_json }}{% if sub_option.product_option.in_group? %} ({{ sub_option.product_option.group_name | escape_json }}) {% endif %}:
+                {{ sub_option.name | escape_json }} {% if sub_option.amount > 0 %}({{sub_option.amount | points_or_currency }}){% endif %}
+                \n
+            {% endfor %}
+            {% if line_item.logo %}
+                Logo: {{ line_item.logo.name | escape_json }}\n
+            {% endif %}
+            {% if line_item.setup_charge and line_item.setup_charge > 0 %}
+                Setup Charge: {{ line_item.setup_charge | points_or_currency }}\n
+            {% endif %}
+            {% for product_personalization in line_item.product_personalizations %}
+              {{ product_personalization.title | escape_json }} ({{ product_personalization.amount | points_or_currency }})\n
+              {% for attribute in product_personalization.product_personalization_attributes %}
+              {{ attribute.key | escape_json }}:
+              {% if attribute.value != empty %}
+                {{ attribute.value | join: ', ' | escape_json }}
+              {% else %}
+                  &lt;not specified&gt;
+              {% endif %}
+              \n
+              {% endfor %}
+            {% endfor %}
+            QTY: {{ line_item.quantity }}
+        {% endcapture %}
+            {
+                "fallback": "",
+                "color": "#9aa0a4",
+                "title": "{{ product.name | escape_json }}",
+                "thumb_url": "{% if line_item.image %}{{ line_item.image.small_url }}{% else %}{{ 'no-image.jpg' | asset_url }}{% endif %}",
+                "fields": [
+                    {
+                        "title": "Details",
+                        "value": "{{ details | strip_newlines }}",
+                        "short": true
+                    },
+                    {
+                        "title": "Product Total",
+                        "value": "{{ line_item.total_price_with_quantity_discount | points_or_currency }}",
+                        "short": true
+                    }
+                ]
+            },
+        {% endfor %}
+
+        {
+            "fallback": "",
+            "color": "#354149",
+            "title": "Pricing Summary",
+            "fields": [
+                {
+                    "title": "Product Subtotal",
+                    "value": "{{ order.item_total | points_or_currency }}",
+                    "short": false
+                },
+                {% if order.total_setup_charge > 0 %}
+                    {
+                        "title": "Setup Charges",
+                        "value": "{{ order.total_setup_charge | points_or_currency }}",
+                        "short": false
+                    },
+                {% endif %}
+                {% for custom_data_collection in order.custom_data_collections %}
+                    {% if custom_data_collection.amount > 0 %}
+                        {
+                            "title": "{{ custom_data_collection.title | escape_json }}",
+                            "value": "{{ custom_data_collection.amount | points_or_currency }}",
+                            "short": false
+                        },
+                    {% endif %}
+                {% endfor %}
+
+                {
+                    "title": "Shipping ({{ order.shipment_friendly_name | escape_json }})",
+                    "value": "{{ order.shipment_rate | points_or_currency }}",
+                    "short": false
+                },
+                {% if order.total_tax > 0 %}
+                    {
+                        "title": "Tax",
+                        "value": "{{ order.total_tax | points_or_currency }}",
+                        "short": false
+                    },
+                {% endif %}
+                {
+                    "title": "Order Subtotal",
+                    "value": "{{ order.order_total | points_or_currency }}",
+                    "short": false
+                },
+                {% if order.promo_total < 0 %}
+                    {
+                        "title": "Coupon Savings",
+                        "value": "{{ order.promo_total | points_or_currency }}",
+                        "short": false
+                    },
+                {% endif %}
+                {
+                    "title": "Order Total",
+                    "value": "{{ order.grand_total | points_or_currency }}",
+                    "short": false
+                }
+            ]
+        },
+        {
+            "fallback": "",
+            "color": "#354149",
+            "title": "Payment Summary",
+            "fields": [
+                {% for payment in order.payments %}
+                {% capture payment_title %}
+                    {% if payment.type == "Custom Payment" %}
+                        {{payment.payment_name | escape_json }} ({{ payment.custom_payment_value | escape_json }})
+                    {% elsif payment.type == "Credit Card" %}
+                        Credit Card #{{ payment.credit_card_lastfour }}
+                    {% elsif payment.type == "Balance" %}
+                        Account Balance Used
+                    {% else %}
+                        {{ payment.type | escape_json }}
+                    {% endif %}
+                {% endcapture %}
+                    {
+                        "title": "{{ payment_title | strip_newlines }}",
+                        "value": "-{{ payment.amount }}",
+                        "short": false
+                    },
+                {% endfor %}
+                {}
+            ]
+        }
+    ]
+}

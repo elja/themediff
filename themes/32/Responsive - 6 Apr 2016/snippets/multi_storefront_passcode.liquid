@@ -1,0 +1,12 @@
+{% if shop.active_multi_storefront? and session_passcode == blank %}
+  <div id="multi-storefront-passcode">
+    <form method='post' action="{{ multi_storefronts_url }}">
+      <div class="form-item">
+        <label class="string control-label" for="passcode">enter group passcode</label>
+        <input class="input-text" id="passcode" name="passcode" type="text" placeholder="Enter Passcode">
+      </div>
+
+      <input type="submit" class="btn btn-green" value="Go"/>
+    </form>
+  </div>
+{% endif %}

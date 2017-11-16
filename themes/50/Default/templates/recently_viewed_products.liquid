@@ -1,0 +1,3 @@
+{% for product in recently_viewed_products limit:5 %}
+	{% include 'product' with product %}
+{% endfor %}

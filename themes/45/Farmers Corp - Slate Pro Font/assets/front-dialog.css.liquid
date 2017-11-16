@@ -1,0 +1,70 @@
+div.front-dialog {
+  border-radius: 0px;
+  border: 1px solid; }
+
+div.front-dialog div.ui-widget-header,
+div.front-dialog div.ui-dialog-buttonpane {
+  border: none;
+  border-radius: 0px;
+  height: 90px;
+  background: {{ settings.content_bg_color }};
+}
+
+div.front-dialog div.ui-widget-header {
+  border-bottom: 1px solid;
+  line-height: 90px; }
+
+div.front-dialog div.ui-widget-header span.ui-dialog-title {
+  font-size: 18px;
+  color: {{ settings.sitewide_text_color }};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 355px;
+  white-space: nowrap;
+  display: inline-block;
+  line-height: 18px;
+  padding-left: 30px; }
+
+div.front-dialog div.ui-dialog-buttonpane {
+  border-top: 1px solid; }
+
+div.front-dialog a.ui-dialog-titlebar-close,
+div.front-dialog a.ui-dialog-titlebar-close.ui-state-hover,
+div.front-dialog .ui-widget-content a.ui-state-hover,
+div.front-dialog .ui-widget-header a.ui-dialog-titlebar-close.ui-state-hover {
+  background: none;
+  border: none;
+  float: right;
+  margin-top: 25px;
+  margin-right: 25px; }
+
+div.front-dialog div.ui-widget-header span.ui-icon.ui-icon-closethick,
+div.front-dialog .ui-state-hover .ui-icon{
+  width: 40px;
+  height: 40px;
+  background: url({{ "close-dialog-btn.png" | asset_url }}) no-repeat 0 0; }
+
+div.front-dialog div.ui-dialog-content.ui-widget-content {
+  overflow: auto;
+  border: none; }
+
+div.front-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset {
+  margin-top: 25px; }
+
+div.front-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset button.ui-state-default,
+div.front-dialog button.ui-state-default,
+div.front-dialog .ui-widget-content button.ui-state-default {
+  color: #FFF;
+  font-size: 16px;
+  background: {{ settings.btn_color_top }};
+  border: 1px {{ settings.btn_color_border}} solid;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 16px;
+  display: inline-block; }
+
+div.front-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset button.left-btn {
+  float: left;}
+
+div.front-dialog div.ui-dialog-buttonpane .ui-dialog-buttonset button.right-btn {
+  float: right;}

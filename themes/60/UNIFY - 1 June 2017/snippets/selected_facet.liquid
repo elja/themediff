@@ -1,0 +1,18 @@
+<a href="{{ selected_facet.remove_filter_url }}">{{ selected_facet.name | escape }}</a>
+{% if selected_facet.name == "Redeem KUDOS Cash" %}
+<script>
+console.log('{{ selected_facet.name }}');
+$(document).ready(function(){
+$(".content-page").prepend("<div class='kudos'><h1>TURN KUDOS CASH INTO a SWAG Store eCARD</h1><p>At UNIFY Rock stars happen. To redeem a team member's hard-earned KUDOS Cash for an electronic gift card to shop at the UNIFY SWAG STORE, simply select the KUDOS Cash icon shown below.</p></div>");
+});
+</script>
+{% endif %}
+
+{% if selected_facet.name == "Personal" %}
+<script>
+$(document).ready(function(){
+	$(".content-page").prepend("<div class='kudos'><p>Below are the items available for UNIFIERs to purchase for their own personal use.  There are no minimum quantity requirements and you will be responsible for shipping charges.</p></div>");
+	});
+</script>
+{% endif %}
+

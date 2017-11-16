@@ -1,0 +1,19 @@
+{% if shop.openid_enabled? %}
+    <div class="openid">
+        {% if shop.openid_config.links_list? %}
+            {% for link in shop.openid_config.links %}
+                <a class="openid-link" href="{{ link | link_to_openid }}">Sign in with '{{ link.name | titleize }}'</a>
+            {% endfor %}
+        {% else %}
+            <p>or login with OpenID</p>
+            <form id="openid_form" method='post' action="{{ openid_session_url }}">
+                <div class="form-item">
+                    <label for="openid-url">OpenID URL</label>
+                    <input class="input-text" id="openid-url" name="openid_url" type="text">
+                </div>
+
+                <input type="submit" class="btn custom_btn btn-green" value="Login"/>
+            </form>
+        {% endif %}
+    </div>
+{% endif %}

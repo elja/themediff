@@ -1,0 +1,17 @@
+{% assign account_section_title = 'Budget Information' %}
+
+{% capture account_page_content %}
+  <div class="content-block budget-info">
+    <h2>Assigned Budgets</h2>
+    <table>
+      {% for budget in budgets %}
+      <tr>
+        <td class="name">{{ budget.name }}</td>
+        <td class="balance">{{ budget.balance | points_or_currency }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endcapture %}
+
+{% include 'account_page' with account_page_content, section_title: account_section_title %}

@@ -1,0 +1,134 @@
+{% assign account_section_title = 'Address Book' %}
+{% capture account_page_content %}
+    <div class="content-block">
+        <h2>Your Addresses</h2>
+        <ul class="address-list clrfix">
+            {% for address in current_user.addresses %}
+                <li class="existing-address">
+                    {% form 'account_address', for: address, remote: true %}
+                        <div class="form-item">
+                            <label>Name</label>
+                            <input class="input-text" name="account_address[nickname]" placeholder="for example 'work'" type="text" value="{{ address.nickname }}" />
+                            <div class="error errors_for_nickname"></div>
+                        </div>
+                        <div class="form-item">
+                            <label>Company</label>
+                            <input class="input-text" name="account_address[company]" placeholder="company name" type="text" value="{{ address.company }}" />
+                            <div class="error errors_for_company"></div>
+                        </div>
+                        <div class="form-item">
+                            <label>Address</label>
+                            <input class="input-text" name="account_address[first_address]" placeholder="address line 1" type="text" value="{{ address.first_address }}" />
+                            <div class="error errors_for_first_address"></div>
+                            <input class="input-text" name="account_address[second_address]" placeholder="address line 2" type="text" value="{{ address.second_address }}" />
+                            <div class="error errors_for_second_address"></div>
+                        </div>
+                        <div class="form-item">
+                            <label>City</label>
+                            <input class="input-text" name="account_address[city]" type="text" value="{{ address.city }}" placeholder="city" />
+                            <div class="error errors_for_city"></div>
+                        </div>
+                    <div class="form-item country">
+                        <label>country</label>
+                        <select class="input-text country-states-country" name="account_address[country]">
+                            <option value=""></option>
+                            {% for country in countries %}
+                            <option value="{{ country }}" {% if address.country == country %} selected="selected" {%endif%} >{{ country }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-item state">
+                        <label>state</label>
+                        {% country_state_select form.object, input_name: 'account_address[state]' %}
+                        <div class="error">{{ form.errors['state'].first }}</div>
+                    </div>
+                        <div class="form-item">
+                            <label>Zip Code</label>
+                            <input class="input-text" name="account_address[zip]" rel="zip code" type="text" value="{{ address.zip }}" placeholder="zip code" />
+                            <div class="error errors_for_zip"></div>
+                        </div>
+                        <label><input type="checkbox" class="default-shipping-address" data-address-id="{{ address.id }}" {% if address.id == current_user.shipping_address.id %}checked="checked"{% endif %} />default shipping address</label>
+                        <label><input type="checkbox" class="default-billing-address" data-address-id="{{ address.id }}" {% if address.id == current_user.billing_address.id %}checked="checked"{% endif %} />default billling address</label>
+                        <div class="error errors_for_form"></div>
+                        <div class="success"></div>
+                        <input type="submit" value="Save Changes" class="btn save-address" />
+                        <a href="{{ address | account_address_url }}" class="delete-address" data-confirm="Are you sure?" data-method="delete">Delete Address</a>
+                    {% endform %}
+                </li>
+                {% capture address_index %}{{ forloop.index | modulo: 3 }}{% endcapture %}
+                {% if address_index == '0' %}
+                    <div class='clear'></div>
+                {% endif %}
+            {% endfor %}
+            <div class="address-role-form">
+                {% form 'account_edit', remote: true %}
+                    <input type="hidden" name="website_user[shipping_address_id]" value="{{ current_user.shipping_address.id }}" />
+                    <input type="hidden" name="website_user[billing_address_id]" value="{{ current_user.billing_address.id }}" />
+                {% endform %}
+            </div>
+            <li>
+                {% form 'account_address' %}
+                <div class="form-item">
+                    <label>Name</label>
+                    <input class="input-text" name="account_address[nickname]" placeholder="for example 'work'" type="text" value="{{ form.object.nickname }}" />
+                    <div class="error errors_for_nickname">{{ form.errors['nickname'].first }}</div>
+                </div>
+                <div class="form-item">
+                    <label>Company</label>
+                    <input class="input-text" name="account_address[company]" placeholder="company name" type="text" value="{{ form.object.company }}" />
+                    <div class="error errors_for_company">{{ form.errors['company'].first }}</div>
+                </div>
+                <div class="form-item">
+                    <label>Address</label>
+                    <input class="input-text" name="account_address[first_address]" type="text" value="{{ form.object.first_address }}" placeholder="address line 1" />
+                    <div class="error">{{ form.errors['first_address'].first }}</div>
+                    <input class="input-text" name="account_address[second_address]" type="text" value="{{ form.object.second_address }}" placeholder="address line 2" />
+                    <div class="error">{{ form.errors['second_address'].first }}</div>
+                </div>
+                <div class="form-item">
+                    <label>City</label>
+                    <input class="input-text" name="account_address[city]" type="text" value="{{ form.object.city }}" placeholder="city" />
+                    <div class="error">{{ form.errors['city'].first }}</div>
+                </div>
+                <div class="form-item country">
+                    <label>country</label>
+                    <select class="input-text country-states-country" name="account_address[country]">
+                        <option value=""></option>
+                        {% for country in countries %}
+                        <option value="{{ country }}" {% if form.object.country == country %} selected="selected" {%endif%} >{{ country }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-item state">
+                    <label>state</label>
+                    {% country_state_select form.object, input_name: 'account_address[state]' %}
+                    <div class="error">{{ form.errors['state'].first }}</div>
+                </div>
+                <div class="form-item">
+                    <label>Zip Code</label>
+                    <input class="input-text" name="account_address[zip]" type="text" value="{{ form.object.zip }}" placeholder="zip code" />
+                    <div class="error">{{ form.errors['zip'].first }}</div>
+                </div>
+                <input type="submit" class="btn custom_btn custom-button btn-blue" value="Add new address" />
+                {% endform %}
+            </li>
+        </ul>
+    </div>
+    <script>
+        $(function () {
+            var addresses = $('li.existing-address');
+            for (var i = 0; i < addresses.length; i++) {
+                bind_address_update_handler(addresses[i])
+            }
+            bind_address_set_role_handler('.address-list', '.address-role-form form', 'shipping');
+            bind_address_set_role_handler('.address-list', '.address-role-form form', 'billing');
+            var addressesForms = $('.address-list form');
+            var addressesForm;
+            for (var i = 0; i < addressesForms.length; i++) {
+                addressesForm = $(addressesForms[i]);
+                new CountrySelectController(addressesForm.find('.country select'),addressesForm.find('.state select'));
+            }
+        });
+    </script>
+{% endcapture %}
+{% include 'account_page' with account_page_content, section_title: account_section_title %}

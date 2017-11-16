@@ -1,0 +1,43 @@
+
+<div class="breadcrumbs">
+  {% render_breadcrumbs %}
+
+  {% if (template_name == 'product') or (template_name == 'catalog_product') %}
+    {% assign is_template_product = true %}
+  {% else %}
+    {% assign is_template_product = false %}
+  {% endif %}
+
+  <div class="breadcrumbs">
+    <a href="{{ root_url }}">Home</a>
+
+    {% if pages != empty %}<span class="separator">»</span>{% endif %}
+    {% for page in pages %}
+      {% if forloop.last and is_template_product != true and categories == empty %}
+        <span class="current">{{ page['title'] }}</span>
+      {% else %}
+        <a href="{{ page['url'] }}" >{{ page['title'] }}</a>
+      {% endif %}
+      {% unless forloop.last %}<span class="separator">»</span>{% endunless %}
+    {% endfor %}
+
+    {% if categories != empty %}<span class="separator">»</span>{% endif %}
+    {% for category in categories %}
+      {% if forloop.last and is_template_product != true %}
+        <span class="current">{{ category['title'] }}</span>
+      {% else %}
+        <a href="{{ category['url'] }}" >{{ category['title'] }}</a>
+      {% endif %}
+      {% unless forloop.last %}<span class="separator">»</span>{% endunless %}
+    {% endfor %}
+
+    {% if is_template_product == true %}
+      <span class="separator">»</span>
+      <span class="current">{{ product.name }}</span>
+    {% endif %}
+  </div>
+
+  {% endrender_breadcrumbs %}
+</div>
+
+

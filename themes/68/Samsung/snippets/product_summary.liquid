@@ -1,0 +1,102 @@
+{% if line_items.size > 1 %}
+  {% assign total_price = 0 %}
+  {% assign total_quantity = 0 %}
+
+  <table class="product-summary">
+    <thead>
+      <tr><th colspan="4">Summary</th></tr>
+    </thead>
+    <tbody>
+      {% for line_item in line_items %}
+        {% if line_item.quantity > 0 %}
+          <tr>
+            {% capture choice_combo %}
+              {% for choice in line_item.choices %}
+                {% if product.multiple_quantity_option_ids contains choice.product_option_id %}
+                  <span class="sub-name">{{ choice.product_sub_option.name }}</span>
+                {% endif %}
+              {% endfor %}
+            {% endcapture %}
+
+            <th class="name" colspan="2">{{ choice_combo }}</th>
+            <td class="quantity">{{ line_item.quantity }}</td>
+            <td class="price">{{ line_item.total_price_with_quantity_discount | points_or_currency }}</td>
+          </tr>
+
+          {% assign total_quantity = total_quantity | plus: line_item.quantity %}
+          {% assign total_price = total_price | plus: line_item.total_price_with_quantity_discount %}
+        {% endif %}
+      {% endfor %}
+      <tr></tr>
+      <tr>
+        <th class="name" colspan="2">total quantity</th>
+        <td class="quantity">{{ total_quantity }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      {% if product.setup_charge %}
+        <tr class="setup-charge">
+          <th style="padding-top: 10px;" colspan="3">setup charge:</th>
+          <td style="padding-top: 10px;">
+            {{ product.setup_charge | points_or_currency }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% for line_item in line_items %}
+        {% if line_item.quantity > 0 %}
+          <tr class="discounted-price-per-item">
+            <th style="padding-top: 10px;" colspan="3">points:</th>
+            <td style="padding-top: 10px;">
+              {{ line_item.price_with_quantity_discount | minus: line_item.options_price | points_or_currency }}
+            </td>
+          </tr>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      <tr class="total">
+        <th style="padding-top: 10px;" colspan="3">total:</th>
+        <td style="padding-top: 10px;">{{ total_price | plus: product.setup_charge | points_or_currency }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+{% elsif line_items.size == 1 %}
+  {% assign line_item = line_items[0] %}
+
+  <table class="product-summary">
+    <tfoot>
+      {% if product.quantity_limits_message %}
+        <tr>
+          <th class='minimum-order-quantity-help' colspan='4'>
+            {{ product.quantity_limits_message }}
+          </th>
+        </tr>
+      {% endif %}
+
+      <tr class="discounted-price-per-item">
+        <th colspan="2" style="padding-top: 10px;">points:</th>
+        <td style="padding-top: 10px;">
+          {{ line_item.price_with_quantity_discount | points_or_currency }}
+        </td>
+      </tr>
+
+      {% if product.setup_charge and product.setup_charge > 0 %}
+        <tr class="setup-charge">
+          <th colspan="2" style="padding-top: 10px;">
+            setup charge:
+          </th>
+          <td style="padding-top: 10px;">
+            {{ product.setup_charge | points_or_currency }}
+          </td>
+        </tr>
+      {% endif %}
+
+      <tr class="total">
+        <th colspan="2">total:</th>
+        <td style="padding-top: 10px;">{{ line_item.total_price_with_quantity_discount | plus: line_item.setup_charge | points_or_currency }}</td>
+      </tr>
+    </tfoot>
+  </table>
+{% endif %}

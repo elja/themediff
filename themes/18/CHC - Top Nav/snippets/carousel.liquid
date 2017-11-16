@@ -1,0 +1,84 @@
+<div class="slippry_wrapper">
+
+    <ol id="slippry_slideshow">
+        {% if settings.show_carousel_item_1 %}
+        <li>
+            {% if settings.carousel_item_1_link != empty %}
+            {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt | link_to: settings.carousel_item_1_link }}
+            {% else %}
+            {{ 'carousel-item-01.jpg' | asset_url | img_tag: settings.carousel_item_1_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_1_header }}</h1>
+                <br><h2>{{ settings.slide_1_caption }}</h2>
+                <br><a href="{{ settings.slide_1_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+        {% if settings.show_carousel_item_2 %}
+        <li>
+            {% if settings.carousel_item_2_link != empty %}
+            {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt | link_to: settings.carousel_item_2_link }}
+            {% else %}
+            {{ 'carousel-item-02.jpg' | asset_url | img_tag: settings.carousel_item_2_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_2_header }}</h1>
+                <br><h2>{{ settings.slide_2_caption }}</h2>
+                <br><a href="{{ settings.slide_2_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+
+        </li>
+        {% endif %}
+        {% if settings.show_carousel_item_3 %}
+        <li>
+            {% if settings.carousel_item_3_link != empty %}
+            {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt | link_to: settings.carousel_item_3_link }}
+            {% else %}
+            {{ 'carousel-item-03.jpg' | asset_url | img_tag: settings.carousel_item_3_alt }}
+            {%endif%}
+            
+            <div class="slideshowcontent">
+                <h1>{{ settings.slide_3_header }}</h1>
+                <br><h2>{{ settings.slide_3_caption }}</h2>
+                <br><a href="{{ settings.slide_3_link }}">Click Here</a>
+
+                <span class="slideblock"></span>
+            </div>
+        </li>
+        {% endif %}
+    </ol>
+
+    <div class="slideshow_boxes clrfix">
+        {% if settings.show_carousel_item_1 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_1_header }}</h1>
+            <p>{{ settings.slide_1_paragraph }}</p>
+            <a href="{{ settings.slide_1_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+
+        {% if settings.show_carousel_item_2 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_2_header }}</h1>
+            <p>{{ settings.slide_2_paragraph }}</p>
+            <a href="{{ settings.slide_2_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+
+        {% if settings.show_carousel_item_3 %}
+        <div class="col col_4 boxlink">
+            <h1>{{ settings.slide_3_header }}</h1>
+            <p>{{ settings.slide_3_paragraph }}</p>
+            <a href="{{ settings.slide_3_link }}">Learn More&nbsp;<i class="fa fa-angle-right"></i></a>
+        </div>
+        {% endif %}
+    </div>
+
+</div>

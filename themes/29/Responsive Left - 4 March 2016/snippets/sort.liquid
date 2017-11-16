@@ -1,0 +1,14 @@
+<div class="sort-form" style="float: right; margin-right: 37px; margin-bottom: 5px;">
+    {% sort products_search %}
+    {% form 'search', preserve_search: true %}
+         <div class="sort clrfix">
+             <select name="s[sort]" class="big-select" onchange="$(this).parents('form').submit();">
+                 <option>Sort on...</option>
+                 {% for sort_option in sort_options %}
+                 <option {% if sort_option.selected %} selected {% endif %} value="{{ sort_option.value }}">{{ sort_option.title }}</option>
+                 {% endfor %}
+             </select>
+         </div>
+    {% endform %}
+    {% endsort %}
+</div>

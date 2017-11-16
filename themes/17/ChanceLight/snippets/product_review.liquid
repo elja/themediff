@@ -1,0 +1,8 @@
+<div class="product-review">
+    <div class="product-review-header">
+        <span class='review-author'>{{ review.author_short_name }}</span> <span class="review-date">on {{ review.created_at }}</span>
+        <div class="product-rating">{% include 'product_stars_rate' rate: review.rating %}</div>
+    </div>
+    <div class="review-title">{{ review.title | escape }}</div>
+    <div class="review-body">{{ review.body | escape }}</div>
+</div>

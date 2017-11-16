@@ -1,0 +1,13 @@
+<div class="sub-category">
+    <a href="{{ sub_category | product_category_url }}">
+        <div class="header">
+            <label class="truncated">{{ sub_category.name }}</label>
+        </div>
+        {% if sub_category.image %}
+            <img src="{{ sub_category.image.small_url }}" />
+        {% else %}
+            <img src="{{ 'no-image.jpg' | asset_url }}" />
+        {% endif %}
+        <div class="footer"></div>
+    </a>
+</div>

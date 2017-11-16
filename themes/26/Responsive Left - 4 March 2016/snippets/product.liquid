@@ -1,0 +1,29 @@
+<div class="product {% if product.featured %} featured {% endif %}" data-product-url="{{ product | product_url }}">
+	<div class="image-carousel">
+		{% if product.images != empty %}
+			<ul>
+				{% for image in product.images %}
+				<li {% if image.image_url == product.thumbnail_image.image_url %}class="start"{% endif %}><img src="{{ image.small_url }}"/></li>
+				{% endfor %}
+			</ul>
+			{% if product.images.size > 1 %}
+			<a href="javascript:void(0)" onclick="$(this).closest('.image-carousel').jcarousel('scroll', '-=1');"
+				class="carousel-prev"></a>
+			<a href="javascript:void(0)" onclick="$(this).closest('.image-carousel').jcarousel('scroll', '+=1');"
+				class="carousel-next"></a>
+			{% endif %}
+		{% else %}
+			<img src="{{ 'no-image.jpg' | asset_url }}"/>
+		{% endif %}
+	</div>
+
+    {% if product.discount > 0 %}
+        <div class="product-discount">
+            <label>{{ product.discount | round }}% off</label>
+        </div>
+    {% endif %}
+    <div class="footer">
+        <label title='{{ product.name }}' class="product-name truncated"><a href="{{ product | product_url }}" class="truncated">{{ product.name }}</a></label>
+        <label title='{{ product.total_price | points_or_currency }}' class="product-price">{{ product.total_price | points_or_currency }}</label>
+    </div>
+</div>

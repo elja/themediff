@@ -1,0 +1,10 @@
+{% capture logo_form %}
+    {% include "logo_form" %}
+{% endcapture %}
+(function () {
+    var dialogForm = $("{{ logo_form | escape_javascript }}");
+    var controller = $('div.logos-container').data('controller');
+    var isValid = {{ logo.valid? }};
+    var emulateFileUpload = {{ logo.image_changed? }};
+    controller.onUpdateAction(isValid, dialogForm, emulateFileUpload);
+}).call();

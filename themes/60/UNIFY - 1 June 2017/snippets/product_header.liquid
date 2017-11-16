@@ -1,0 +1,25 @@
+<div class="product-header clrfix">
+    <div class="product-price clrfix">
+        <div class="profit-price">
+            {% if product.save_price > 0 %}
+            <p>
+                <span class="was-price">{{ product.retail_price | points_or_currency }}</span>
+            </p>
+            <p>
+                You save
+                <span class="save-price">{{ product.save_price | points_or_currency }}</span>
+            </p>
+            {% endif %}
+        </div>
+        <div class="current-price">
+            <span>Unit Price:</span>
+            {% if product.sku == "UN0011C" %}Amounts Vary{% else %}{{ product.total_price | points_or_currency }}{% endif %}
+        </div>
+    </div>
+    <div class="product-title">
+        <h1 class="truncated">
+            {{ product.name }}
+        </h1>
+        <span>sku: {{ product.sku }}</span>
+    </div>
+</div>

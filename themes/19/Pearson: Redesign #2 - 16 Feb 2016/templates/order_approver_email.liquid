@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  {% include 'order_email_headers' %}
+</head>
+<body>
+
+<table style="max-width: 600px; width: 130px;">
+  <tr>
+    <td colspan="3" style="line-height: 18px;">
+      Dear Approver,
+      <br>
+      This order has been sent to you to approve or deny.
+      Please use the buttons below to make your choice.
+    </td>
+  </tr>
+
+  <tr>
+    <td valign="middle" align="center" width="300" height="40" style="text-align: right; padding: 15px 5px 15px 0px">
+      <a href="{{ approve_order_url }}" id="approve" border="0" style="margin-right: 5px;">
+        {{ "moas_approve.png" | asset_url | img_tag: "Approve Order" }}
+      </a>
+    </td>
+
+    <td valign="middle" align="center" width="300" height="40" style="text-align: left; padding: 15px 0px 15px 5px">
+      <a href="{{ deny_order_url }}" id="deny" border="0" style="margin-left: 5px;">
+        {{ "moas_deny.png" | asset_url | img_tag: "Deny Order" }}
+      </a>
+    </td>
+  </tr>
+
+  <td colspan="2">
+    <hr/>
+  </td>
+    
+  <tr>
+    <td colspan="999">
+      {% include 'order_information' %}
+    </td>
+  </tr>
+
+  <td colspan="2">
+    <hr/>
+  </td>
+
+  <tr>
+    <td valign="middle" align="center" width="300" height="40" style="text-align: right; padding: 15px 5px 15px 0px">
+      <a href="{{ approve_order_url }}" id="approve" border="0" style="margin-right: 5px;">
+        {{ "moas_approve.png" | asset_url | img_tag: "Approve Order" }}
+      </a>
+    </td>
+
+    <td valign="middle" align="center" width="300" height="40" style="text-align: left; padding: 15px 0px 15px 5px">
+      <a href="{{ deny_order_url }}" id="deny" border="0" style="margin-left: 5px;">
+        {{ "moas_deny.png" | asset_url | img_tag: "Deny Order" }}
+      </a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

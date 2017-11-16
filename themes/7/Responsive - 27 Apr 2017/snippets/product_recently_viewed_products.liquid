@@ -1,0 +1,29 @@
+<div class="product-page-right recently-viewed-products" style="display: none">
+    <h4>
+        Recently viewed:
+    </h4>
+</div>
+
+<script>
+        $(function () {
+          function load_recently_viewed_products(container) {
+            $.ajax({
+              url: '/recently_viewed_products',
+              cache: false,
+              dataType: 'html',
+              success: function(response, status) {
+                var jContainer = $(container);
+                if (status == "success" && jContainer.length > 0) {
+                  jContainer.append(response);
+                  jContainer.show();
+
+                  setup_carousels(jContainer.find('.product .image-carousel'));
+                  bind_product_body_clicker(jContainer, '.product');
+                }
+              }
+            });
+          }
+
+          load_recently_viewed_products('.recently-viewed-products');
+        });
+      </script>

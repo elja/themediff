@@ -1,0 +1,5 @@
+<p>Hi, {{ email }}!</p>
+<p>Low inventory levels for the following products:</p>
+{% for inventory in inventory_items %}
+  <p>{{ inventory | inventory_row }}</p>
+{% endfor %}

@@ -1,0 +1,7 @@
+{% capture logo_form %}
+    {% include "logo_form" %}
+{% endcapture %}
+(function () {
+    var controller = $('div.logos-container').data('controller');
+    controller.prepareDialog($("{{ logo_form | escape_javascript }}"), "Edit logo <span>{{logo.name}}</span>", 'Update', true);
+}).call();

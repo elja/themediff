@@ -1,0 +1,28 @@
+{% form 'create_account', context_name: 'f' %}
+{{ form.errors | default_errors }}
+
+{% form_field 'f.input', 'first_name' %}
+{% form_field 'f.input', 'last_name' %}
+{% form_field 'f.input', 'username' %}
+{% form_field 'f.input', 'email', { "required" : true }  %}
+{% if shop.shop.slack_integration_enabled?? %}
+  {% form_field 'f.input', 'slack_handle' %}
+{% endif %}
+
+{% if shop.shop.custom_user_fields_enabled?? %}
+  {% for field in form.custom_user_fields %}
+  <div class="fields">
+    {% include 'custom_user_field', field: field %}
+  </div>
+{% endfor %}
+{% endif %}
+
+{% if shop.active_group_passcode? %}
+  {% form_field 'f.input', 'group_passcode' %}
+{% endif %}
+
+{% form_field 'f.input', 'password', { "required" : true } %}
+{% form_field 'f.input', 'password_confirmation' %}
+
+{% form_field 'f.submit', 'Create account', {"class": "btn custom_btn custom-button btn-green"} %}
+{% endform %}

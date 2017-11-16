@@ -1,0 +1,97 @@
+{% if product.enable_product_options? and product.ordered_modifications != empty %}
+    <div class="prod_option_block">
+        <h3>Product Options</h3>
+        <div class="product-options">
+            {% for modification in product.ordered_modifications %}
+                {% if modification.group? %}
+                    {% include 'product_option_group' with modification %}
+                    {% elsif modification.option? %}
+                    {% include 'product_option' with modification %}
+                {% endif %}
+            {% endfor %}
+
+            {% if product.has_multiple_quantity_options? %}
+                <div class='product-option-wrapper form-item'>
+                    {% if product.multiple_quantity_options.size == 1 %}
+                        {% assign col = product.multiple_quantity_options[0] %}
+
+                        <div class="multiple-quantity-product-option">
+                            <label>{{ col.friendly_name }}</label>
+
+                            {% for sub_option in col.sub_options %}
+                                {% assign index = forloop.index0 %}
+
+                                <div class="product-sub-option">
+                                    {% assign amount = sub_option.amount %}
+
+                                    <label>{{ sub_option.name }}{% if amount and amount != 0 %} ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }}){% endif %}:</label>
+
+                                    <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                                    <span class="stock"></span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% elsif product.multiple_quantity_options.size == 2 %}
+                        {% assign index = 0 %}
+
+                        {% assign col = product.multiple_quantity_options[0] %}
+                        {% assign row = product.multiple_quantity_options[1] %}
+
+                        <div class="multiple-quantity-product-option">
+                            {% assign cols_in_table = 4 %}
+                            {% assign steps = col.sub_options.size | divided_by: cols_in_table %}
+
+                            {% if steps < 1 %}{% assign steps = 1 %}{% endif %}
+
+                            {% for step in (0..steps) %}
+                                {% assign row_offset = step | times: cols_in_table  %}
+                                {% assign step_offset = step | times: row.sub_options.size | times: cols_in_table %}
+
+                                <table class="multiple-quantity-grid">
+                                    {% for sub_y in row.sub_options %}
+                                        {% assign y_index = forloop.index0 %}
+
+                                        {% if y_index == 0 %}
+                                            <tr>
+                                                <th></th>
+                                                {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                    {% assign amount_x = sub_x.amount %}
+                                                    <th>{{ sub_x.name }}{% if amount_x != 0 %} ({% if amount_x > 0 %}+{% endif %}{{ amount_x | points_or_currency }}){% endif %}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endif %}
+
+                                        <tr>
+                                            {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                {% assign x_index = forloop.index0 %}
+                                                {% assign index = x_index | times: row.sub_options.size | plus: y_index | plus: step_offset %}
+
+                                                {% if x_index == 0 %}
+                                                    {% assign amount_y = sub_y.amount %}
+                                                    <th>{{ sub_y.name }}{% if amount_y != 0 %} ({% if amount_y > 0 %}+{% endif %}{{ amount_y | points_or_currency }}){% endif %}</th>
+                                                {% endif %}
+
+                                                <td>
+                                                    <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
+                                                    <span class="stock"></span>
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        Not Implemented
+                    {% endif %}
+
+                    {% if product.quantity_limits_message %}
+                        <div class='minimum-order-quantity-help'>
+                            {{ product.quantity_limits_message }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

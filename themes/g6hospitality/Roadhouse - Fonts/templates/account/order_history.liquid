@@ -1,0 +1,15 @@
+{% assign account_section_title = 'Order History' %}
+{% capture account_page_content %}
+{% if current_user.order_history != empty %}
+
+  {% paginate current_user.order_history by 20 %}
+  <table class="recent-orders">
+      {% include 'order_history_item' with paginate.collection %}
+  </table>
+    {% include "paginator", paginate: paginate %}
+  {% endpaginate %}
+{% else %}
+    <div class="no-orders">You have no completed orders yet.</div>
+{% endif %}
+{% endcapture %}
+{% include 'account_page' with account_page_content, section_title: account_section_title %}

@@ -1,0 +1,23 @@
+{% form 'add_product_review', context_name: 'f', for: review, remote: 'true' %}
+
+<div class="form-item">
+    {% form_field 'f.label', 'title', 'Title' %}
+    {% form_field 'f.text_field', 'title', { "class": "input-text title", "placeholder": "review title" }%}
+    {% form_field 'f.error', 'title' %}
+</div>
+
+<div class="form-item">
+    {% form_field 'f.label', 'stars', 'Rate product' %}
+    <div class="rating-stars"></div>
+    {% form_field 'f.error', 'stars' %}
+</div>
+
+<div class="form-item">
+    {% form_field 'f.label', 'body', 'Your review' %}
+    {% form_field 'f.text_area', 'body', { "class": "input-text body", "placeholder": "review text" }%}
+    {% form_field 'f.error', 'body' %}
+</div>
+
+<button class="custom-button preview-review-btn btn_2">Preview</button>
+
+{% endform %}

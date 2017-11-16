@@ -1,0 +1,26 @@
+
+
+
+<div class="four_column">
+<div class="four_column col_1">
+{% if settings.show_home_nav_menu_item_1_image %}
+<a href="{{ settings.home_nav_menu_item_1_link }}" ><img src= "{{ 'home_nav_menu_1.png' | asset_url }}" onmouseover="this.src= '{{ 'home_nav_menu_1_on.png' | asset_url }}'" onmouseout="this.src='{{ 'home_nav_menu_1.png' | asset_url }}'"  /></a>
+{% endif %}
+</div>
+<div class="four_column col_2">
+{% if settings.show_home_nav_menu_item_2_image %}
+<a href="{{ settings.home_nav_menu_item_2_link }}" ><img src= "{{ 'home_nav_menu_2.png' | asset_url }}" onmouseover="this.src= '{{ 'home_nav_menu_2_on.png' | asset_url }}'" onmouseout="this.src='{{ 'home_nav_menu_2.png' | asset_url }}'"  /></a>
+{% endif %}
+</div>
+<div class="four_column col_3">
+{% if settings.show_home_nav_menu_item_3_image %}
+<a href="{{ settings.home_nav_menu_item_3_link }}" ><img src= "{{ 'home_nav_menu_3.png' | asset_url }}" onmouseover="this.src= '{{ 'home_nav_menu_3_on.png' | asset_url }}'" onmouseout="this.src='{{ 'home_nav_menu_3.png' | asset_url }}'"  /></a>
+{% endif %}
+</div>
+<div class="four_column col_4">
+{% if settings.show_home_nav_menu_item_4_image %}
+<a href="{{ settings.home_nav_menu_item_4_link }}" ><img src= "{{ 'home_nav_menu_4.png' | asset_url }}" onmouseover="this.src= '{{ 'home_nav_menu_4_on.png' | asset_url }}'" onmouseout="this.src='{{ 'home_nav_menu_4.png' | asset_url }}'"  /></a>
+{% endif %}
+</div>
+</div>
+

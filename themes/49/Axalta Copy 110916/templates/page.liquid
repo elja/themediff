@@ -1,0 +1,27 @@
+{% include 'update_breadcrumbs' %}
+{% unless page.is_home_page %}
+  {% if settings.show_breadcrumbs %}
+{% include 'breadcrumbs_section' %}
+	
+{% endif %}
+{% endunless %}
+
+{% if settings.show_content_box != false %}
+<div class="col_4 col">
+    <!-- BOX 1 -->
+    <div class="box">
+        {{ settings.box_1_content }}
+    </div>
+
+    <!-- BOX 2 -->
+    <div class="box">
+        {{ settings.box_2_content }}
+    </div>
+</div>
+
+<div class="col col_8">
+{{ page.content }}
+</div>
+{% else %}
+{{ page.content }}
+{% endif %}

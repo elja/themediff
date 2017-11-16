@@ -1,0 +1,19 @@
+<div class="content-block">
+    {{ special_page }}
+</div>
+
+{% if featured_products != empty %}
+    <div class="content-block featured-products">
+		<h1>Featured Products</h1>
+        <div class="product-list">
+            {% include 'product' with featured_products %}
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            setup_carousels('.product-list .product .image-carousel');
+            bind_product_body_clicker('.product-list', '.product');
+        });
+    </script>
+{% endif %}

@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        Requested Sample Email
+    </title>
+    <style type="text/css">
+        body, td {
+            color: #555;
+            font-size: 14px;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+        }
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+            color: #555;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+        }
+        a, a:visited {
+            color: #1414ff;
+        }
+        table {
+            border: 0;
+            border-collapse: collapse;
+            max-width: 600px;
+        }
+        table td, table th {
+            padding: 0;
+        }
+        table#background {
+            width: 100%;
+        }
+        table#order-summary {
+        }
+        table#background table {
+            width: 600px;
+            margin: 0 auto;
+        }
+        table#background table tr.section-header {
+            background-color: #326fb1;
+            font-size: 14px;
+            text-indent: 10px;
+            font-weight: bold;
+            color: #fff;
+            vertical-align: middle;
+        }
+        table#background table tr.section-header td {
+            padding: 7px 0;
+        }
+        table#background table tr.section-header td p {
+            color: #fff;
+            line-height: 16px;
+            vertical-align: middle;
+        }
+        table#background table tr.section-header.right-aligned td p {
+            text-align: right;
+            margin-right: 10px;
+        }
+        table#order-information {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        table#order-information tr td {
+            width: 300px;
+        }
+        table#order-information tr td h3 {
+            text-indent: 15px;
+        }
+        table#order-information tr td p {
+            margin: 3px 0;
+            text-indent: 15px;
+        }
+        table#order-information tr {
+            vertical-align: top;
+        }
+        table#order-summary {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        table#order-summary tr.line-item {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        table#order-summary tr.line-item td.product-info p.sub-option span.sub-option-name {
+            text-transform:capitalize;
+        }
+        table#order-summary tr.line-item td.product-info p.logo span.logo-name {
+            height: 32px;
+            line-height: 32px;
+            vertical-align: 7px;
+            display: inline-block;
+            max-width: 190px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        table#order-summary tr.line-item td.product-info p.logo span.logo-name.logo-title {
+            min-width: 50px; width: 50px; max-width: 50px;
+            text-transform: lowercase;
+        }
+        table#order-summary tr.line-item td.product-info p.logo span.logo-image {
+            width: 48px;
+            height: 32px;
+            line-height: 32px;
+            display: inline-block;
+            position: relative;
+        }
+        table#order-summary tr.line-item td.product-info p.logo span.logo-image img {
+            max-height: 32px;
+            max-width: 48px;
+            position: absolute;
+            bottom: 0;
+        }
+        table#order-summary tr.line-item td.image-cell {
+            width: 200px;
+            max-width: 200px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        table#order-summary tr.line-item td.image-cell img {
+            display: block;
+            max-width: 180px;
+            height: auto;
+            margin: 0 auto;
+        }
+        table#order-summary tr.line-item td.product-info {
+            vertical-align: top;
+            width: 300px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        table#order-summary tr.line-item td.product-info p {
+            padding-top: 3px;
+        }
+
+        table#order-summary tr.line-item td.product-info h3.product-title {
+            color: #2c5987;
+        }
+
+        table#order-summary tr.line-item td.product-price p {
+            text-align: right;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<table id="background">
+    <tr>
+        <td>
+            <table id="order-information">
+                {% assign contact = request_sample.shipping_contact %}
+                {% assign address = request_sample.shipping_address %}
+
+                <tr>
+                    <td colspan="2">
+                        <h3>
+                            Customer information
+                        </h3>
+                        <p>
+                            First name: {{ contact.first_name }}
+                        </p>
+                        <p>
+                            Last name: {{ contact.last_name }}
+                        </p>
+                        <p>
+                            Email: <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                        </p>
+                        <p>
+                            Phone: {{ contact.phone }}
+                        </p>
+                        <p>
+                            Address: {{ address.full_address_line }}
+                        </p>
+                        <br/>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr class="section-header">
+                    <td>
+                        <p>
+                            Requested Product Sample
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <table  id="order-summary">
+                <tr class="line-item">
+                    <td class="image-cell">
+                        <img src="{% if request_sample.primary_image %}{{ request_sample.primary_image.thumb_url }}{% else %}{{ 'no-image.jpg' | asset_url }}{% endif %}" alt="{{ request_sample.name }} image"/>
+                    </td>
+                    <td class="product-info">
+                        <h3 class="product-title">
+                            {{ request_sample.name }}
+                        </h3>
+
+                        <p class="sub-option">
+                            <span class="sub-option-name">SKU#</span>
+                            <span class="sub-option-value">{{ request_sample.sku }}</span>
+                        </p>
+
+                        {% if request_sample.logo %}
+                            {% assign logo = request_sample.logo %}
+
+                            <p class="sub-option logo">
+                                <span class="sub-option-name logo-name logo-title">logo: </span>
+                                <span class="sub-option-value logo-image"><img src="{{ logo.front_thumb_url }}" alt="{{ logo.name }}"></span>
+                                <span class="sub-option-name logo-name">{{ logo.name }}</span>
+                            </p>
+                        {% endif %}
+
+                        {% for choice in request_sample.choices %}
+                            <p class="sub-option">
+                                <span class="sub-option-name">{{ choice[0].friendly_name }}{% if choice[0].in_group? %} ({{ choice[0].group_name }}) {% endif %}:</span>
+                                <span class="sub-option-value">{{ choice[1].name }}</span>
+                            </p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

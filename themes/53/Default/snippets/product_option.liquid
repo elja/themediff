@@ -1,0 +1,43 @@
+<div class='product-option-wrapper form-item'>
+    {% if product_option.multiple_quantity %}
+        <div class="multiple-quantity-product-option">
+            <label>{{ product_option.friendly_name }}</label>
+            {% for sub_option in product_option.sub_options %}
+                <div class="product-sub-option">
+                    {% assign amount = sub_option.amount %}
+                    <label>{{ sub_option.name }}{% if amount and amount != 0 %} ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }}){% endif %}:</label>
+                    <input type="text" data-type="quantity" data-id="{{ sub_option.id }}" class="quantity" value="{{ line_item.quantity }}">
+                    <span class="error" data-type="product-option-error" data-id="{{ product_option.id }}"></span>
+
+                    <span class="stock"></span>
+                </div>
+            {% endfor %}
+            {% if product.quantity_limits_message %}
+                <div class='minimum-order-quantity-help'>
+                    {{ product.quantity_limits_message }}
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <label>{{ product_option.friendly_name }}{% if product_option.required? %} *{% endif %}</label>
+        <div class="select-area {% if product_option.show_as_thumbs? %}thumbnail{% endif %}">
+            <select data-type="product-option" data-name="{{ product_option.friendly_name }}" data-id="{{ product_option.id }}" class="msdropdown-select">
+                <option value='' {% if product_option.show_as_thumbs? %}style="visibility:hidden; display: list-item;"{% endif %}>not specified</option>
+                {% for sub_option in product_option.sub_options %}
+                    {% capture sub_option_text %}
+                        {% assign amount = sub_option.amount %}
+                        {{ sub_option.name }}{% if amount and amount != 0 %} ({% if amount > 0 %}+{% endif %}{{ amount | points_or_currency }}){% endif %}
+                    {% endcapture %}
+
+                    {% if product_option.show_as_thumbs? %}
+                        <option data-name="{{ sub_option.name }}" {% if sub_option.thumb_url %}data-image="{{ sub_option.thumb_url }}"{% else %}data-image="{{ 'product-image-preview/no_thumb.png' | asset_url }}"{% endif %} value='{{ sub_option.id }}' {% if sub_option.large_url %}data-new-image="{{ sub_option.large_url }}"{% endif %}>{{ sub_option_text }}</option>
+                    {% else %}
+                        <option data-name="{{ sub_option.name }}" {% if sub_option.thumb_url %}data-image="{{ sub_option.thumb_url }}"{% endif %} value='{{ sub_option.id }}' {% if sub_option.large_url %}data-new-image="{{ sub_option.large_url }}"{% endif %}>{{ sub_option_text }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <span class="error" data-type="product-option-error" data-id="{{ product_option.id }}"></span>
+        </div>
+    {% endif %}
+    <div class="clear"></div>
+</div>

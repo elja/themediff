@@ -1,0 +1,8 @@
+<div class="logo" id='{{ logo | dom_id }}'>
+  <div class="name">{{ logo.name }}</div>
+  <div class="image"><img src="{{ logo.front_thumb_url }}"></div>
+  <div class="controls">
+    <a class="edit" href="{{ logo | edit_logo_url }}">edit</a>
+    <a class="delete" href="{{ logo | delete_logo_url }}" data-method='delete'>delete</a>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+var hotSpotTypeContainer = $(".try-it-on-dialog");
+
+hotSpotTypeContainer.find(".hot-spot-image-container .hot-spot").remove();
+
+var hotSpots = [{{ hot_spots_attributes }}]
+
+{% assign hot_spot_type_name = hot_spot_type.name %}
+hotSpotImage = new {{hot_spot_type_name | capitalize }}HotSpotImage(hotSpotTypeContainer, [], {notificationHelperMethod: function(type, msg){ alert(msg); }});
+hotSpotImage.update(hotSpots);

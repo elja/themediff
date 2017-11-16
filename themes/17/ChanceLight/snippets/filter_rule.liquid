@@ -1,0 +1,24 @@
+{% filtrate products_search by filter_rule %}
+{% if filter.facets and filter_rule.friendly_name != "Vendors" and filter_rule.friendly_name != "Quantity ordered" %}
+<div class='filter-rule'>
+	<h4 class='menu-title navOpen'>
+		{{ filter_rule.friendly_name }}
+	</h4>
+	<ul class='level-0 top-container'>
+		{% for facet in filter.facets %}
+		<li class="{% if facet.selected == true %} selected open {% else %} closed {% endif %}">
+            {% if filter_rule.name == 'Rating' %}
+                {% if facet.selected == true %}
+                    <a href="{{ facet.remove_filter_url }}" class='selected' title='{{ facet.name | escape }} ({{ facet.count }} items)'><span class="checkbox"/><div class="show-star flo" data-rating="{{ facet.from }}" data-star-count="5"></div><span class='count'>({{ facet.count }})</span></a>
+                {% else %}
+                    <a href="{{ facet.filter_url }}" title='{{ facet.name | escape }} ({{ facet.count }} items)'><span class="checkbox"/><div class="show-star flo" data-rating="{{ facet.from }}" data-star-count="5"></div><span class='count'>({{ facet.count }})</span></a>
+                {% endif %}
+            {% else %}
+                {% include 'facet' with facet %}
+            {% endif %}
+        </li>
+		{% endfor %}
+	</ul>
+</div>
+{% endif %}
+{% endfiltrate %}

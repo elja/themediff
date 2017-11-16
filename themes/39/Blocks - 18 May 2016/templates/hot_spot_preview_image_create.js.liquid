@@ -1,0 +1,10 @@
+{% capture hot_spot_preview_image_html %}
+    {% include "hot_spot_preview_image", image: hot_spot_preview_image %}
+{% endcapture %}
+
+$(function(){
+    var image = "{{ hot_spot_preview_image_html | escape_javascript }}";
+    var controller = $('div.try-it-on-controller').data('controller');
+    controller.addPreviewImage(image);
+});
+

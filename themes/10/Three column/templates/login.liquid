@@ -1,0 +1,18 @@
+<div class="sign-in-wrap">
+<div class="sign-in">
+    <div class="content-block">
+        <h1>Sign In</h1>
+    </div>
+    <div class="content-block">
+        <div class="sign-in-form">
+          {% include "login_form" %}
+        </div>
+    </div>
+    <div class="content-block">
+        <a href="{{ forgot_password_url }}" class="forgot-link">Forgot password?</a>
+        {% for provider in providers %}
+            <a href="{{ provider | provider_url }}">Sign in with {{ provider.name | titleize }}</a>
+        {% endfor %}
+    </div>
+</div>
+</div>

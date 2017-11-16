@@ -1,0 +1,10 @@
+<div class="add-to-cart-area">
+    {% if shop.store_enabled? %}
+        <input type="submit" name="add_to_cart" value="Add to Cart" class="btn"/>
+        <br>
+    {% endif %}
+
+    {% if shop.wishlist_enabled? %}
+        <input type="submit" name="add_to_wishlist" value="Add to Wishlist" class="btn"/>
+    {% endif %}
+</div>

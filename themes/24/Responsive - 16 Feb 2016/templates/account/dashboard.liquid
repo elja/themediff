@@ -1,0 +1,43 @@
+{% assign account_section_title = 'Account Dashboard' %}
+{% capture account_page_content %}
+    <div class="content-block">
+        <h2>Account Info</h2>
+        <a href="{{ edit_account_url }}" class="action-link">edit account info</a>
+        <table class="account-info">
+            <tr>
+                <th>User Name :</th>
+                <td>{{ current_user.username }}</td>
+            </tr>
+            <tr>
+                <th>Account # :</th>
+                <td>{{ current_user.id }}</td>
+            </tr>
+            {% if current_user.shipping_address %}
+            <tr>
+                <th>Shipping address :</th>
+                {% assign address = current_user.shipping_address %}
+                <td>{{ address.first_address }} {{ address.second_address }} {{ address.city }} {{ address.state }} {{ address.zip }}</td>
+            </tr>
+            {% endif %}
+            {% if current_user.billing_address %}
+            <tr>
+                <th>Billing address :</th>
+                {% assign address = current_user.billing_address %}
+                <td>{{ address.first_address }} {{ address.second_address }} {{ address.city }} {{ address.state }} {{ address.zip }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    {% if shop.store_enabled? and current_user.recent_orders != empty %}
+    <div class="content-block">
+        <h2>Recent Orders</h2>
+        <a href="{{ order_history_url }}" class="action-link">view all orders</a>
+        <div class="recent-orders-wrapper">
+            <table class="recent-orders">
+                {% include 'order_history_item' with current_user.recent_orders %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+{% endcapture %}
+{% include 'account_page' with account_page_content, section_title: account_section_title %}

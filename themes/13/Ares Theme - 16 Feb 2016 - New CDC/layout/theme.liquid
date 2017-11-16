@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--<html xmlns="http://www.w3.org/1999/xhtml">-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 9]>         <html class="no-js lt-ie10" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE]>         <html class="no-js ie" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" xmlns="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+  {% seo_tags %}
+  {{ 'main.css' | asset_url | stylesheet_tag }}
+  {{ 'jquery.treeview.css' | asset_url | stylesheet_tag }}
+  {{ 'loading_indicator.css' | asset_url | stylesheet_tag }}
+  {{ 'msdropdown/dd.css' | asset_url | stylesheet_tag }}
+
+  <!--[if lte IE 9]>
+  {{ 'ie.css' | asset_url | stylesheet_tag }}
+  <![endif]-->
+
+  {{ 'jquery.min.js' | asset_url | script_tag }}
+  {{ 'jquery-ui.js' | asset_url | script_tag }}
+  {{ 'jquery_ujs.js' | asset_url | script_tag }}
+  {{ 'jquery-ui-1.9.2.custom.min.js' | asset_url | script_tag }}
+  {{ 'jquery.tools.min.js' | asset_url | script_tag }}
+  {{ 'jquery_nested_form.js' | asset_url | script_tag }}
+  {{ 'jquery.treeview.js' | asset_url | script_tag }}
+  {{ 'flowplayer.js' | asset_url | script_tag }}
+  {{ 'scripts.js' | asset_url | script_tag }}
+  {{ 'address_updater.js' | asset_url | script_tag }}
+  {{ 'chosen.jquery.min.js' | asset_url | script_tag }}
+  {{ 'lightbox.js' | asset_url | script_tag }}
+  {{ 'product_body_clicker.js' | asset_url | script_tag }}
+  {{ 'checkout_controller.js' | asset_url | script_tag }}
+  {{ 'image_fitter.js' | asset_url | script_tag }}
+  {{ 'radiance.js' | asset_url | script_tag }}
+  {{ 'carousel_setup.js' | asset_url | script_tag }}
+  {{ 'jquery.jcarousel.min.js' | asset_url | script_tag }}
+  {{ 'jquery.raty.js' | asset_url | script_tag }}
+  {{ 'stars-rating.js' | asset_url | script_tag }}
+  {{ 'product_reviews_controller.js' | asset_url | script_tag }}
+
+  {{ 'vertical_scrolling.js' | asset_url | script_tag }}
+  {{ 'horizontal_scrolling.js' | asset_url | script_tag }}
+  {{ 'webcam.js' | asset_url | script_tag }}
+  {{ 'maps.js' | asset_url | script_tag }}
+  {{ 'jquery.showLoading.js' | asset_url | script_tag }}
+  {{ 'jquery.blockUI.js' | asset_url | script_tag }}
+  {{ 'flowplayer.js' | asset_url | script_tag }}
+  {{ 'resizer.js' | asset_url | script_tag }}
+  {{ 'cart.js' | asset_url | script_tag }}
+  {{ 'wishlist.js' | asset_url | script_tag }}
+
+  {{ 'backbone/underscore.js' | asset_url | script_tag }}
+  {{ 'backbone/backbone.js' | asset_url | script_tag }}
+  {{ 'backbone/backbone_rails_sync.js' | asset_url | script_tag }}
+  {{ 'backbone/backbone_datalink.js' | asset_url | script_tag }}
+  {{ 'backbone/application.js' | asset_url | script_tag }}
+  {{ 'backbone/models/eyewear_hot_spot_type.js' | asset_url | script_tag }}
+  {{ 'backbone/models/hot_spot.js' | asset_url | script_tag }}
+  {{ 'backbone/models/hot_spot_preview_image.js' | asset_url | script_tag }}
+
+  {{ 'reflective_view.js' | asset_url | script_tag }}
+  {{ 'product_price_updater.js' | asset_url | script_tag }}
+  {{ 'product_price_updater_callback.js' | asset_url | script_tag }}
+
+
+  {{ 'jquery-file-uploader/jquery.ui.widget.js' | asset_url | script_tag }}
+  {{ 'jquery-file-uploader/jquery.iframe-transport.js' | asset_url | script_tag }}
+  {{ 'jquery-file-uploader/jquery.fileupload.js' | asset_url | script_tag }}
+  {{ 'jquery-file-uploader/jquery.fileupload-fp.js' | asset_url | script_tag }}
+  {{ 'jquery-file-uploader/tmpl.js' | asset_url | script_tag }}
+
+  {{ 'try-it-on/try_it_on.js' | asset_url | script_tag }}
+  {{ 'try-it-on/base_hot_spot_image.js' | asset_url | script_tag }}
+  {{ 'try-it-on/eyewear_hot_spot_image.js' | asset_url | script_tag }}
+
+  {{ 'virtual_logo/preview_logo.js' | asset_url | script_tag }}
+  {{ 'virtual_logo/account_logos_controller.js' | asset_url | script_tag }}
+  {{ 'virtual_logo/base_virtual_logo.js' | asset_url | script_tag }}
+  {{ 'virtual_logo/view_logos_controller.js' | asset_url | script_tag }}
+
+  {{ 'product-image-preview/msdropdown_helpers.js' | asset_url | script_tag }}
+  {{ 'product-image-preview/product-images.js' | asset_url | script_tag }}
+  {{ 'elevate-zoom/jquery.elevatezoom.js' | asset_url | script_tag }}
+
+
+  {{ 'msdropdown/jquery.dd.js' | asset_url | script_tag }}
+  {{ 'country_states.js' | asset_url | script_tag }}
+  {{ 'country_states.css' | asset_url | stylesheet_tag }}
+  {{ 'country_select_controller.js' | asset_url | script_tag }}
+
+  {{ csrf_meta_tag }}
+
+  <!-- FONTAWESOME -->
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ 'responsive.js' | asset_url | script_tag }}
+  {{ 'mobile-content-blocks.css' | asset_url | stylesheet_tag }}
+
+  {{ 'ares_main.css' | asset_url | stylesheet_tag }}
+  <script src="https://use.typekit.net/sfb7yfl.js"></script>
+  <script>try{Typekit.load({ async: true });}catch(e){}</script>
+
+<meta name="referrer" content="always"></head>
+<style type="text/css">
+  {% if page.is_home_page %}
+  #wrapper > div.content {
+    padding:0px;
+  }
+
+  body div.content{
+    min-height: 100px!important;
+  }
+
+  .main{
+    float: none;
+  }
+
+
+
+    {% if settings.show_carousel %}
+        .iframe-area{min-height:0px!important;}
+      {% else %}
+        .iframe-area{min-height:300px!important;}
+    {% endif %}
+
+  .iframe-area{min-height:0px!important;}
+    
+  {% endif %}
+	
+	.banner {
+		background: #025C9B;
+		color: #fff;
+		padding: 10px 0;
+		text-align: center;
+	}	
+	
+</style>
+<body>
+  <div id="main-container">
+    <div id="upper-navigation">
+      <div class="navigation-bar">
+        <div id="wrapper">
+          <div id="dropdown">
+            <i id="open" class="fa fa-bars visible"></i>
+            <i id="close" class="fa fa-times hidden"></i>
+          </div>
+
+          <div id="top-menu">
+            {% if shop.primary_phone != blank %}<a href="tel:{{ shop.primary_phone }}" class="phone">{{ shop.primary_phone }}</a>{% endif %}
+
+      			<!--{% if shop.store_enabled? and current_user %}
+      			  <a href="{{ account_balance_url }}" class="balance-info">{% if shop.points_store? %}Points{% else %}Account{% endif %} Balance: <span>{{ current_user.balance | points_or_currency }}</span></a>
+      			{% endif %} -->
+			  
+            {% if shop.store_enabled? %}
+              <a href="{{ cart_url }}" class="cart"><i class="fa fa-shopping-cart"></i> {% if settings.show_shopping_cart_total %} {{ order.item_with_setup_charge_total | points_or_currency }} {% endif %} ({{ order.line_items.size }} items )</a>
+            {% endif %}
+
+            {% if current_user and wishlist_enabled %}
+              <a href="{{ wishlist_url }}" class="cart"><i class="fa fa-heart"></i> ( {{ wishlist.line_items.size }} items )</a>
+            {% endif %}
+
+            {% if authentication_enabled %}
+              <div class="account-links">
+                {% if current_user %}
+                <a href="{{ account_dashboard_url }}">{{ current_user.first_name }} {{ current_user.last_name }}</a>
+                <a href="{{ logout_url }}">Log Out</a>
+                {% else %}
+                <a href="https://ares.okta.com/home/aresproduction_epromos_1/0oa42pbrvqdfKtXfO0x7/aln42q5hiwWnmqAdE0x7">Login</a>
+               <!-- <a href="{{ signup_url }}">Register</a>-->
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% main_navigation %}
+          </div>
+          <div class="clear"></div>
+        </div>
+      </div>
+
+      {% include 'multi_storefront_passcode' %}
+
+      <div id="header">
+        <div id="wrapper">
+          <div class="top-area clrfix">
+            {% if settings.show_logo %}
+            <a href="/">
+              <div class="logo"></div>
+            </a>
+            {% endif %}
+
+      			  {% if shop.catalog_enabled? %}
+                <a id="searchdropdown"><i class="fa fa-search"></i></a>
+      			  {% endif %}
+
+            {% if shop.catalog_enabled? %}
+            <div id="search" class="search-wrapper">
+              {% form 'search', context_name: 'f', url: '/products' %}
+              <div class="search clrfix">
+                {% form_field 'f.text_field', 'keyword', { "class": "input-text clearHint", "placeholder": "Search", "value": "" }  %}
+                {% form_field 'f.submit', '', { "class": "button" } %}
+              </div>
+              {% endform %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div id="category-navigation" class="category-navigation">
+        <div id="wrapper">
+          <i id="hover2" class="fa fa-angle-left"></i>
+          <i id="hover" class="fa fa-angle-right"></i>
+          <div class="container">
+            {% category_navigation full:true %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notification-area">
+      {% for notice in flash_notices %}
+      <div class="notification notification-success">{{ notice }}</div>
+      {% endfor %}
+      {% for error_message in flash_errors %}
+      <div class="notification notification-error">{{ error_message }}</div>
+      {% endfor %}
+    </div>
+
+    <!--{% if page.is_home_page %}
+      {% include 'home' %}
+    {% endif %}-->
+
+    <div id="wrapper">
+      <div class="content">
+
+        {{ content_for_layout }}
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+    <div class="footer-content">
+      <div class="footer-main clrfix">
+        <div class="footer-block">
+          <div>
+            <h5>{{ shop.company_name }}</h5>
+            {% assign address = shop.address %}
+            <p>{{ address.first_address }}{% if address.first_address != blank and address.second_address != blank %}, {% endif %}{{ address.second_address }}</p>
+            <p>{{ address.city }}{% if address.city != blank and address.state != blank %}, {% endif %}{{ address.state }} {{ address.zip}}</p>
+            {% if shop.primary_email != blank %}<p>email : {{ shop.primary_email }}</p>{% endif %}
+            {% if shop.primary_phone != blank %}<p>phone : {{ shop.primary_phone }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="footer-block"><p>{{ settings.copyright_info }}</p></div>
+        <div class="footer-block">
+          {% if settings.footer_social_icons %}
+          <ul class="social clrfix">
+            {% if settings.sm_facebook %}
+            <li><a href="{{ settings.sm_facebook_link }}" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
+            {% endif %}
+            {% if settings.sm_twitter %}
+            <li><a href="{{ settings.sm_twitter_link }}" target="_blank"><i class="fa fa-twitter-square"></i></a></li>
+            {% endif %}
+            {% if settings.sm_google %}
+            <li><a href="{{ settings.sm_google_link }}" target="_blank"><i class="fa fa-google-plus-square"></i></a></li>
+            {% endif %}
+            {% if settings.sm_linkedin %}
+            <li><a href="{{ settings.sm_linkedin_link }}" target="_blank"><i class="fa fa-linkedin-square"></i></a></li>
+            {% endif %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+  /*------------------------------------------------*/
+  /* ADJUSTS 'JUMPING' OF CONTENT */
+  /*------------------------------------------------*/
+  var stickyHeight = document.getElementById('category-navigation').offsetHeight;
+  document.write('<style id="fixedStyle">.fixed_content{margin-top:'+stickyHeight+'px;}</style>');
+
+  window.onresize = function(event) {
+    stickyHeight = document.getElementById('category-navigation').offsetHeight;
+    document.getElementById("fixedStyle").innerHTML = '.fixed_content{margin-top:'+stickyHeight+'px;}';
+  }
+  
+  /*$('#header').after('<div class="banner">This site will be closed Feb 10, 2017 for warehousing duties and re-open on Feb 20, 2017.</di>');*/
+  </script>
+</body>
+</html>

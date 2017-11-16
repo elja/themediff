@@ -1,0 +1,19 @@
+{% form 'search', products_search %}
+<div class="keyword clrfix">
+    <input type="text" name="s[keyword]" placeholder="search within"/>
+</div>
+{% endform %}
+
+<div class="filtering-results">
+	<p class='info'>We found {{ products_search.total | pluralize: 'item', 'items' }}</p>
+</div>
+
+<script>
+    $(function () {
+        $('.keyword input').on('keypress', function (event) {
+            if (event.keyCode == 13) {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,18 @@
+{% if recently_viewed_products != empty %}
+<div class="product-page-right recently-viewed-products">
+    <h4>
+        Recently viewed:
+    </h4>
+
+    {% for product in recently_viewed_products limit: 4 %}
+    {% include 'product' with product %}
+    {% endfor %}
+</div>
+<script>
+    $(function () {
+                setup_carousels('.recently-viewed-products .product .image-carousel');
+                bind_product_body_clicker('.recently-viewed-products', '.product');
+            }
+    );
+</script>
+{% endif %}

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        RailsCasts Weekly
+    </title>
+    <style type="text/css">
+        body, td {
+            color: #555;
+            font-size: 14px;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+        }
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+            color: #555;
+            font-family: Verdana, Helvetica, Arial, sans-serif;
+        }
+        a, a:visited {
+            color: #1414ff;
+        }
+        table {
+            border: 0;
+            border-collapse: collapse;
+            max-width: 600px;
+        }
+        table td, table th {
+            padding: 0;
+        }
+        table#background {
+            width: 100%;
+        }
+        table#background table {
+            width: 600px;
+            margin: 0 auto;
+        }
+        table#background table tr.section-header {
+            background-color: #326fb1;
+            font-size: 14px;
+            text-indent: 10px;
+            font-weight: bold;
+            color: #fff;
+            vertical-align: middle;
+        }
+        table#background table tr.section-header td {
+            padding: 7px 0;
+        }
+        table#background table tr.section-header.footer td {
+            height: 18px;
+        }
+        table#background table tr.section-header td p {
+            color: #fff;
+            line-height: 16px;
+            vertical-align: middle;
+        }
+        table#background table tr.section-header.footer td p {
+            min-height: 18px;
+            height: 18px;
+        }
+        table#background table tr.section-header.right-aligned td p {
+            text-align: right;
+            margin-right: 10px;
+        }
+        table#order-information {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        table#order-information tr td {
+            width: 300px;
+        }
+        table#order-information tr td h3 {
+            text-indent: 15px;
+        }
+        table#order-information tr td p {
+            margin: 3px 0;
+            text-indent: 15px;
+        }
+        table#order-information tr {
+            vertical-align: top;
+        }
+        table#order-information tr td.billing-information h3,
+        table#order-information tr td.billing-information p {
+            text-indent: 0;
+        }
+        table#main {
+            border-collapse:separate;
+            border-spacing:10px;
+        }
+        table#main td {
+            margin-left: 15px;
+        }
+        table#main tr td.service {
+            line-height: 40px;
+            color: #646e23;
+        }
+        table#main tr td h1.email-title {
+            color: #2c5987;
+            font-style: italic;
+        }
+        table#main tr td h3.appeal-to-user {
+            margin: 15px 0;
+        }
+
+		.description {
+			text-indent: 15px;
+		}
+
+		.description h2, .description .product-personalizations, .description img {
+			display: none;
+		}
+
+		.line-item-details {
+			margin: 5px 10px;
+		}
+    </style>
+</head>
+<body>
+<table id="background">
+    <tr>
+        <td>
+            <table id="main">
+                <tr>
+                    <td class="service">
+                        Customer Service {{ store.primary_phone | number_to_phone }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1 class="email-title">
+                            Thank you for your order!
+                        </h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h3 class="order-title">
+                            Order Number:
+                            <a href="{{ account_dashboard_url }}">{{ order.order_id }}</a>
+                        </h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3 class="appeal-to-user">
+                            Hi, {{ user_name }}!
+                        </h3>
+                        <p>
+                          Your order from "{{ store.name }}" has been shipped, click <a href="{{ login_url }}">here</a> to login and review your order.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <table id="order-information">
+                <tr class="section-header">
+                    <td colspan="2">
+                        <p>
+                            Your Shipping Information
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+		            <td colspan="2">
+						<p>Item: {{ line_item.name }}</p>
+						<div class="description">
+							<span>Description:</span>
+							<div class="line-item-details">{% include 'line_item_details' %}</div>
+						</div>
+						<p>Quantity: {{ split_item.quantity }}</p>
+						<p>Ship Date: {{ split_item.ship_date }}</p>
+                        <p>Shipping Method: {{ split_item.shipment_friendly_name }}</p>
+
+                        {% if split_item.tracking_number != empty %}
+                        <p>
+                            Tracking number: {{ split_item.shipment | tracking_link }}
+                        </p>
+                        {% endif %}
+
+                        <p>Shipping State: {{ split_item.state }}</p>
+                    </td>
+                </tr>
+            </table>
+            <table><tr class="section-header footer"><td><p></p></td></tr></table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

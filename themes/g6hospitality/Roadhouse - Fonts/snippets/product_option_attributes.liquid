@@ -1,0 +1,8 @@
+<div class="attribute">
+    <label>{{ option.friendly_name }}:</label>
+    {% for choice in line_item.choices %}
+        {% if choice.product_option_id == option.id %}
+            <span class="value">{{ choice.product_sub_option.name }}</span>
+        {% endif %}
+    {% endfor %}
+</div>
