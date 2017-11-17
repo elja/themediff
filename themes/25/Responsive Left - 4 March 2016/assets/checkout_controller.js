@@ -25,14 +25,14 @@ window.CheckoutController = (function() {
         switch (self.state) {
             case 'address':
                 $('.content-item.shipping .method label').addClass('unavailable').find('input[type="radio"]').attr('disabled', true);
-                self.prepareShippingMethods();
+                
                 self.bindExistingAddressSelect('shipping');
                 break;
             case 'delivery':
                 $('.content-item.shipping .contact input').attr('disabled', true);
                 $('.content-item.shipping .address input').attr('disabled', true);
                 $('.content-item.shipping .address select').attr('disabled', true).trigger("liszt:updated");
-                self.prepareShippingMethods();
+                
                 self.bindSubmitDeliveryForm();
                 break;
             case 'payment':
@@ -96,7 +96,7 @@ window.CheckoutController = (function() {
             var container = $('.content-item.payment .address');
             if ($(this).is(':checked')) {
                 container.find('input[type="text"]').attr('disabled', 'disabled').removeClass('with-hint');
-                self._updateAddress(container, self.addressJson);
+                self._updateAddress(container, $(this).data('shipping'));
             } else {
                 container.find('input[type="text"]').attr('disabled', false);
             }
@@ -117,7 +117,7 @@ window.CheckoutController = (function() {
     };
 
     CheckoutController.prototype.bindPromotionDeletion = function() {
-        $('.promotions .fields').live('nested:fieldRemoved:promotion_adjustments', function() {
+        $('.promotions .fields').live('nested:fieldRemoved:coupons', function() {
             form = $('.promotions .fields').parents('form');
             actsLikeApplyCode = $("<input type='hidden' name='apply_coupon_code' value='1'/>");
             form.append(actsLikeApplyCode);

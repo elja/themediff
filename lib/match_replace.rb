@@ -1,25 +1,30 @@
 class MatchReplace
   class MatchError < StandardError
-    attr_reader :change
+    attr_reader :change, :result
 
-    def initialize(msg, change)
+    def initialize(msg, result, change)
       @change = change
+      @result = result
       super(msg)
     end
   end
 
-  class MatchFound    < MatchError; end
-  class MatchNotFound < MatchError; end
-  class BlockNotFound < MatchError; end
+  class MatchFound < MatchError;
+  end
+  class MatchNotFound < MatchError;
+  end
+  class BlockNotFound < MatchError;
+  end
 
   BLOCK_ANY = /\bANY\b/
   REGEXP_PART = /\#{([^\}]+)\}/
 
   attr_reader :conflicts, :path, :result
 
-  def initialize(path, content)
+  def initialize(path, file)
     @path = path
-    @content = content
+    @file = file
+    @content = @file ? File.read(file[:full_path]) : ''
     @result = @content.dup
 
     @conflicts = Hash.new { |h, k| h[k] = [] }
@@ -27,39 +32,14 @@ class MatchReplace
 
   def match_replace!(change)
     case change.type
+    when 'PREPEND'
+      return @result = [change.matches[0], @result].join("\n")
     when 'OVERWRITE'
-      return (@result = change.match)
-    when 'REPLACE_ANY'
-      replaces = 0
-      errors = []
-
-      change.matches.each do |match|
-        change.match = match
-
-        begin
-          replace_text(change)
-        rescue MatchNotFound => ex
-          errors << ex
-        else
-          replaces += 1
-        end
-      end
-
-      if replaces > 0
-        @result
-      else
-        errors.each do |ex|
-          conflicts[:not_found] << { change: ex.change, message: ex.message }
-        end
-
-        return false
-      end
+      return (@result = change.matches[0])
     when 'REPLACE'
       replace_text(change)
-    when 'REPLACE_OR_IGNORE'
-      replace_text(change, strict: false)
-    when 'REPLACE_BLOCK'
-      replace_block(change)
+    when 'BLOCK_REPLACE'
+      block_replace(change)
     when 'ENSURE_NO'
       ensure_no(change)
     end
@@ -77,69 +57,79 @@ class MatchReplace
   private
 
   def ensure_no(change)
-    text_regexp = to_regexp(change.match)
-    match_data = text_regexp.match(@result)
+    change.matches.each do |match|
+      text_regexp = to_regexp(match)
+      match_data = text_regexp.match(@result)
 
-    if match_data
-      raise MatchFound.new("Match '#{change.match.strip}' found in #{change.path}", change)
+      if match_data
+        raise MatchNotFound.new("Match (#{match_data}): \n#{change.matches.join("\n")} found in path (#{change.path}): \n#{@result}", change)
+      end
     end
 
     @result
   end
 
-  def replace_text(change, strict: true)
-    text_regexp = to_regexp(change.match)
-    match_data = text_regexp.match(@content)
+  def replace_text(change)
+    return false unless @file
 
-    if strict && match_data.nil?
-      raise MatchNotFound.new("Can't find '#{change.match.strip}' in #{change.path}", change)
+    any_matched = false
+    change.matches.each do |match|
+      text_regexp = to_regexp(match)
+      match_data = text_regexp.match(@content)
+
+      unless match_data.nil?
+        any_matched = true
+        replace_content(match_data, change.replace)
+      end
     end
 
-    replace_content(match_data, change.replace)
+    if !any_matched && !change.modifiers.include?('IGNORE')
+      raise MatchNotFound.new("Match not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
+    end
+
+    @result
   end
 
-  def replace_block(change)
-    block_match = change.match
-    start_match, end_match = block_match.split(BLOCK_ANY)
+  def block_replace(change)
+    return false unless @file
 
-    start_match.strip!
-    end_match.strip!
+    any_matched = false
+    change.matches.each do |match|
+      block_match = match
+      start_match, end_match = block_match.split(BLOCK_ANY)
 
-    if start_match.start_with?(Liquid::BlockBody::TAGSTART) && start_match =~ Liquid::BlockBody::FullToken # liquid block
-      block_regexps = to_liquid_regexps($1, start_match, end_match)
+      start_match.strip!
+      end_match.strip!
 
-      if block_regexps.size == 0
-        raise BlockNotFound.new("Can't find block '#{change.match.strip}' in #{change.path}", change)
+      block_regexps = if start_match.start_with?(Liquid::BlockBody::TAGSTART) && start_match =~ Liquid::BlockBody::FullToken
+        to_liquid_regexps($1, start_match, end_match)
+      elsif start_match =~ /<(\w+)[^>]*>/ # html node
+        to_html_regexps($1, start_match, end_match)
+      else
+        raise NotImplementedError, "can't match block type for #{start_match}"
       end
 
-      block_regexps.each do |regexp|
-        match_data = regexp.match(@content)
+      if block_regexps.size > 0
+        block_regexps.each do |regexp|
+          match_data = regexp.match(@content)
 
-        if match_data.nil?
-          raise MatchNotFound.new("Can't find '#{change.match.strip}' in #{change.path}", change)
+          unless match_data.nil?
+            any_matched = true
+            replace_content(match_data, change.replace)
+          end
         end
-
-        replace_content(match_data, change.replace)
-      end
-    elsif start_match =~ /<(\w+)[^>]*>/  # html node
-      block_regexps = to_html_regexps($1, start_match, end_match)
-
-      if block_regexps.size == 0
-        raise BlockNotFound.new("Can't find block '#{change.match.strip}' in #{change.path}", change)
-      end
-
-      block_regexps.each do |regexp|
-        match_data = regexp.match(@content)
-
-        if match_data.nil?
-          raise MatchNotFound.new("Can't find '#{change.match.strip}' in #{change.path}", change)
+      else
+        unless change.modifiers.include?('IGNORE')
+          raise BlockNotFound.new("Block '#{match.strip}' not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
         end
-
-        replace_content(match_data, change.replace)
       end
-    else
-      raise NotImplementedError, "can't match block type for #{start_match}"
     end
+
+    if !any_matched && !change.modifiers.include?('IGNORE')
+      raise BlockNotFound.new("Block '#{match.strip}' not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
+    end
+
+    @result
   end
 
   def replace_content(match_data, replace_with)

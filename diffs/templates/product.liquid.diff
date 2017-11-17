@@ -5,21 +5,26 @@ WITH
   <div class="line-items-reflective-view">
 END
 
+REPLACE_IGNORE
+{% assign line_item = line_items.first %}
+WITH
+END
+
 REPLACE
 {% form 'populate_product', context_name: 'f' %}
 {% include 'line_item_hidden_fields' %}
 WITH
 END
 
-REPLACE_ANY
+REPLACE
 {% unless product.has_multiple_quantity_option#{s?}? %}
-  {% include #{['"]}stock_message#{['"]}#{.+} %}
+  {% include #{['"]}stock_message#{['"]}#{.*} %}
 
   <table class="product-quantity">
     <tfoot>
     <tr>
       <th colspan='2'>Quantity</th>
-      <td id="quantity">
+      <td id="quantity"#{.*}>
         <input type="text" data-id data-type="quantity" class="amount" value="{{ line_item.quantity }}">
       </td>
     </tr>
@@ -29,14 +34,14 @@ REPLACE_ANY
 OR
 {% if line_items.size == 1 %}
     {% unless product.has_multiple_quantity_option#{s?}? %}
-        {% include #{['"]}stock_message#{['"]}#{.+} %}
+        {% include #{['"]}stock_message#{['"]}#{.*} %}
     {% endunless %}
 
     <table class="product-quantity">
         <tfoot>
         <tr>
             <th colspan='2'>Quantity</th>
-            <td id="quantity">
+            <td id="quantity"#{.*}>
                 <input type="text" data-id="0" data-type="quantity" class="amount"
                        value="{{ line_items[0].quantity }}">
             </td>
@@ -68,5 +73,5 @@ WITH
 END
 
 ENSURE_NO
-line_item
+#{\s}line_item#{s?}
 END

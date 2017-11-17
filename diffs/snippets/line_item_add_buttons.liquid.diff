@@ -1,29 +1,33 @@
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 store.
 WITH
 shop.
 END
 
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 site.
 WITH
 shop.
 END
 
 REPLACE
-wishlist_enabled
+ wishlist_enabled
 WITH
-shop.wishlist_enabled?
+ shop.wishlist_enabled?
 END
 
-REPLACE_OR_IGNORE
-request_sample_enabled
+REPLACE_IGNORE
+ request_sample_enabled
 WITH
-shop.request_sample_enabled?
+ shop.request_sample_enabled?
 END
 
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 {{ product.url }}/request_sample
 WITH
 {{ product | request_sample_url }}
+END
+
+ENSURE_NO
+ wishlist_enabled
 END

@@ -12,7 +12,7 @@ themes_root = File.expand_path('../themes/*/*/', __FILE__)
 diffs_root = File.expand_path('../diffs', __FILE__)
 
 parser = DiffParser.parse(diffs_root)
-roots = Dir.glob(themes_root)
+
 Dir.glob(themes_root).each do |theme_root|
   next unless File.directory?(theme_root)
 
@@ -21,12 +21,12 @@ Dir.glob(themes_root).each do |theme_root|
     merge = merger.merge!(diff)
 
     if merge.conflicts.empty?
-      file_path = File.join(theme_root, merge.path)
-      file = File.open(file_path, 'w+')
-      file.write(merge.result)
-      file.close
+      # file_path = File.join(theme_root, merge.path)
+      # file = File.open(file_path, 'w+')
+      # file.write(merge.result)
+      # file.close
     else
-      file = File.open(File.join(theme_root, '..', 'conflicts.log'), 'w+')
+      file = File.open(File.join(theme_root, '..', 'conflicts.log'), 'a+')
       merge.conflicts.each do |type, details|
         file.write("#{type}:\n")
         details.each { |d| file.write("#{d[:change].path}: #{d[:message]}\n") }
@@ -35,6 +35,4 @@ Dir.glob(themes_root).each do |theme_root|
       file.close
     end
   end
-
-  break
 end

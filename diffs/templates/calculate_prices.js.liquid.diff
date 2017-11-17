@@ -1,4 +1,4 @@
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% for line_item in line_items %}
 ANY
 {% endfor %}

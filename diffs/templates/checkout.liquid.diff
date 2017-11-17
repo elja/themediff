@@ -1,0 +1,301 @@
+REPLACE_IGNORE
+order.state | state_passed: 'custom_data_collection'
+WITH
+checkout_flow.passed_states contains 'custom_data_collection'
+END
+
+REPLACE_IGNORE
+order.state | state_passed: 'payment'
+WITH
+checkout_flow.passed_states contains 'payment'
+END
+
+REPLACE_IGNORE
+order.state | state_passed: 'address'
+WITH
+checkout_flow.passed_states contains 'address'
+END
+
+REPLACE_IGNORE
+order.state | state_passed: 'delivery'
+WITH
+checkout_flow.passed_states contains 'delivery'
+END
+
+REPLACE_IGNORE
+order.state | state_passed: 'budget'
+WITH
+checkout_flow.passed_states contains 'budget'
+END
+
+REPLACE
+order.state
+WITH
+checkout_flow.state
+END
+
+ENSURE_NO
+order.state
+END
+
+REPLACE
+order.has_custom_data_collections?
+WITH
+custom_data_collection != empty?
+END
+
+REPLACE_IGNORE
+ cart_options.custom_data_collections_name
+WITH
+ shop.custom_data_collections_name }}
+END
+
+ENSURE_NO
+{{ cart_options
+END
+
+
+REPLACE
+{% for form in order.custom_data_collections %}
+WITH
+{% for form in custom_data_collections %}
+END
+
+REPLACE
+{% render_custom_data_collection_form form %}
+WITH
+END
+
+REPLACE
+{% endrender_custom_data_collection_form %}
+WITH
+END
+
+REPLACE
+{{ form.hidden_fields }}
+WITH
+END
+
+REPLACE
+{{ input.hidden_fields }}
+WITH
+END
+
+REPLACE
+{{ input.label_for }}
+WITH
+input_{{ input.id }}
+END
+
+REPLACE
+{% render_custom_data_collection_input input %}
+WITH
+{% if input.text_input? %}
+  <input type="text" value="{{ form.custom_data_collections[custom_collection.id][input.id].value }}"
+         name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
+         id="input_{{ input.id }}" class="input-text"/>
+{% elsif input.text_area? %}
+  <textarea name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
+            id="input_{{ input.id }}">{{ form.custom_data_collections[custom_collection.id][input.id].value }}</textarea>
+{% elsif input.select? or input.multi_select? %}
+  <select {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
+    {% unless input.required? %}<option value=''>not specified</option>{% endunless %}
+    {% for option in input.options %}
+      {% assign selected = form.custom_data_collections[custom_collection.id][input.id].value contains option.value %}
+      <option {% if selected %}selected="selected"{% endif %}>{{ option.value }}</option>
+    {% endfor %}
+  </select>
+{% endif %}
+
+{% if form.custom_data_collections[custom_collection.id][input.id].errors %}
+  <span class="error">
+    {{ form.custom_data_collections[custom_collection.id][input.id].errors | default_errors }}
+  </span>
+{% endif %}
+END
+
+REPLACE_IGNORE
+{% form_block 'f.association', context_name: 'ff', object_name: 'shipping_contact' %}
+  {% include 'contact_fields' %}
+{% endform_block %}
+OR
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'shipping_contact' %}
+  {% include 'contact_fields' %}
+{% endform_block %}
+WITH
+{% include 'contact_fields', shipping: true %}
+END
+
+REPLACE_IGNORE
+{% form_block 'f.association', context_name: 'ff', object_name: 'shipping_address' %}
+  {% include 'address_fields' %}
+{% endform_block %}
+OR
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'shipping_address' %}
+  {% include 'address_fields' %}
+{% endform_block %}
+WITH
+{% include 'address_fields', shipping: true %}
+END
+
+REPLACE_IGNORE
+{% form_block 'f.association', context_name: 'ff', object_name: 'billing_contact' %}
+  {% include 'contact_fields' %}
+{% endform_block %}
+OR
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'billing_contact' %}
+  {% include 'contact_fields' %}
+{% endform_block %}
+WITH
+{% include 'contact_fields', billing: true %}
+END
+
+REPLACE_IGNORE
+{% form_block 'f.association', context_name: 'ff', object_name: 'billing_address' %}
+  {% include 'address_fields' %}
+{% endform_block %}
+OR
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'billing_address' %}
+  {% include 'address_fields' %}
+{% endform_block %}
+WITH
+{% include 'address_fields', billing: true %}
+END
+
+REPLACE
+<label class="form-checkbox"><input type="checkbox" name="website_order[save_to_shipping_address]" {% if order.save_to_shipping_address %}checked{% endif %}/>save my address information</label>
+WITH
+<label class="form-checkbox">
+  <input type="checkbox" name="checkout[save_to_address]" value="true" {% if form.save_to_address %}checked{% endif %}/>
+  save my address information
+</label>
+END
+
+REPLACE
+<label class="form-checkbox"><input type="checkbox" name="website_order[save_to_billing_address]" {% if order.save_to_billing_address %}checked{% endif %}/>save my address information</label>
+WITH
+<label class="form-checkbox" for="save-to-billing-address">
+  <input type="checkbox" id="save-to-billing-address" name="checkout[save_to_address]" value="true" {% if form.address.save_to_address %}checked{% endif %}/>
+  save my address information
+</label>
+END
+
+REPLACE
+ shipment_errors
+WITH
+ form.shipment_errors
+END
+
+BLOCK_REPLACE
+{% for shipment in shipments %}
+ANY
+{% endfor %}
+WITH
+{% for shipment in form.shipments %}
+  <label>
+    <input type="radio"
+           name="checkout[delivery][shipment_id]"
+           value="{{ shipment.id }}"
+           {% if order.shipment_id == shipment.id %} checked="checked" {% endif %}
+           />
+    {{ shipment.name }} ({{ shipment.amount | points_or_currency }})
+  </label>
+{% endfor %}
+END
+
+REPLACE_IGNORE
+order.shipment.cost
+WITH
+order.shipment_total
+END
+
+REPLACE_
+<label class="form-checkbox">
+  {% form_field 'f.check_box', 'use_same_as_shipping_address', { "id": "same-as-shipping-address" } %}
+  <label for="same-as-shipping-address">same as shipping address</label>
+</label>
+WITH
+<label class="form-checkbox" for="same-as-shipping-address">
+  <input type="checkbox" id="same-as-shipping-address" name="checkout[use_same_as_shipping_address]" value="true" data-shipping='{{ form.shipping_details | json | escape }}' {% if form.use_same_as_shipping_address %}checked{% endif %}/>
+  same as shipping address
+</label>
+END
+
+REPLACE
+ shop.available_payment_methods
+WITH
+ form.available_payment_methods
+END
+
+BLOCK_REPLACE
+<div class="form-item promotions">
+ANY
+</div>
+WITH
+{% if shop.show_coupon? %}
+  <div class="form-item promotions">
+    <label class="string optional control-label" for="coupon-code">Coupon code</label>
+    <input class="input-text promo-code clearHint" id="coupon-code" name="checkout[coupon_code]" placeholder="promotional code" size="30" type="text"/>
+    <input class="btn-apply button" name="apply_coupon_code" type="submit" value="Apply">
+
+    {% for coupon in order.coupons %}
+      <div class="fields">
+        <input type="hidden" class="delete-coupon" name="checkout[coupons][{{ coupon.id }}][delete]" value="false"/>
+        <a href="javascript:void(0)" class="remove-promotion remove_nested_fields" data-association="coupons"></a>
+        <span title="{{ coupon.note }}" class="coupon-note">{{ coupon.note }}</span>({{ coupon.amount | points_or_currency }})
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+END
+
+REPLACE
+{% form_field 'f.label', 'gift_certificate' %}
+{% form_field 'f.text_field', 'gift_certificate', { "class": "input-text gift-certificate clearHint", "placeholder": "gift certificate" } %}
+{% form_field 'f.submit', 'Apply', { "name": "apply_gift_certificate", "class": "btn-apply button" } %}
+WITH
+{% if shop.show_gift_certificate? %}
+  <div class="form-item">
+    <label class="string optional control-label" for="gift-certificate">Gift certificate</label>
+    <input class="input-text gift-certificate clearHint" id="gift-certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
+    <input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
+  </div>
+{% endif %}
+END
+
+REPLACE_IGNORE
+{% form_field 'f.check_box', 'use_balance', { "id": "switch" } %}
+WITH
+<input type="checkbox" id="switch" name="checkout[use_balance]"/>
+END
+
+REPLACE_IGNORE
+{% form_field 'f.check_box', 'use_balance', { "id": "switch" } %}
+WITH
+<input type="checkbox" id="switch" name="checkout[use_balance]"/>
+END
+
+REPLACE_IGNORE
+{% form_field 'f.check_box', 'use_balance' %}
+WITH
+<input type="checkbox" id="website_order_use_balance" name="checkout[use_balance]"/>
+END
+
+ENSURE_NO
+form_field 'f.check_box', 'use_balance'
+END
+
+REPLACE_IGNORE
+{% render_adjustments_template %}
+WITH
+END
+
+REPLACE_IGNORE
+name="website_order[budget_id]"
+WITH
+name="checkout[budget][budget_id]"
+END
+
+ENSURE_NO
+{% form_block
+END

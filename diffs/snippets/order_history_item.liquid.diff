@@ -10,7 +10,7 @@ WITH
 {% if order.coupons != empty %}
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% if order.has_balance_adjustments? %}
 ANY
 {% endif %}

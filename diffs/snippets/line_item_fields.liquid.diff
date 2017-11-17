@@ -11,17 +11,15 @@ line_item.name
 END
 
 REPLACE
-{% if product.vendors != empty %}
-<p>
-    by {{ product.vendor_names }}
-</p>
-{% endif %}
+ product.vendors != empty
 WITH
-{% if line_item.vendors != empty %}
-  <p>
-    by {{ line_item.vendor_names }}
-  </p>
-{% endif %}
+ line_item.vendors != empty
+END
+
+REPLACE
+ product.vendor_name
+WITH
+ line_item.vendor_names
 END
 
 REPLACE
@@ -36,36 +34,34 @@ WITH
 {% endif %}
 END
 
-REPLACE
-{% if line_item.ordered_modifications != empty %}
-  {% for choice in line_item.grouped_choices %}
-  {% assign group = choice.product_option_group %}
-  {% assign option = choice.product_option %}
 
-  <div class="product-option-grouping-element container">
-      {% if group and group.product_options != empty %}
-          {% include 'product_option_group_attributes' group: group, line_item: line_item %}
-      {% elsif option %}
-          {% include 'product_option_attributes' option: option, line_item: line_item %}
-      {% endif %}
-  </div>
-  {% endfor %}
-{% endif %}
+BLOCK_REPLACE
+<div class="product-options">
+ANY
+</div>
 WITH
-{% assign rendered_groups = '' %}
-{% for choice in line_item.choices %}
-  <div class="product-option-grouping-element container">
-    {% if choice.has_group? %}
-      {% capture group_id %}[{{ choice.group.id }}]{% endcapture %}
-      {% unless rendered_groups contains group_id %}
-        {% include 'product_option_group_attributes', group: choice.group, choices: line_item.choices.groups[choice.group.id] %}
-        {% assign rendered_groups = rendered_groups | append: group_id %}
-      {% endunless %}
-    {% else %}
-      {% include 'product_option_attributes' option: choice.option, sub_option: choice.sub_option %}
-    {% endif %}
-  </div>
-{% endfor %}
+<div class="product-options">
+  {% assign rendered_groups = '' %}
+  {% for choice in line_item.choices %}
+    <div class="product-option-grouping-element container">
+      {% if choice.has_group? %}
+        {% capture group_id %}[{{ choice.group.id }}]{% endcapture %}
+        {% unless rendered_groups contains group_id %}
+          {% include 'product_option_group_attributes', group: choice.group, choices: line_item.choices.groups[choice.group.id] %}
+          {% assign rendered_groups = rendered_groups | append: group_id %}
+        {% endunless %}
+      {% else %}
+        {% include 'product_option_attributes' option: choice.option, sub_option: choice.sub_option %}
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {% if line_item.logo %}
+    <div class="section logo">
+      {% include 'logo_attributes' logo: line_item.logo %}
+    </div>
+  {% endif %}
+</div>
 END
 
 REPLACE
@@ -97,5 +93,3 @@ WITH
   <a href="{{ line_item | move_line_item_to_cart_url }}" class="btn move-item-to-cart" data-method="post">Cart ></a>
 {% endif %}
 END
-
-

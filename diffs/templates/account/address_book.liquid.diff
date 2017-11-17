@@ -4,7 +4,7 @@ WITH
 {% for address in address_book %}
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% form 'account_address', for: address, remote: true %}
 ANY
 {% endform %}
@@ -17,14 +17,14 @@ WITH
 <a href="{{ address | account_address_url }}" class="btn delete-address" data-confirm="Are you sure?" data-method="delete">Delete Address</a>
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 <div class="address-role-form">
 ANY
 </div>
 WITH
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% form 'account_address' %}
 ANY
 {% endform %}
@@ -35,7 +35,7 @@ WITH
 {% endform %}
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 <script>
 ANY
 </script>

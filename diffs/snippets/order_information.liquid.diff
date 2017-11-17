@@ -1,10 +1,10 @@
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 cart_options.custom_data_collections_name
 WITH
 shop.custom_data_collections_name
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% for sub_option in line_item.product_sub_options %}
 ANY
 {% endfor %}
@@ -19,8 +19,12 @@ WITH
 {% endfor %}
 END
 
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 order.promo_total < 0
 WITH
 order.promo_total > 0
+END
+
+ENSURE_NO
+cart_options
 END

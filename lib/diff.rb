@@ -2,7 +2,8 @@ require 'pathname'
 require 'ostruct'
 
 class Diff
-  KEYWORDS = ['OVERWRITE', 'REPLACE', 'REPLACE_ANY', 'REPLACE_BLOCK', 'REPLACE_OR_IGNORE', 'ENSURE_NO']
+  MODIFIERS = ['IGNORE']
+  KEYWORDS = ['PREPEND', 'OVERWRITE', 'REPLACE', 'BLOCK_REPLACE', 'ENSURE_NO']
 
   attr_reader :changes
 
@@ -25,7 +26,7 @@ class Diff
   def parse!
     tap do
       change = nil
-      match = true
+      reset_buffers!
 
       puts "Parsing: #{relative_path}"
 
@@ -34,25 +35,30 @@ class Diff
         token = line.rstrip
         next if token.length == 0
 
-        if KEYWORDS.include?(token)
-          match = true
+        if (keyword = KEYWORDS.detect { |kw| token.start_with?(kw) })
+          reset_buffers!
+          set_direction(:match)
+
           change = OpenStruct.new(
-            type: token,
+            type: keyword,
+            modifiers: token.split('_').select { |mod| MODIFIERS.include?(mod) },
             path: relative_path,
-            match: '',
-            matches: [],
-            replace: ''
+            matches: []
           )
         elsif token == 'WITH'
-          match = false
+          set_direction(:replace)
         elsif token == 'OR'
-          change.matches << change.match
-          change.match = ''
+          change.matches << @match_buffer.dup
+          reset_buffers!
         elsif token == 'END'
-          change.matches << change.match
+          change.matches << @match_buffer.dup
+          change.replace = @replace_buffer.dup
+
           @changes << change
+
+          reset_buffers!
         else
-          match ? change.match << line : change.replace << line
+          append_buffer(line)
         end
       end
 
@@ -61,6 +67,27 @@ class Diff
   end
 
   private
+
+  def append_buffer(data)
+    case @direction
+    when :match
+      @match_buffer << data
+    when :replace
+      @replace_buffer << data
+    else
+      raise NotImplementedError
+    end
+  end
+
+  def set_direction(direction)
+    @direction = direction
+  end
+
+  def reset_buffers!
+    @direction = :match
+    @replace_buffer = ''
+    @match_buffer = ''
+  end
 
   def initialize(path)
     @path = path

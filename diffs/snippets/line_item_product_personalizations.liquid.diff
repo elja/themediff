@@ -1,11 +1,11 @@
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 <input id='artifi-customize' type="button" name="artifi_customnize" value="Customize" class="btn"/>
 WITH
 <input id="artifi-data" type="hidden" name="product[artifi_data]" value="{{ form.artifi_data }}"/>
 <input id='artifi-customize' type="button" name="artifi_customize" value="Customize" class="btn"/>
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% if product.enable_product_personalization?#{.*}%}
 ANY
 {% endif %}
@@ -43,4 +43,12 @@ WITH
     </div>
   </div>
 {% endif %}
+END
+
+ENSURE_NO
+render_product_personalization_form
+END
+
+ENSURE_NO
+render_product_personalization_input
 END

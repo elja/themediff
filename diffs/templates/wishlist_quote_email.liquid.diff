@@ -4,7 +4,7 @@ WITH
 {% if line_item.image %}{{ line_item.image.thumb_url }}{% else %}{{ 'no-image.jpg' | asset_url }}{% endif %}
 END
 
-REPLACE_BLOCK
+BLOCK_REPLACE
 {% for sub_option in line_item.product_sub_options %}
 ANY
 {% endfor %}
@@ -21,6 +21,8 @@ END
 
 REPLACE
 {{ wishlist.grand_total | points_or_currency }}
+OR
+{{ wishlist.item_total | points_or_currency }}
 WITH
 {{ wishlist.cart_total | points_or_currency }}
 END

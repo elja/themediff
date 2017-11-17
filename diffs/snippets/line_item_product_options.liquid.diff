@@ -1,41 +1,92 @@
-REPLACE
-<input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
-<span class="stock" data-index="{{ index }}"></span>
-</div>
-WITH
-<input type="text" class="quantity" data-type="quantity"
-       name="product[grid][{{ sub_option.id }}][quantity]"
-       value="{{ form.grid[sub_option.id].quantity | default: 0 }}">
-<span class="stock" id="stock_{{ sub_option.id }}"></span>
-</div>
-END
+OVERWRITE
+{% if product.product_options_enabled? and product.options_or_groups != empty %}
+    <div class="prod_option_block">
+        <h3>Product Options</h3>
+        <div class="product-options">
+            {% for option_or_group in product.options_or_groups %}
+                {% if option_or_group.group? %}
+                    {% include 'product_option_group' with option_or_group %}
+                {% elsif option_or_group.option? %}
+                    {% include 'product_option' with option_or_group %}
+                {% endif %}
+            {% endfor %}
 
+            {% if product.options_or_groups.multiple_quantity != empty %}
+                <div class='product-option-wrapper form-item'>
+                    {% if product.options_or_groups.multiple_quantity.size == 1 %}
+                        {% assign option = product.options_or_groups.multiple_quantity[0] %}
 
-REPLACE_OR_IGNORE
-<td>
-  <input type="text" data-type="quantity" data-id="{{ index }}" class="quantity" value="{{ line_items[index].quantity }}">
-  <span class="stock" data-index="{{ index }}"></span>
-</td>
-WITH
-<td>
-  <input type="text" class="quantity" data-type="quantity"
-         name="product[grid][{{ sub_x.id }}][{{ sub_y.id }}][quantity]"
-         value="{{ form.grid[sub_x.id][sub_y.id].quantity | default: 0 }}">
+                        <div class="multiple-quantity-product-option">
+                            <label>{{ option.friendly_name }}</label>
 
-  <span class="stock" id="stock_{{ sub_x.id }}_{{ sub_y.id }}"></span>
-</td>
-END
+                            {% for sub_option in option.sub_options %}
+                              <div class="product-sub-option">
+                                <label for="qnt_{{ sub_option.id }}">
+                                  {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}
+                                </label>
 
-REPLACE
-{% if product.quantity_limits_message %}
-    <div class='minimum-order-quantity-help'>
-        {{ product.quantity_limits_message }}
+                                <input type="text" class="quantity" data-type="quantity"
+                                       name="product[grid][{{ sub_option.id }}][quantity]"
+                                       value="{{ form.grid[sub_option.id].quantity | default: 0 }}">
+
+                                <span class="stock" id="stock_{{ sub_option.id }}"></span>
+                              </div>
+                            {% endfor %}
+                        </div>
+                    {% elsif product.options_or_groups.multiple_quantity.size == 2 %}
+                        {% assign col = product.options_or_groups.multiple_quantity[0] %}
+                        {% assign row = product.options_or_groups.multiple_quantity[1] %}
+
+                        <div class="multiple-quantity-product-option">
+                            {% assign cols_in_table = 4 %}
+                            {% assign steps = col.sub_options.size | divided_by: cols_in_table %}
+
+                            {% if steps < 1 %}{% assign steps = 1 %}{% endif %}
+
+                            {% for step in (0..steps) %}
+                                {% assign row_offset = step | times: cols_in_table  %}
+                                {% assign step_offset = step | times: row.sub_options.size | times: cols_in_table %}
+
+                                <table class="multiple-quantity-grid">
+                                    {% for sub_y in row.sub_options %}
+                                        {% if forloop.index0 == 0 %}
+                                            <tr>
+                                                <th></th>
+                                                {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                  <th>{% include 'modifier', title: sub_x.name, amount: sub_x.amount %}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endif %}
+
+                                        <tr>
+                                            {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                {% if forloop.index0 == 0 %}
+                                                    <th>{% include 'modifier', title: sub_y.name, amount: sub_y.amount %}</th>
+                                                {% endif %}
+
+                                                <td>
+                                                  <input type="text" class="quantity" data-type="quantity"
+                                                         name="product[grid][{{ sub_x.id }}][{{ sub_y.id }}][quantity]"
+                                                         value="{{ form.grid[sub_x.id][sub_y.id].quantity | default: 0 }}">
+
+                                                  <span class="stock" id="stock_{{ sub_x.id }}_{{ sub_y.id }}"></span>
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
+                      <div class='minimum-order-quantity-help'>
+                        {% include 'quantity_limits_message', product: product %}
+                      </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
     </div>
-{% endif %}
-WITH
-{% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
-  <div class='minimum-order-quantity-help'>
-    {% include 'quantity_limits_message', product: product %}
-  </div>
 {% endif %}
 END

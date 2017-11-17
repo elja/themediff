@@ -1,16 +1,16 @@
-REPLACE_OR_IGNORE
-custom_user_fields_enabled
+REPLACE_IGNORE
+ custom_user_fields_enabled
 WITH
-shop.custom_user_fields_enabled?
+ shop.custom_user_fields_enabled?
 END
 
-REPLACE_OR_IGNORE
-slack_integration_enabled
+REPLACE_IGNORE
+ slack_integration_enabled
 WITH
-shop.slack_integration_enabled?
+ shop.slack_integration_enabled?
 END
 
-REPLACE_OR_IGNORE
+REPLACE_IGNORE
 {% form_block #{['"]}f.fields_for#{['"]}, context_name: #{['"]}ff#{['"]}, object_name: #{['"]}custom_field_values#{['"]} %}
   {% for field in f.liquid_object.custom_fields_for_registration %}
     {% include #{['"]}custom_user_field#{['"]}#{,?} field: field %}
@@ -22,4 +22,16 @@ WITH
     {% include 'custom_user_field', field: field %}
   </div>
 {% endfor %}
+END
+
+ENSURE_NO
+#{\s}slack_integration_enabled
+END
+
+ENSURE_NO
+#{\s}custom_user_fields_enabled
+END
+
+ENSURE_NO
+form_block
 END
