@@ -15,7 +15,7 @@ WITH
        value="{{ form.first_name.value }}"
        name="checkout[address][first_name]"
        id="website_order_{{ id_part }}_contact_attributes_first_name"
-       class="input-text first-address"
+       class="input-text first-name"
        placeholder="first name" />
 END
 

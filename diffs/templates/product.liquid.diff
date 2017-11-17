@@ -58,7 +58,7 @@ WITH
           <th colspan='2'>Quantity</th>
           <td id="quantity">
               <input type="text" data-type="quantity" class="amount"
-                     name="product[quantity]" value="{{ form.quantity | default: 0 }}"/>
+                     name="product[quantity]" value="{{ form.quantity | default: 1 }}"/>
           </td>
       </tr>
       </tfoot>

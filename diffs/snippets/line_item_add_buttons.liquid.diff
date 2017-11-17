@@ -29,5 +29,5 @@ WITH
 END
 
 ENSURE_NO
- wishlist_enabled
+#{\s}wishlist_enabled
 END

@@ -32,7 +32,7 @@ END
 REPLACE_IGNORE
 {% form_field 'f.text_field', 'keyword', { "class": "input-text clearHint", "placeholder": "Search", "value": "" }  %}
 WITH
-<input type="text" name="s[keyword]" class="input-text clearHint" placeholder="Search"/>
+<input type="text" id="s_keyword" name="s[keyword]" class="input-text clearHint" placeholder="Search"/>
 END
 
 REPLACE_IGNORE

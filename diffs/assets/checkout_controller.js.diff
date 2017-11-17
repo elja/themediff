@@ -1,5 +1,5 @@
 REPLACE
-function CheckoutController(state, contactJson, addressJson) {
+function CheckoutController(#{.+}) {
 #{[\S\s]+}
 this.initialize();
 }
@@ -8,6 +8,19 @@ function CheckoutController(state) {
   this.state = state;
   this.initialize();
 }
+
+REPLACE_IGNORE
+$('.content-item.payment input#same-as-shipping-contact').live('click', function (event) {
+WITH
+$('.content-item.payment input#same-as-shipping-contact').live('click', function (event) {
+self.contactJson = $(this).data('shipping');
+END
+
+container.find('input.first-name').val(self.contactJson.firstName);
+container.find('input.last-name').val(self.contactJson.lastName);
+container.find('input.email').val(self.contactJson.email);
+container.find('input.phone').val(self.contactJson.phone);
+END
 
 REPLACE
 self.prepareShippingMethods();

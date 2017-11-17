@@ -62,7 +62,7 @@ class MatchReplace
       match_data = text_regexp.match(@result)
 
       if match_data
-        raise MatchNotFound.new("Match (#{match_data}): \n#{change.matches.join("\n")} found in path (#{change.path}): \n#{@result}", change)
+        raise MatchNotFound.new("Match (#{match_data}): \n#{change.matches.join("\n")} found in path (#{@file[:full_path]})", @result, change)
       end
     end
 

@@ -194,6 +194,7 @@ WITH
 {% for shipment in form.shipments %}
   <label>
     <input type="radio"
+           id="{{ shipment.shipment_id }}"
            name="checkout[delivery][shipment_id]"
            value="{{ shipment.id }}"
            {% if order.shipment_id == shipment.id %} checked="checked" {% endif %}
@@ -209,7 +210,19 @@ WITH
 order.shipment_total
 END
 
-REPLACE_
+REPLACE_IGNORE
+<label class="form-checkbox">
+  {% form_field 'f.check_box', 'use_same_as_shipping_contact', { "id": "same-as-shipping-contact" } %}
+  <label for="same-as-shipping-contact">same as shipping contact</label>
+</label>
+WITH
+<label class="form-checkbox" for="same-as-shipping-contact">
+  <input type="checkbox" id="same-as-shipping-contact" name="checkout[use_same_as_shipping_contact]" value="true" data-shipping='{{ form.shipping_details | json | escape }}' {% if form.use_same_as_shipping_contact %}checked{% endif %}/>
+  same as shipping contact
+</label>
+END
+
+REPLACE
 <label class="form-checkbox">
   {% form_field 'f.check_box', 'use_same_as_shipping_address', { "id": "same-as-shipping-address" } %}
   <label for="same-as-shipping-address">same as shipping address</label>
@@ -234,8 +247,8 @@ ANY
 WITH
 {% if shop.show_coupon? %}
   <div class="form-item promotions">
-    <label class="string optional control-label" for="coupon-code">Coupon code</label>
-    <input class="input-text promo-code clearHint" id="coupon-code" name="checkout[coupon_code]" placeholder="promotional code" size="30" type="text"/>
+    <label class="string optional control-label" for="website_order_coupon_code">Coupon code</label>
+    <input class="input-text promo-code clearHint" id="website_order_coupon_code" name="checkout[coupon_code]" placeholder="promotional code" size="30" type="text"/>
     <input class="btn-apply button" name="apply_coupon_code" type="submit" value="Apply">
 
     {% for coupon in order.coupons %}
@@ -256,8 +269,8 @@ REPLACE
 WITH
 {% if shop.show_gift_certificate? %}
   <div class="form-item">
-    <label class="string optional control-label" for="gift-certificate">Gift certificate</label>
-    <input class="input-text gift-certificate clearHint" id="gift-certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
+    <label class="string optional control-label" for="website_order_gift_certificate">Gift certificate</label>
+    <input class="input-text gift-certificate clearHint" id="website_order_gift_certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
     <input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
   </div>
 {% endif %}
@@ -294,6 +307,12 @@ REPLACE_IGNORE
 name="website_order[budget_id]"
 WITH
 name="checkout[budget][budget_id]"
+END
+
+REPLACE
+new CheckoutController(#{.});
+WITH
+new CheckoutController('{{ checkout_flow.state }}');
 END
 
 ENSURE_NO
