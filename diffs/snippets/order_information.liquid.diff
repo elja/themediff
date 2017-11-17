@@ -26,5 +26,5 @@ order.promo_total > 0
 END
 
 ENSURE_NO
-cart_options
+{{ cart_options
 END

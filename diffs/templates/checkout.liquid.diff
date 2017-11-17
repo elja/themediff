@@ -310,7 +310,7 @@ name="checkout[budget][budget_id]"
 END
 
 REPLACE
-new CheckoutController(#{.+});
+new CheckoutController(#{[^\)].+})#{;?}
 WITH
 new CheckoutController('{{ checkout_flow.state }}');
 END

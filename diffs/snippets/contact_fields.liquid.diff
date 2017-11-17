@@ -1,4 +1,6 @@
-PREPEND
+BEFORE
+#{\A}
+WITH
 {% capture id_part %}{% if billing %}billing{% endif %}{% if shipping %}shipping{% endif %}{% endcapture %}
 END
 

@@ -32,8 +32,10 @@ class MatchReplace
 
   def match_replace!(change)
     case change.type
-    when 'PREPEND'
-      return @result = [change.matches[0], @result].join("\n")
+    when 'BEFORE'
+      adjust(change, :before)
+    when 'AFTER'
+      adjust(change, :after)
     when 'OVERWRITE'
       return (@result = change.matches[0])
     when 'REPLACE'
@@ -41,7 +43,9 @@ class MatchReplace
     when 'BLOCK_REPLACE'
       block_replace(change)
     when 'ENSURE_NO'
-      ensure_no(change)
+      ensure_content(change, :absent)
+    when 'ENSURE_EXIST'
+      ensure_content(change, :present)
     end
   rescue MatchNotFound => ex
     conflicts[:not_found] << { change: ex.change, message: ex.message }
@@ -56,13 +60,38 @@ class MatchReplace
 
   private
 
-  def ensure_no(change)
+  def adjust(change, type)
+    return false unless @file
+
+    any_matched = false
+    change.matches.each do |match|
+      text_regexp = to_regexp(match)
+      match_data = @result.to_enum(:scan, text_regexp).map { Regexp.last_match }
+
+      if match_data.any?
+        any_matched = true
+        replace_content(match_data, change.replace, type: type)
+      end
+    end
+
+    if !any_matched && !change.modifiers.include?('IGNORE')
+      raise MatchNotFound.new("Match not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
+    end
+
+    @result
+  end
+
+  def ensure_content(change, type)
     change.matches.each do |match|
       text_regexp = to_regexp(match)
       match_data = text_regexp.match(@result)
 
-      if match_data
+      if !match_data.nil? && type == :absent
         raise MatchNotFound.new("Match (#{match_data}): \n#{change.matches.join("\n")} found in path (#{@file[:full_path]})", @result, change)
+      end
+
+      if !match_data && type == :present
+        raise MatchNotFound.new("Match (#{match_data}): \n#{change.matches.join("\n")} not found in path (#{@file[:full_path]})", @result, change)
       end
     end
 
@@ -75,9 +104,9 @@ class MatchReplace
     any_matched = false
     change.matches.each do |match|
       text_regexp = to_regexp(match)
-      match_data = text_regexp.match(@content)
+      match_data = @result.to_enum(:scan, text_regexp).map { Regexp.last_match }
 
-      unless match_data.nil?
+      if match_data.any?
         any_matched = true
         replace_content(match_data, change.replace)
       end
@@ -111,9 +140,9 @@ class MatchReplace
 
       if block_regexps.size > 0
         block_regexps.each do |regexp|
-          match_data = regexp.match(@content)
+          match_data = @result.to_enum(:scan, regexp).map { Regexp.last_match }
 
-          unless match_data.nil?
+          if match_data.any?
             any_matched = true
             replace_content(match_data, change.replace)
           end
@@ -126,23 +155,36 @@ class MatchReplace
     end
 
     if !any_matched && !change.modifiers.include?('IGNORE')
-      raise BlockNotFound.new("Block '#{match.strip}' not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
+      raise BlockNotFound.new("Block '#{change.matches.join("\n")}' not found in path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @result, change)
     end
 
     @result
   end
 
-  def replace_content(match_data, replace_with)
-    matched_fragments = match_data.to_a
-    matched_fragments.each do |fragment|
-      @result.gsub!(fragment, replace_with.rstrip)
+  def replace_content(match_data, replace_with, type: nil)
+    content_parts = []
+
+    start_index = 0
+    match_data.each do |match|
+      begin_index, end_index = match.offset(0)
+      content_parts << @result[start_index...begin_index]
+      content_parts << if type == :before
+                         "#{replace_with}#{@result[begin_index...end_index]}"
+                       elsif type == :after
+                         "#{@result[begin_index...end_index]}#{replace_with}"
+                       else
+                         replace_with
+                       end
+
+      start_index = end_index
     end
 
-    @result
+    content_parts << @result[start_index..-1]
+    @result = content_parts.join
   end
 
   def to_block_regexps(tag_regexp, start_regexp, end_regexp)
-    segments = @content.split(/(#{tag_regexp})/)
+    segments = @result.split(/(#{tag_regexp})/)
     matches = []
 
     match_data = ''

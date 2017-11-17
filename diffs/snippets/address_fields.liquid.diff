@@ -1,10 +1,7 @@
-PREPEND
-{% capture id_part %}{% if billing %}billing{% endif %}{% if shipping %}shipping{% endif %}{% endcapture %}
-END
-
 REPLACE
 {% assign address = ff.object %}
 WITH
+{% capture id_part %}{% if billing %}billing{% endif %}{% if shipping %}shipping{% endif %}{% endcapture %}
 END
 
 REPLACE_IGNORE

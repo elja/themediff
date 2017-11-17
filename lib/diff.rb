@@ -3,7 +3,7 @@ require 'ostruct'
 
 class Diff
   MODIFIERS = ['IGNORE']
-  KEYWORDS = ['PREPEND', 'OVERWRITE', 'REPLACE', 'BLOCK_REPLACE', 'ENSURE_NO']
+  KEYWORDS = ['BEFORE', 'AFTER', 'OVERWRITE', 'REPLACE', 'BLOCK_REPLACE', 'ENSURE_NO', 'ENSURE_EXIST']
 
   attr_reader :changes
 
@@ -33,7 +33,7 @@ class Diff
       data = File.open(@path)
       data.readlines.each do |line|
         token = line.rstrip
-        next if token.length == 0
+        next if @direction == :match && token.length == 0
 
         if (keyword = KEYWORDS.detect { |kw| token.start_with?(kw) })
           reset_buffers!
@@ -51,8 +51,8 @@ class Diff
           change.matches << @match_buffer.dup
           reset_buffers!
         elsif token == 'END'
-          change.matches << @match_buffer.dup
-          change.replace = @replace_buffer.dup
+          change.matches << @match_buffer[0...-1]
+          change.replace = @replace_buffer[0...-1]
 
           @changes << change
 
