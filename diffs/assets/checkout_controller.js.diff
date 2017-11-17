@@ -16,12 +16,6 @@ $('.content-item.payment input#same-as-shipping-contact').live('click', function
 self.contactJson = $(this).data('shipping');
 END
 
-container.find('input.first-name').val(self.contactJson.firstName);
-container.find('input.last-name').val(self.contactJson.lastName);
-container.find('input.email').val(self.contactJson.email);
-container.find('input.phone').val(self.contactJson.phone);
-END
-
 REPLACE
 self.prepareShippingMethods();
 WITH

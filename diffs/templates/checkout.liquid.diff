@@ -1,31 +1,31 @@
 REPLACE_IGNORE
 order.state | state_passed: 'custom_data_collection'
 WITH
-checkout_flow.passed_states contains 'custom_data_collection'
+checkout_flow | state_passed: 'custom_data_collection'
 END
 
 REPLACE_IGNORE
 order.state | state_passed: 'payment'
 WITH
-checkout_flow.passed_states contains 'payment'
+checkout_flow | state_passed: 'payment'
 END
 
 REPLACE_IGNORE
 order.state | state_passed: 'address'
 WITH
-checkout_flow.passed_states contains 'address'
+checkout_flow | state_passed: 'address'
 END
 
 REPLACE_IGNORE
 order.state | state_passed: 'delivery'
 WITH
-checkout_flow.passed_states contains 'delivery'
+checkout_flow | state_passed: 'delivery'
 END
 
 REPLACE_IGNORE
 order.state | state_passed: 'budget'
 WITH
-checkout_flow.passed_states contains 'budget'
+checkout_flow | state_passed: 'budget'
 END
 
 REPLACE
@@ -41,19 +41,18 @@ END
 REPLACE
 order.has_custom_data_collections?
 WITH
-custom_data_collection != empty?
+custom_data_collections != empty
 END
 
 REPLACE_IGNORE
- cart_options.custom_data_collections_name
+cart_options.custom_data_collections_name
 WITH
- shop.custom_data_collections_name }}
+shop.custom_data_collections_name
 END
 
 ENSURE_NO
-{{ cart_options
+cart_options
 END
-
 
 REPLACE
 {% for form in order.custom_data_collections %}
@@ -79,37 +78,40 @@ END
 REPLACE
 {{ input.hidden_fields }}
 WITH
+{% capture input_id %}website_order_custom_data_collections_attributes_{{ form.id }}_custom_data_attributes_attributes_{{ forloop.index0 }}_value{% endcapture %}
 END
 
 REPLACE
 {{ input.label_for }}
 WITH
-input_{{ input.id }}
+{{ input_id }}
 END
 
 REPLACE
 {% render_custom_data_collection_input input %}
 WITH
-{% if input.text_input? %}
-  <input type="text" value="{{ form.custom_data_collections[custom_collection.id][input.id].value }}"
-         name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
-         id="input_{{ input.id }}" class="input-text"/>
-{% elsif input.text_area? %}
-  <textarea name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
-            id="input_{{ input.id }}">{{ form.custom_data_collections[custom_collection.id][input.id].value }}</textarea>
-{% elsif input.select? or input.multi_select? %}
-  <select {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
-    {% unless input.required? %}<option value=''>not specified</option>{% endunless %}
-    {% for option in input.options %}
-      {% assign selected = form.custom_data_collections[custom_collection.id][input.id].value contains option.value %}
-      <option {% if selected %}selected="selected"{% endif %}>{{ option.value }}</option>
-    {% endfor %}
-  </select>
-{% endif %}
+<div class="input text optional website_order_custom_data_collections_custom_data_value">
+  {% if input.text_input? %}
+    <input type="text" value="{{ form.custom_data_collections[custom_collection.id][input.id].value }}"
+           name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]"
+           id="{{ input_id }}" class="input-text"/>
+  {% elsif input.text_area? %}
+    <textarea name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]"
+              id="{{ input_id }}">{{ form.custom_data_collections[form.id][input.id].value }}</textarea>
+  {% elsif input.select? or input.multi_select? %}
+    <select id="{{ input_id }}" {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
+      {% unless input.required? %}<option value=''>not specified</option>{% endunless %}
+      {% for option in input.options %}
+        {% assign selected = form.custom_data_collections[form.id][input.id].value contains option.value %}
+        <option {% if selected %}selected="selected"{% endif %}>{{ option.value }}</option>
+      {% endfor %}
+    </select>
+  {% endif %}
+</div>
 
-{% if form.custom_data_collections[custom_collection.id][input.id].errors %}
+{% if form.custom_data_collections[form.id][input.id].errors %}
   <span class="error">
-    {{ form.custom_data_collections[custom_collection.id][input.id].errors | default_errors }}
+    {{ form.custom_data_collections[form.id][input.id].errors | default_errors }}
   </span>
 {% endif %}
 END

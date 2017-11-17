@@ -1,0 +1,9 @@
+REPLACE_IGNORE
+order.state
+WITH
+checkout_flow.state
+END
+
+ENSURE_NO
+order.state
+END
