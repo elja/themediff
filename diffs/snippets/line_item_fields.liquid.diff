@@ -64,16 +64,16 @@ WITH
 </div>
 END
 
-REPLACE
+REPLACE_IGNORE
 line_item.price_with_quantity_discount | points_or_currency
 WITH
-line_item.price_after_discount | points_or_currency
+line_item.unit_price | points_or_currency
 END
 
 REPLACE
 {{ line_item.price_with_quantity_discount | minus: line_item.options_price | points_or_currency }}
 WITH
-{{ line_item.product_price | points_or_currency }}
+{{ line_item.price_after_discount | points_or_currency }}
 END
 
 

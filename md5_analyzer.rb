@@ -14,8 +14,7 @@ COLLECT_MD5 = [
   # 'snippets/product_option.liquid',
   # 'snippets/product_option_attributes.liquid',
   # 'snippets/product_option_group_attributes.liquid',
-  'snippets/address_fields.liquid',
-  'snippets/contact_fields.liquid',
+  'templates/adjustments.liquid',
 ]
 
 def get_md5(path)

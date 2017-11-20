@@ -301,11 +301,6 @@ form_field 'f.check_box', 'use_balance'
 END
 
 REPLACE_IGNORE
-{% render_adjustments_template %}
-WITH
-END
-
-REPLACE_IGNORE
 name="website_order[budget_id]"
 WITH
 name="checkout[budget][budget_id]"
