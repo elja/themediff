@@ -14,6 +14,20 @@ WITH
 #spreedly-cvv { border-right: 1px solid #666; width: 95px; }
 END
 
+REPLACE_IGNORE
+.checkout-main .error {
+  display: inline-block;
+  vertical-align: 10px;
+  margin: 0
+}
+WITH
+.checkout-main .error {
+  display: inline-block;
+  margin: 0 0 0 5px;
+  line-height: 24px;
+}
+END
+
 ENSURE_EXIST
 #spreedly-cvv
 END

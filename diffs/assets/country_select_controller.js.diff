@@ -1,0 +1,7 @@
+REPLACE
+return this.j_country.change(this.change_country_handler);
+WITH
+this.j_country.change(this.change_country_handler);
+this.j_country.trigger('change');
+return true;
+END

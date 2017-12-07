@@ -1,8 +1,0 @@
-{% assign history_item = account_balance_history_item %}
-<tr>
-    <td>{{ history_item.occurred_at | date: '%m/%d/%Y %I:%M %p' }}</td>
-    <th>by</th>
-    <td>{{ history_item.author }}</td>
-    <th>balance was changed by</th>
-    <td>{{ history_item.delta | points_or_currency }}</td>
-</tr>

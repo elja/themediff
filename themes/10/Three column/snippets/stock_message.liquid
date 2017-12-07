@@ -1,9 +1,0 @@
-{% assign in_stock = line_item.check_in_stock? %}
-
-<span class="stock {% if in_stock %}in-stock{% else %}out-of-stock{% endif %}">
-	{% if in_stock %}
-		{{ line_item.display_stock }}
-	{% else %}
-		{{ line_item.errors['quantity'] }}
-	{% endif %}
-</span>
