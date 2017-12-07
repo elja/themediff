@@ -1,7 +1,0 @@
-<div class="split-item-shipment">
-	<p><label>Quantity:</label><span>{{ split_item_shipment.quantity }}</span></p>
-	<p><label>Status:</label><span class="{{ split_item_shipment.state | replace: ' ', '-' | downcase }}">{{ split_item_shipment.state }}</span></p>
-	<p><label>Tracking #:</label><span>{{ split_item_shipment.shipment | tracking_link }}</span></p>
-	<p><label>Ship Date:</label><span>{{ split_item_shipment.ship_date }}</span></p>
-	<p><label>Ship Method:</label><span>{{ split_item_shipment.shipment_friendly_name }}</span></p>
-</div>

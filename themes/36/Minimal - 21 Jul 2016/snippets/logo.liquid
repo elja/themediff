@@ -1,6 +1,0 @@
-<div class="image-wrapper left-arrow item {% if log.custom? %} 'user-logo' {% endif %}" data-image='{{ logo.front_preview_url }}' id='{{ logo | dom_id }}' data-id="{{ logo.id }}">
-    <img src="{{ logo.front_thumb_url }}" />
-    {% if logo.custom? %}
-    <a href='{{ logo | delete_logo_url }}' class="delete-image"></a>
-    {% endif %}
-</div>
