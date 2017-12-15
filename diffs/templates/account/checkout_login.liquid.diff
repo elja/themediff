@@ -8,8 +8,8 @@ REPLACE
 {% form_field 'f.input', 'customer_email', { "label": "email address", "required": true } %}
 WITH
 <div class="input string required">
-  <label class="string required control-label" for="customer_email"><abbr title="required">*</abbr> Email address</label>
-  <input class="string required" id="customer_email" name="guest[email]" type="text" value="{{ form.email }}">
+  <label class="string required control-label" for="website_order_customer_email"><abbr title="required">*</abbr> Email address</label>
+  <input class="string required" id="website_order_customer_email" name="guest[email]" type="text" value="{{ form.email }}">
 
   {% if form.errors contains 'email' %}
     <span class="error">{{ form.errors['email'] }}</span>

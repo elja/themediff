@@ -57,7 +57,13 @@ END
 REPLACE
 {% for form in order.custom_data_collections %}
 WITH
-{% for form in custom_data_collections %}
+{% for custom_collection in custom_data_collections %}
+END
+
+REPLACE
+<h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}</h4>
+WITH
+<h4>{{ custom_collection.title }} {% if custom_collection.amount != 0 %} ({{ custom_collection.amount | points_or_currency }}) {% endif %}</h4>
 END
 
 REPLACE
@@ -78,7 +84,7 @@ END
 REPLACE
 {{ input.hidden_fields }}
 WITH
-{% capture input_id %}website_order_custom_data_collections_attributes_{{ form.id }}_custom_data_attributes_attributes_{{ forloop.index0 }}_value{% endcapture %}
+{% capture input_id %}website_order_custom_data_collections_attributes_{{ custom_collection.id }}_custom_data_attributes_attributes_{{ forloop.index0 }}_value{% endcapture %}
 END
 
 REPLACE
@@ -93,25 +99,25 @@ WITH
 <div class="input text optional website_order_custom_data_collections_custom_data_value">
   {% if input.text_input? %}
     <input type="text" value="{{ form.custom_data_collections[custom_collection.id][input.id].value }}"
-           name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]"
+           name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
            id="{{ input_id }}" class="input-text"/>
   {% elsif input.text_area? %}
-    <textarea name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]"
-              id="{{ input_id }}">{{ form.custom_data_collections[form.id][input.id].value }}</textarea>
+    <textarea name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
+              id="{{ input_id }}">{{ form.custom_data_collections[custom_collection.id][input.id].value }}</textarea>
   {% elsif input.select? or input.multi_select? %}
     <select id="{{ input_id }}" {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
       {% unless input.required? %}<option value=''>not specified</option>{% endunless %}
       {% for option in input.options %}
-        {% assign selected = form.custom_data_collections[form.id][input.id].value contains option.value %}
+        {% assign selected = form.custom_data_collections[custom_collection.id][input.id].value contains option.value %}
         <option {% if selected %}selected="selected"{% endif %}>{{ option.value }}</option>
       {% endfor %}
     </select>
   {% endif %}
 </div>
 
-{% if form.custom_data_collections[form.id][input.id].errors %}
+{% if form.custom_data_collections[custom_collection.id][input.id].errors %}
   <span class="error">
-    {{ form.custom_data_collections[form.id][input.id].errors | default_errors }}
+    {{ form.custom_data_collections[custom_collection.id][input.id].errors | default_errors }}
   </span>
 {% endif %}
 END
@@ -149,7 +155,7 @@ OR
   {% include 'contact_fields' %}
 {% endform_block %}
 WITH
-{% include 'contact_fields', billing: true %}
+{% include 'contact_fields', billing: true, form: form.address %}
 END
 
 REPLACE_IGNORE
@@ -161,7 +167,7 @@ OR
   {% include 'address_fields' %}
 {% endform_block %}
 WITH
-{% include 'address_fields', billing: true %}
+{% include 'address_fields', billing: true, form: form.address %}
 END
 
 REPLACE
@@ -180,6 +186,18 @@ WITH
   <input type="checkbox" id="save-to-billing-address" name="checkout[save_to_address]" value="true" {% if form.address.save_to_address %}checked{% endif %}/>
   save my address information
 </label>
+END
+
+REPLACE_IGNORE
+{% include 'billing_addresses_drop_down' %}
+WITH
+{% include 'billing_addresses_drop_down', form: form.address %}
+END
+
+REPLACE_IGNORE
+{% include 'billing_address_fields' %}
+WITH
+{% include 'billing_address_fields', form: form.address %}
 END
 
 REPLACE_IGNORE

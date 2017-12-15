@@ -8,6 +8,7 @@ function CheckoutController(state) {
   this.state = state;
   this.initialize();
 }
+END
 
 REPLACE_IGNORE
 $('.content-item.payment input#same-as-shipping-contact').live('click', function (event) {
