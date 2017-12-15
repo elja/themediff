@@ -1,4 +1,6 @@
 OVERWRITE
+ANY
+WITH
 {% if product.minimum_order_quantity %}
   {% if product.maximum_order_quantity %}
     Minimum order quantity: {{ product.minimum_order_quantity }}

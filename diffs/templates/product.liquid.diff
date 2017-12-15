@@ -6,12 +6,304 @@ WITH
 END
 
 REPLACE_IGNORE
+{% if product.enable_product_options? and product.product_option_grouping_elements != empty %}
+<h3>Product Options</h3>
+<div class="product-options">
+  {% for grouping_element in line_item.product_option_grouping_elements %}
+    {% assign group = grouping_element.product_option_group %}
+    {% assign option = grouping_element.product_option %}
+
+    {% if group %}
+      {% include 'product_option_group' with group %}
+    {% endif %}
+
+    {% if option %}
+    { % include 'product_option' with option %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+OR
+{% if product.enable_product_options? and product.ordered_modification#{s?} != empty %}
+<div class="prod_option_block">
+  <h3>Product Options</h3>
+  <div class="product-options">
+    {% for choice in line_item.choices %}
+    {% assign group = choice.product_option_group %}
+    {% assign option = choice.product_option %}
+
+    {% if group %}
+      {% include 'product_option_group' with group %}
+    {% endif %}
+
+    {% if option %}
+      {% include 'product_option' with option %}
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+OR
+{% if product.enable_product_options? and product.ordered_modification#{s?} != empty %}
+<div class="prod_option_block">
+  <h3>Product Options</h3>
+  <div class="product-options">
+    {% for choice in line_item.choices %}
+      {% assign group  = choice.product_option_group %}
+      {% assign option = choice.product_option %}
+
+      {% if group %}
+        {% include 'product_option_group' with group %}
+      {% elsif option %}
+        {% include 'product_option' with option %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+WITH
+{% if product.product_options_enabled? and product.options_or_groups != empty %}
+    <div class="prod_option_block">
+        <h3>Product Options</h3>
+        <div class="product-options">
+            {% for option_or_group in product.options_or_groups %}
+                {% if option_or_group.group? %}
+                    {% include 'product_option_group' with option_or_group %}
+                {% elsif option_or_group.option? %}
+                    {% include 'product_option' with option_or_group %}
+                {% endif %}
+            {% endfor %}
+
+            {% if product.options_or_groups.multiple_quantity != empty %}
+                <div class='product-option-wrapper form-item'>
+                    {% if product.options_or_groups.multiple_quantity.size == 1 %}
+                        {% assign option = product.options_or_groups.multiple_quantity[0] %}
+
+                        <div class="multiple-quantity-product-option">
+                            <label>{{ option.friendly_name }}</label>
+
+                            {% for sub_option in option.sub_options %}
+                              <div class="product-sub-option">
+                                <label for="qnt_{{ sub_option.id }}">
+                                  {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}
+                                </label>
+
+                                <input type="text" class="quantity" data-type="quantity"
+                                       name="product[grid][{{ sub_option.id }}][quantity]"
+                                       value="{{ form.grid[sub_option.id].quantity | default: 0 }}">
+
+                                <span class="stock" id="stock_{{ sub_option.id }}"></span>
+                              </div>
+                            {% endfor %}
+                        </div>
+                    {% elsif product.options_or_groups.multiple_quantity.size == 2 %}
+                        {% assign col = product.options_or_groups.multiple_quantity[0] %}
+                        {% assign row = product.options_or_groups.multiple_quantity[1] %}
+
+                        <div class="multiple-quantity-product-option">
+                            {% assign cols_in_table = 4 %}
+                            {% assign steps = col.sub_options.size | divided_by: cols_in_table %}
+
+                            {% if steps < 1 %}{% assign steps = 1 %}{% endif %}
+
+                            {% for step in (0..steps) %}
+                                {% assign row_offset = step | times: cols_in_table  %}
+                                {% assign step_offset = step | times: row.sub_options.size | times: cols_in_table %}
+
+                                <table class="multiple-quantity-grid">
+                                    {% for sub_y in row.sub_options %}
+                                        {% if forloop.index0 == 0 %}
+                                            <tr>
+                                                <th></th>
+                                                {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                  <th>{% include 'modifier', title: sub_x.name, amount: sub_x.amount %}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endif %}
+
+                                        <tr>
+                                            {% for sub_x in col.sub_options offset: row_offset, limit: cols_in_table %}
+                                                {% if forloop.index0 == 0 %}
+                                                    <th>{% include 'modifier', title: sub_y.name, amount: sub_y.amount %}</th>
+                                                {% endif %}
+
+                                                <td>
+                                                  <input type="text" class="quantity" data-type="quantity"
+                                                         name="product[grid][{{ sub_x.id }}][{{ sub_y.id }}][quantity]"
+                                                         value="{{ form.grid[sub_x.id][sub_y.id].quantity | default: 0 }}">
+
+                                                  <span class="stock" id="stock_{{ sub_x.id }}_{{ sub_y.id }}"></span>
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if product.minimum_order_quantity > 0 or product.maximum_order_quantity > 0 %}
+                      <div class='minimum-order-quantity-help'>
+                        {% include 'quantity_limits_message', product: product %}
+                      </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+END
+
+
+----------------------------------------------------------
+REPLACE_IGNORE
+{% if product.enable_product_personalization?#{.+}%}
+<div class="prod_option_block">
+  <h3>Product Personalizations</h3>
+  <div class="product-personalization">
+    {% for form in line_item.product_personalizations %}
+      {% capture personalization_path %}product[{{ line_item_index }}]{% endcapture %}
+      {% render_product_personalization_form form, attributes_path: "product[]" %}
+        <h4>{{ form.title }}{% if form.amount > 0 %} ({% if form.amount > 0 %}+{% endif %}{{ form.amount | points_or_currency }}){% endif %}</h4>
+        {{ form.hidden_fields }}
+        {% for input in form.inputs %}
+          <div class='form-item'>
+            {{ input.hidden_fields }}
+            <label for='{{ input.label_for }}'>{{ input.label }}{% if input.required? %} *{% endif %}</label>
+            {% render_product_personalization_input input, {"data-id": "{{input.form_input_id}}", "data-type": "product-personalization"} %}
+          </div>
+        {% endfor %}
+      {% endrender_product_personalization_form %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+OR
+{% if product.enable_product_personalization?#{.+}%}
+<h3>Product Personalizations</h3>
+<div class="product-personalization">
+  {% for form in line_item.product_personalizations %}
+    {% capture personalization_path %}product[{{ line_item_index }}]{% endcapture %}
+    {% render_product_personalization_form form, attributes_path: "product[]" %}
+      <h4>{{ form.title }}{% if form.amount > 0 %} ({% if form.amount > 0 %}+{% endif %}{{ form.amount | money_with_currency }}){% endif %}</h4>
+      {{ form.hidden_fields }}
+      {% for input in form.inputs %}
+        <div class='form-item'>
+          {{ input.hidden_fields }}
+          <label for='{{ input.label_for }}'>{{ input.label }}{% if input.required? %} *{% endif %}</label>
+          {% render_product_personalization_input input, {"data-id": "{{input.form_input_id}}", "data-type": "product-personalization"} %}
+        </div>
+      {% endfor %}
+    {% endrender_product_personalization_form %}
+  {% endfor %}
+</div>
+{% endif %}
+WITH
+{% if product.product_personalizations_enabled? %}
+  <div class="prod_option_block">
+    <h3>Product Personalizations</h3>
+    {% for personalization in product.personalizations %}
+      <div class="product-personalization">
+        <h4>{% include 'modifier' title: personalization.title, amount: personalization.amount %}</h4>
+
+        {% for input in personalization.inputs %}
+          {% capture input_id %}product__product_personalizations_attributes_{{ personalization.id }}_product_personalization_attributes_attributes_{{ forloop.index0 }}_value{% endcapture %}
+
+          <div class="form-item clrfix">
+            <label for="{{ input_id }}">{{ input.label }}{% if input.required? %} *{% endif %}</label>
+
+            <div class="input string optional product_product_personalizations_product_personalization_value">
+              {% if input.text_area? %}
+                <textarea name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                          id="{{ input_id }}"
+                          data-type="product-personalization">{{ form.personalizations[personalization.id][input.id].value }}</textarea>
+              {% else %}
+                <input type="text" value="{{ form.personalizations[personalization.id][input.id].value }}"
+                       name="product[personalizations][{{ personalization.id }}][{{ input.id }}]"
+                       id="{{ input_id }}" class="input-text"
+                       data-type="product-personalization"/>
+              {% endif %}
+
+              {% if form.personalizations[personalization.id][input.id].errors %}
+                <span class="error" data-type="product-personalization-error">
+                  {{ form.personalizations[personalization.id][input.id].errors | default_errors }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+END
+----------------------------------------------------------
+
+REPLACE_IGNORE
+#{\s}wishlist_enabled
+WITH
+ shop.wishlist_enabled?
+END
+
+REPLACE_IGNORE
+new ReflectiveView.View(#{[^)]+});
+WITH
+END
+
+REPLACE_IGNORE
+#{\s}quantity_discounts
+WITH
+ product.quantity_discounts
+END
+
+REPLACE_IGNORE
+#{\s}line_item.product_personalizations
+WITH
+ product.product_personalizations
+END
+
+BLOCK_REPLACE_IGNORE
+<div class="hidden-section">
+ANY
+</div>
+WITH
+END
+
+REPLACE_IGNORE
+line_item.setup_charge
+WITH
+product.setup_charge
+END
+
+REPLACE_IGNORE
+line_item.logo_id
+WITH
+form.logo_id
+END
+
+REPLACE_IGNORE
+line_item.minimum_order_quantity
+WITH
+product.minimum_order_quantity
+END
+
+REPLACE_IGNORE
+line_item.maximum_order_quantity
+WITH
+product.maximum_order_quantity
+END
+
+REPLACE_IGNORE
 {% assign line_item = line_items.first %}
 WITH
 END
 
 REPLACE
 {% form 'populate_product', context_name: 'f' %}
+WITH
+END
+
+REPLACE_IGNORE
 {% include 'line_item_hidden_fields' %}
 WITH
 END
@@ -73,5 +365,29 @@ WITH
 END
 
 ENSURE_NO
+product_option_grouping_elements
+END
+
+ENSURE_NO
+render_product_personalization_form
+END
+
+ENSURE_NO
+render_product_personalization_input
+END
+
+ENSURE_NO
 #{\s}line_item#{s?}
+END
+
+ENSURE_NO
+#{\s}wishlist_enabled
+END
+
+ENSURE_NO
+#{\s}quantity_discounts
+END
+
+ENSURE_NO
+ReflectiveView
 END

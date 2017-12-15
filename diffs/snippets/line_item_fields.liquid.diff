@@ -35,7 +35,7 @@ WITH
 END
 
 
-BLOCK_REPLACE
+BLOCK_REPLACE_IGNORE
 <div class="product-options">
 ANY
 </div>
@@ -70,20 +70,22 @@ WITH
 line_item.unit_price | points_or_currency
 END
 
-REPLACE
+REPLACE_IGNORE
 {{ line_item.price_with_quantity_discount | minus: line_item.options_price | points_or_currency }}
 WITH
-{{ line_item.price_after_discount | points_or_currency }}
+{{ line_item.product_price | points_or_currency }}
 END
 
-
-REPLACE
+REPLACE_IGNORE
 {% if line_item.has_quantity_errors %}
     {% form_field 'ff.text_field', 'quantity', { "class": "quantity custom-input-text clearHint error" }%}
 {% else %}
     {% form_field 'ff.text_field', 'quantity', { "class": "quantity custom-input-text clearHint" }%}
 {% endif %}
 
+{% form_field 'ff.hidden_field', 'id' %}
+OR
+{% form_field 'ff.text_field', 'quantity', { "class": "quantity custom-input-text clearHint" } %}
 {% form_field 'ff.hidden_field', 'id' %}
 WITH
 <input class="quantity custom-input-text clearHint{% if line_item.errors contains 'quantity' %} error{% endif %}"

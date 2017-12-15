@@ -1,0 +1,20 @@
+BLOCK_REPLACE_IGNORE
+{% for grouping_element in line_item.product_option_grouping_elements %}
+ANY
+{% endfor %}
+WITH
+{% assign rendered_groups = '' %}
+{% for choice in line_item.choices %}
+<div class="product-option-grouping-element container">
+  {% if choice.has_group? %}
+    {% capture group_id %}[{{ choice.group.id }}]{% endcapture %}
+    {% unless rendered_groups contains group_id %}
+      {% include 'product_option_group_attributes', group: choice.group, choices: line_item.choices.groups[choice.group.id] %}
+      {% assign rendered_groups = rendered_groups | append: group_id %}
+    {% endunless %}
+  {% else %}
+    {% include 'product_option_attributes' option: choice.option, sub_option: choice.sub_option %}
+  {% endif %}
+</div>
+{% endfor %}
+END

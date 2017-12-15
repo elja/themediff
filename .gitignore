@@ -3,4 +3,5 @@
 .ruby-gemset
 .ruby-version
 .idea
+themes
 vendor/cache

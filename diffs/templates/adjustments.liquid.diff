@@ -9,9 +9,3 @@ order.promotion_adjustments
 WITH
 order.coupons
 END
-
-BLOCK_REPLACE
-{% if order.has_balance_adjustments? %}
-ANY
-{% endif %}
-END

@@ -37,7 +37,8 @@ class MatchReplace
     when 'AFTER'
       adjust(change, :after)
     when 'OVERWRITE'
-      return (@result = change.matches[0])
+      overwrite(change)
+      # return (@result = change.matches[0])
     when 'REPLACE'
       replace_text(change)
     when 'BLOCK_REPLACE'
@@ -59,6 +60,23 @@ class MatchReplace
   end
 
   private
+
+  def overwrite(change)
+    if change.matches[0] == 'ANY'
+      @result = change.replace
+    else
+      content = @content.gsub(/\s+/, '').gsub!(/\n|\r|\s|\t/, '')
+      hash = Digest::MD5.hexdigest(content)
+
+      if change.matches.include?(hash)
+        @result = change.replace
+      else
+        if !change.modifiers.include?('IGNORE')
+          raise MatchNotFound.new("Hash isn't acceptable for path: #{@file[:full_path]}:\n#{change.matches.join("\n")}", @content, change)
+        end
+      end
+    end
+  end
 
   def adjust(change, type)
     return false unless @file

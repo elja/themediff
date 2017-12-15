@@ -1,4 +1,6 @@
 OVERWRITE
+ANY
+WITH
 <div class="form-item">
   <label class="string required control-label" for="{{ form.id }}-nickname"><abbr title="required">*</abbr> Name</label>
   <input id="{{ form.id }}-nickname" class="required input-text" name="address[nickname]" placeholder="for example 'work'" type="text" value="{{ form.nickname }}"/>

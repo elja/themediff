@@ -23,6 +23,8 @@ REPLACE
 {{ wishlist.grand_total | points_or_currency }}
 OR
 {{ wishlist.item_total | points_or_currency }}
+OR
+{{ wishlist.item_total | money_with_currency }}
 WITH
 {{ wishlist.cart_total | points_or_currency }}
 END

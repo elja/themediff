@@ -1,4 +1,13 @@
 OVERWRITE
+615286276efd5bb5d472549b6b0324a8
+6e3fea3e3b23a7c1d467f14e3821ad8c
+f7b825c84434de8b5e0c020c0347b431
+5720e3e3c2b6413de476ee0519ff3d99
+8250833b79bf85881908c4cd1c1195e2
+38651fcd367521815fb6d7bfcb982a80
+0f2024fc74ed9687510d6a71f8eebbb7
+041cbe02d810b9675c6fd7a55a3e718a
+WITH
 {% if form.variants.size > 1 %}
   <table class="product-summary">
     <thead>

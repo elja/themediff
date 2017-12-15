@@ -8,7 +8,7 @@ Bundler.require
 require_relative 'lib/diff_parser'
 require_relative 'lib/merger'
 
-themes_root = File.expand_path('../themes/*/*/', __FILE__)
+themes_root = File.join(ARGV[0], "*/*/*/")
 diffs_root = File.expand_path('../diffs', __FILE__)
 
 parser = DiffParser.parse(diffs_root)
@@ -21,15 +21,18 @@ Dir.glob(themes_root).each do |theme_root|
     merge = merger.merge!(diff)
 
     if merge.conflicts.empty?
-      file_path = File.join(theme_root, merge.path)
-      file = File.open(file_path, 'w+')
-      file.write(merge.result)
-      file.close
+      # file_path = File.join(theme_root, merge.path)
+      # file = File.open(file_path, 'w+')
+      # file.write(merge.result)
+      # file.close
     else
       file = File.open(File.join(theme_root, '..', 'conflicts.log'), 'a+')
       merge.conflicts.each do |type, details|
         file.write("#{type}:\n")
-        details.each { |d| file.write("#{d[:change].path}: #{d[:message]}\n") }
+        details.each do |d|
+          file.write("#{d[:change].path}: #{d[:message]}\n")
+          file.write("-------------------------------------------------\n")
+        end
         file.write("-------------------------------------------------\n")
       end
       file.close

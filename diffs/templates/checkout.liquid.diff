@@ -182,7 +182,7 @@ WITH
 </label>
 END
 
-REPLACE
+REPLACE_IGNORE
  shipment_errors
 WITH
  form.shipment_errors
@@ -285,15 +285,9 @@ WITH
 END
 
 REPLACE_IGNORE
-{% form_field 'f.check_box', 'use_balance', { "id": "switch" } %}
-WITH
-<input type="checkbox" id="switch" name="checkout[use_balance]"/>
-END
-
-REPLACE_IGNORE
 {% form_field 'f.check_box', 'use_balance' %}
 WITH
-<input type="checkbox" id="website_order_use_balance" name="checkout[use_balance]"/>
+<input type="checkbox" id="switch" name="checkout[use_balance]"/>
 END
 
 ENSURE_NO
