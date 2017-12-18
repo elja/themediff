@@ -62,6 +62,8 @@ END
 
 REPLACE
 <h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}</h4>
+OR
+<h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | money_with_currency }}) {% endif %}</h4>
 WITH
 <h4>{{ custom_collection.title }} {% if custom_collection.amount != 0 %} ({{ custom_collection.amount | points_or_currency }}) {% endif %}</h4>
 END

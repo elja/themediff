@@ -42,7 +42,7 @@ WITH
     <div class="contact">
       <div class="form-item">
         <label class="string optional control-label" for="first_name">First name *</label>
-        <input class="input-text first_name" id="first_name" value="{{ form.shipping_contact.first_name }}"
+        <input class="input-text first_name first-name" id="first_name" value="{{ form.shipping_contact.first_name }}"
                name="request_sample[shipping_contact][first_name]" placeholder="first name" size="30" type="text"/>
 
         {% if form.shipping_contact.errors contains 'first_name' %}
@@ -52,7 +52,7 @@ WITH
 
       <div class="form-item">
         <label class="string optional control-label" for="last_name">Last name *</label>
-        <input class="input-text last_name" id="last_name" value="{{ form.shipping_contact.last_name }}"
+        <input class="input-text last_name last-name" id="last_name" value="{{ form.shipping_contact.last_name }}"
                name="request_sample[shipping_contact][last_name]" placeholder="last name" size="30" type="text"/>
 
         {% if form.shipping_contact.errors contains 'last_name' %}
@@ -99,14 +99,14 @@ WITH
       <div class="form-item">
         <label class="string optional control-label" for="first_address">Address *</label>
 
-        <input class="input-text first_address" id="first_address" value="{{ form.shipping_address.first_address }}"
+        <input class="input-text first-address first_address" id="first_address" value="{{ form.shipping_address.first_address }}"
                name="request_sample[shipping_address][first_address]" placeholder="address line 1" size="30" type="text"/>
 
         {% if form.shipping_address.errors contains 'first_address' %}
           <span class="error">{{ form.shipping_address.errors['first_address'] }}</span>
         {% endif %}
 
-        <input class="input-text second_address" id="second_address" value="{{ form.shipping_address.second_address }}"
+        <input class="input-text second-address second_address" id="second_address" value="{{ form.shipping_address.second_address }}"
                name="request_sample[shipping_address][second_address]" placeholder="address line 2" size="30" type="text"/>
 
         {% if form.shipping_address.errors contains 'second_address' %}

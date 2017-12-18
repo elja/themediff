@@ -51,8 +51,8 @@ class Diff
           change.matches << @match_buffer.dup
           reset_buffers!
         elsif token == 'END'
-          change.matches << @match_buffer[0...-1]
-          change.replace = @replace_buffer[0...-1]
+          change.matches << @match_buffer[0...-1].dup
+          change.replace = @replace_buffer[0...-1].dup
 
           @changes << change
 

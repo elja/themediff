@@ -17,18 +17,6 @@ WITH
 product.personalizations
 END
 
-REPLACE
-form.
-WITH
-personalization.
-END
-
-REPLACE
-{% for form in
-WITH
-{% for personalization in
-END
-
 BLOCK_REPLACE
 {% capture personalization_path %}
 ANY
@@ -55,6 +43,18 @@ REPLACE
 {{ input.hidden_fields }}
 WITH
 {% capture input_id %}product__product_personalizations_attributes_{{ personalization.id }}_product_personalization_attributes_attributes_{{ forloop.index0 }}_value{% endcapture %}
+END
+
+REPLACE
+form.
+WITH
+personalization.
+END
+
+REPLACE
+{% for form in
+WITH
+{% for personalization in
 END
 
 REPLACE

@@ -16,7 +16,7 @@ WITH
 <input type="text"
        value="{{ form.company.value }}"
        name="checkout[address][company]"
-       id="website_order_{{ id_part }}_contact_attributes_company"
+       id="website_order_{{ id_part }}_address_attributes_company"
        class="input-text company"
        placeholder="company"/>
 END
