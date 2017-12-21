@@ -60,6 +60,12 @@ WITH
 {% for custom_collection in custom_data_collections %}
 END
 
+REPLACE_IGNORE
+{% for input in form.inputs %}
+WITH
+{% for input in custom_collection.inputs %}
+END
+
 REPLACE
 <h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}</h4>
 OR
@@ -107,7 +113,7 @@ WITH
     <textarea name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]"
               id="{{ input_id }}">{{ form.custom_data_collections[custom_collection.id][input.id].value }}</textarea>
   {% elsif input.select? or input.multi_select? %}
-    <select id="{{ input_id }}" {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ form.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
+    <select id="{{ input_id }}" {% if input.multi_select? %}multiple="multiple"{% endif %} name="checkout[custom_data_collections][{{ custom_collection.id }}][{{ input.id }}]{% if input.multi_select? %}[]{% endif %}">
       {% unless input.required? %}<option value=''>not specified</option>{% endunless %}
       {% for option in input.options %}
         {% assign selected = form.custom_data_collections[custom_collection.id][input.id].value contains option.value %}
@@ -324,6 +330,10 @@ REPLACE
 new CheckoutController(#{[^\)].+})#{;?}
 WITH
 new CheckoutController('{{ checkout_flow.state }}');
+END
+
+ENSURE_NO
+form.inputs
 END
 
 ENSURE_NO
