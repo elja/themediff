@@ -1,0 +1,5 @@
+REPLACE
+.form input#website_logo_image_cache
+WITH
+form input#website_logo_image_cache
+END
