@@ -10,16 +10,20 @@ WITH
 line_item.name
 END
 
-REPLACE
+REPLACE_IGNORE
  product.vendors != empty
 WITH
  line_item.vendors != empty
 END
 
-REPLACE
+REPLACE_IGNORE
  product.vendor_name
 WITH
  line_item.vendor_names
+END
+
+ENSURE_NO
+ product.vendor
 END
 
 REPLACE
@@ -33,7 +37,6 @@ WITH
   </p>
 {% endif %}
 END
-
 
 BLOCK_REPLACE_IGNORE
 <div class="product-options">

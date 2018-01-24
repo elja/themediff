@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/home/deploy/.rbenv/shims/ruby
 
 require 'rubygems'
 require 'bundler/setup'
@@ -22,10 +22,10 @@ Dir.glob(themes_root).each do |theme_root|
     merge = merger.merge!(diff)
 
     if merge.conflicts.empty?
-      file_path = File.join(theme_root, merge.path)
-      file = File.open(file_path, 'w+')
-      file.write(merge.result)
-      file.close
+      # file_path = File.join(theme_root, merge.path)
+      # file = File.open(file_path, 'w+')
+      # file.write(merge.result)
+      # file.close
     else
       puts "Conflicts Found For: #{theme_root}"
 
