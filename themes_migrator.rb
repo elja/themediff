@@ -9,7 +9,7 @@ Bundler.require
 require_relative 'lib/diff_parser'
 require_relative 'lib/merger'
 
-themes_root = File.join(ARGV[0], "*/*/*/")
+themes_root = File.join(ARGV[0], "*/*")
 diffs_root = File.expand_path('../diffs', __FILE__)
 
 parser = DiffParser.parse(diffs_root)
