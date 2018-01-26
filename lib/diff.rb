@@ -3,7 +3,7 @@ require 'ostruct'
 
 class Diff
   MODIFIERS = ['IGNORE']
-  KEYWORDS = ['BEFORE', 'AFTER', 'OVERWRITE', 'REPLACE', 'BLOCK_REPLACE', 'ENSURE_NO', 'ENSURE_EXIST']
+  KEYWORDS = ['BEFORE', 'AFTER', 'WHEN', 'OVERWRITE', 'REPLACE', 'BLOCK_REPLACE', 'ENSURE_NO', 'ENSURE_EXIST']
 
   attr_reader :changes
 
@@ -43,19 +43,39 @@ class Diff
             type: keyword,
             modifiers: token.split('_').select { |mod| MODIFIERS.include?(mod) },
             path: relative_path,
-            matches: []
+            matches: [],
+            conditions: []
           )
+        elsif token == 'CASE'
+          set_direction(:match)
+
+          if @match_buffer.length > 0
+            change.conditions << {
+              match: @match_buffer[0...-1].dup,
+              replace: @replace_buffer[0...-1].dup
+            }
+          end
+
+          reset_buffers!
+        elsif token == 'THEN'
+          set_direction(:replace)
         elsif token == 'WITH'
           set_direction(:replace)
         elsif token == 'OR'
           change.matches << @match_buffer.dup
           reset_buffers!
         elsif token == 'END'
-          change.matches << @match_buffer[0...-1].dup
-          change.replace = @replace_buffer[0...-1].dup
+          if change.type == 'WHEN'
+            change.conditions << {
+              match: @match_buffer[0...-1].dup,
+              replace: @replace_buffer[0...-1].dup
+            }
+          else
+            change.matches << @match_buffer[0...-1].dup
+            change.replace = @replace_buffer[0...-1].dup
+          end
 
           @changes << change
-
           reset_buffers!
         else
           append_buffer(line)

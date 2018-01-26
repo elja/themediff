@@ -38,7 +38,7 @@ Dir.glob(themes_root).each do |theme_root|
       merge.conflicts.each do |type, details|
         file.write("#{type}:\n")
         details.each do |d|
-          file.write("#{d[:change].path}: #{d[:message]}\n")
+          file.write("path: #{d[:change].path}, hash: #{d[:hash]}, message: #{d[:message]}\n")
           file.write("-------------------------------------------------\n")
         end
         file.write("-------------------------------------------------\n")

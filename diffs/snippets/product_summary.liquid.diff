@@ -7,6 +7,7 @@ f7b825c84434de8b5e0c020c0347b431
 38651fcd367521815fb6d7bfcb982a80
 0f2024fc74ed9687510d6a71f8eebbb7
 041cbe02d810b9675c6fd7a55a3e718a
+ea402bac3af46e1e1ccd4341bd5ba8a2
 WITH
 {% if form.variants.size > 1 %}
   <table class="product-summary">

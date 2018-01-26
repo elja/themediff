@@ -300,9 +300,9 @@ REPLACE
 {% form_field 'f.text_field', 'gift_certificate', { "class": "input-text gift-certificate clearHint", "placeholder": "gift certificate" } %}
 {% form_field 'f.submit', 'Apply', { "name": "apply_gift_certificate", "class": "btn-apply button" } %}
 WITH
-  <label class="string optional control-label" for="website_order_gift_certificate">Gift certificate</label>
-  <input class="input-text gift-certificate clearHint" id="website_order_gift_certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
-  <input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
+<label class="string optional control-label" for="website_order_gift_certificate">Gift certificate</label>
+<input class="input-text gift-certificate clearHint" id="website_order_gift_certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
+<input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
 END
 
 REPLACE_IGNORE

@@ -1,9 +1,13 @@
-OVERWRITE
+WHEN
+CASE
 80744b508fee9a7015f9d0d56f576185
 0cfe43d027d974a57d6a5f3682bf0621
 005d00f821a6db99023c9c03ac327ab5
 6e6140f9eca8c107cc7c5df10087615c
-WITH
+785aab4b264f7459523fca87f6133d93
+f762ac8aa962b6167dd4493018c9c1ba
+c3708e65aef118d552ecd763412b989f
+THEN
 <div class='product-option-wrapper form-item'>
     <label>{{ product_option.friendly_name }}{% if product_option.required? %} *{% endif %}</label>
     <div class="select-area {% if product_option.show_as_thumbs? %}thumbnail{% endif %}">
@@ -19,15 +23,57 @@ WITH
             {% for sub_option in product_option.sub_options %}
                     <option data-name="{{ sub_option.name }}"
                             {% if sub_option.thumb_url %}
-                            data-image="{{ sub_option.thumb_url }}"
+                              data-image="{{ sub_option.thumb_url }}"
                             {% elsif product_option.show_as_thumbs? %}
-                            data-image="{{ 'product-image-preview/no_thumb.png' | asset_url }}"
+                              data-image="{{ 'product-image-preview/no_thumb.png' | asset_url }}"
                             {% endif %}
                             {% if sub_option.large_url %}
-                            data-new-image="{{ sub_option.large_url }}"
+                              data-new-image="{{ sub_option.large_url }}"
                             {% endif %}
                             {% if form.options[product_option.id].sub_option == sub_option.id %}
-                            selected
+                              selected
+                            {% endif %}
+                            value="{{ sub_option.id }}">
+                      {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}
+                    </option>
+            {% endfor %}
+        </select>
+
+      {% if form.options[product_option.id].errors %}
+          <span class="error" data-type="product-option-error">
+            {{ form.options[product_option.id].errors | default_errors }}
+          </span>
+      {% endif %}
+    </div>
+
+    <div class="clear"></div>
+</div>
+CASE
+fd3963032edb44d1e501b7dae69a452a
+b40ba722f4777b255c7c12ad707885c6
+THEN
+<div class='product-option-wrapper form-item'>
+    <label>{{ product_option.friendly_name }}{% if product_option.required? %} *{% endif %}</label>
+    <div class="select-area {% if product_option.show_as_thumbs? %}thumbnail{% endif %}">
+        <select data-type="product-option"
+                data-name="{{ product_option.friendly_name }}"
+                name="product[options][{{ product_option.id }}][sub_option]"
+                class="msdropdown-select">
+
+            <!--<option value='' {% if product_option.show_as_thumbs? %}style="visibility:hidden; display: list-item;"{% endif %}>not specified</option>-->
+
+            {% for sub_option in product_option.sub_options %}
+                    <option data-name="{{ sub_option.name }}"
+                            {% if sub_option.thumb_url %}
+                              data-image="{{ sub_option.thumb_url }}"
+                            {% elsif product_option.show_as_thumbs? %}
+                              data-image="{{ 'product-image-preview/no_thumb.png' | asset_url }}"
+                            {% endif %}
+                            {% if sub_option.large_url %}
+                              data-new-image="{{ sub_option.large_url }}"
+                            {% endif %}
+                            {% if form.options[product_option.id].sub_option == sub_option.id %}
+                              selected
                             {% endif %}
                             value="{{ sub_option.id }}">
                       {% include 'modifier', title: sub_option.name, amount: sub_option.amount %}

@@ -39,6 +39,8 @@ class MatchReplace
       adjust(change, :after)
     when 'OVERWRITE'
       overwrite(change)
+    when 'WHEN'
+      conditional_overwrite(change)
     when 'REPLACE'
       replace_text(change)
     when 'BLOCK_REPLACE'
@@ -49,24 +51,28 @@ class MatchReplace
       ensure_content(change, :present)
     end
   rescue MatchNotFound => ex
-    conflicts[:not_found] << { change: ex.change, message: ex.message }
+    conflicts[:not_found] << { change: ex.change, message: ex.message, hash: get_md5(@content) }
     return false
   rescue BlockNotFound => ex
-    conflicts[:block_not_found] << { change: ex.change, message: ex.message }
+    conflicts[:block_not_found] << { change: ex.change, message: ex.message, hash: get_md5(@content) }
     return false
   rescue MatchFound => ex
-    conflicts[:match_found] << { change: ex.change, message: ex.message }
+    conflicts[:match_found] << { change: ex.change, message: ex.message, hash: get_md5(@content) }
     return false
   end
 
   private
 
+  def get_md5(content)
+    content = content.gsub(/\s+/, '').gsub(/\n|\r|\s|\t/, '')
+    Digest::MD5.hexdigest(content)
+  end
+
   def overwrite(change)
     if change.matches[0] == 'ANY' || !@file
       @result = change.replace
     else
-      content = @content.gsub(/\s+/, '').gsub(/\n|\r|\s|\t/, '')
-      hash = Digest::MD5.hexdigest(content)
+      hash = get_md5(@content)
       hashes = change.matches[0].split(/\n/).map(&:strip)
 
       if hashes.include?(hash)
@@ -76,6 +82,30 @@ class MatchReplace
           raise MatchNotFound.new("Hash (#{hash}) isn't acceptable for path: #{@file[:full_path]}:\n#{hashes.join("\n")}", @content, change)
         end
       end
+    end
+  end
+
+  def conditional_overwrite(change)
+    return false unless @file
+
+    hash = get_md5(@content)
+    replaced = false
+    all_hashes = []
+
+    change.conditions.each do |condition|
+      match, replace = condition[:match], condition[:replace]
+      hashes = match.split(/\n/).map(&:strip)
+      all_hashes += hashes
+
+      if hashes.include?(hash)
+        @result = replace
+        replaced = true
+        break
+      end
+    end
+
+    if !replaced && !change.modifiers.include?('IGNORE')
+      raise MatchNotFound.new("Hash (#{hash}) isn't acceptable for path: #{@file[:full_path]}:\n#{all_hashes.join("\n")}", @content, change)
     end
   end
 
