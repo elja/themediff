@@ -25,8 +25,9 @@ class MatchReplace
     @path = path
     @file = file
     @content = @file ? File.read(file[:full_path]) : ''
-    @result = @content.dup
+    @file[:full_path] = File.basename(@file[:full_path]) if @file && @file[:full_path]
 
+    @result = @content.dup
     @conflicts = Hash.new { |h, k| h[k] = [] }
   end
 
@@ -72,7 +73,7 @@ class MatchReplace
         @result = change.replace
       else
         if !change.modifiers.include?('IGNORE')
-          raise MatchNotFound.new("Hash isn't acceptable for path: #{@file[:full_path]}:\n#{hashes.join("\n")}", @content, change)
+          raise MatchNotFound.new("Hash (#{hash}) isn't acceptable for path: #{@file[:full_path]}:\n#{hashes.join("\n")}", @content, change)
         end
       end
     end

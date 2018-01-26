@@ -67,11 +67,11 @@ WITH
 END
 
 REPLACE
-<h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}</h4>
+{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | points_or_currency }}) {% endif %}
 OR
-<h4>{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | money_with_currency }}) {% endif %}</h4>
+{{ form.title }} {% if form.amount != 0 %} ({{ form.amount | money_with_currency }}) {% endif %}
 WITH
-<h4>{{ custom_collection.title }} {% if custom_collection.amount != 0 %} ({{ custom_collection.amount | points_or_currency }}) {% endif %}</h4>
+{{ custom_collection.title }} {% if custom_collection.amount != 0 %} ({{ custom_collection.amount | points_or_currency }}) {% endif %}
 END
 
 REPLACE
@@ -268,26 +268,31 @@ WITH
  form.available_payment_methods
 END
 
-BLOCK_REPLACE
-<div class="form-item promotions">
-ANY
-</div>
+REPLACE
+{% form_field 'f.label', 'coupon_code' %}
+{% form_field 'f.text_field', 'coupon_code', { "class": "input-text promo-code clearHint", "placeholder": "promotional code" } %}
+{% form_field 'f.submit', 'Apply', { "name": "apply_coupon_code", "class": "btn-apply button" } %}
 WITH
-{% if shop.show_coupon? %}
-  <div class="form-item promotions">
-    <label class="string optional control-label" for="website_order_coupon_code">Coupon code</label>
-    <input class="input-text promo-code clearHint" id="website_order_coupon_code" name="checkout[coupon_code]" placeholder="promotional code" size="30" type="text"/>
-    <input class="btn-apply button" name="apply_coupon_code" type="submit" value="Apply">
+<label class="string optional control-label" for="website_order_coupon_code">Coupon code</label>
+<input class="input-text promo-code clearHint" id="website_order_coupon_code" name="checkout[coupon_code]" placeholder="promotional code" size="30" type="text"/>
+<input class="btn-apply button" name="apply_coupon_code" type="submit" value="Apply">
+END
 
-    {% for coupon in order.coupons %}
-      <div class="fields">
-        <input type="hidden" class="delete-coupon" name="checkout[coupons][{{ coupon.id }}][delete]" value="false"/>
-        <a href="javascript:void(0)" class="remove-promotion remove_nested_fields" data-association="coupons"></a>
-        <span title="{{ coupon.note }}" class="coupon-note">{{ coupon.note }}</span>({{ coupon.amount | points_or_currency }})
-      </div>
-    {% endfor %}
+REPLACE
+{% form_field 'f.submit', '', { "id": "update_coupon_code", "name": "update_coupon_code", "style": "display: none;" } %}
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'promotion_adjustments' %}
+  {% form_field 'ff.link_to_remove', '', { "class": "remove-promotion" } %}
+  <span title="{{ ff.object.note }}" class="coupon-note">{{ ff.object.note }}</span>
+  ({{ ff.object.amount | points_or_currency }})
+{% endform_block %}
+WITH
+{% for coupon in order.coupons %}
+  <div class="fields">
+    <input type="hidden" class="delete-coupon" name="checkout[coupons][{{ coupon.id }}][delete]" value="false"/>
+    <a href="javascript:void(0)" class="remove-promotion remove_nested_fields" data-association="coupons"></a>
+    <span title="{{ coupon.note }}" class="coupon-note">{{ coupon.note }}</span>({{ coupon.amount | points_or_currency }})
   </div>
-{% endif %}
+{% endfor %}
 END
 
 REPLACE
@@ -295,13 +300,9 @@ REPLACE
 {% form_field 'f.text_field', 'gift_certificate', { "class": "input-text gift-certificate clearHint", "placeholder": "gift certificate" } %}
 {% form_field 'f.submit', 'Apply', { "name": "apply_gift_certificate", "class": "btn-apply button" } %}
 WITH
-{% if shop.show_gift_certificate? %}
-  <div class="form-item">
-    <label class="string optional control-label" for="website_order_gift_certificate">Gift certificate</label>
-    <input class="input-text gift-certificate clearHint" id="website_order_gift_certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
-    <input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
-  </div>
-{% endif %}
+  <label class="string optional control-label" for="website_order_gift_certificate">Gift certificate</label>
+  <input class="input-text gift-certificate clearHint" id="website_order_gift_certificate" name="checkout[gift_certificate]" placeholder="gift certificate" size="30" type="text"/>
+  <input class="btn-apply button" name="apply_gift_certificate" type="submit" value="Apply">
 END
 
 REPLACE_IGNORE
@@ -311,9 +312,15 @@ WITH
 END
 
 REPLACE_IGNORE
+{% form_field 'f.check_box', 'use_balance', { "id": "switch", "checked": "checked" } %}
+WITH
+<input type="checkbox" id="switch" checked="checked" name="checkout[use_balance]"/>
+END
+
+REPLACE_IGNORE
 {% form_field 'f.check_box', 'use_balance' %}
 WITH
-<input type="checkbox" id="switch" name="checkout[use_balance]"/>
+<input type="checkbox" name="checkout[use_balance]"/>
 END
 
 ENSURE_NO
