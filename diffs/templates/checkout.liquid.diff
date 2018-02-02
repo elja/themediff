@@ -285,6 +285,13 @@ REPLACE
   <span title="{{ ff.object.note }}" class="coupon-note">{{ ff.object.note }}</span>
   ({{ ff.object.amount | points_or_currency }})
 {% endform_block %}
+OR
+{% form_field 'f.submit', '', { "id": "update_coupon_code", "name": "update_coupon_code", "style": "display: none;" } %}
+{% form_block 'f.fields_for', context_name: 'ff', object_name: 'promotion_adjustments' %}
+  {% form_field 'ff.link_to_remove', '', { "class": "remove-promotion" } %}
+  <span title="{{ ff.object.note }}" class="coupon-note">{{ ff.object.note }}</span>
+  ({{ ff.object.amount | money_with_currency }})
+{% endform_block %}
 WITH
 {% for coupon in order.coupons %}
   <div class="fields">

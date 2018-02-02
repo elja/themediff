@@ -32,7 +32,7 @@ END
 REPLACE
 {% form_field 'ff.label', 'last_name', 'last name' %}
 WITH
-<label for="website_order_{{ id_part }}_contact_attributes_last_name">first name</label>
+<label for="website_order_{{ id_part }}_contact_attributes_last_name">last name</label>
 END
 
 REPLACE

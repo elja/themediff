@@ -7,6 +7,8 @@ CASE
 785aab4b264f7459523fca87f6133d93
 f762ac8aa962b6167dd4493018c9c1ba
 c3708e65aef118d552ecd763412b989f
+026e22cb930521005eaf966bd8409214
+094661e1d5ecda8224a7979a6c842d2d
 THEN
 <div class='product-option-wrapper form-item'>
     <label>{{ product_option.friendly_name }}{% if product_option.required? %} *{% endif %}</label>
