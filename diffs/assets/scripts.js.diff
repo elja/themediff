@@ -1,5 +1,9 @@
-REPLACE
-$(".content-page.two-col").size()
+REPLACE_IGNORE
+).size() > 0
 WITH
-$(".content-page.two-col").length > 0
+).length > 0
+END
+
+ENSURE_NO
+size()
 END
