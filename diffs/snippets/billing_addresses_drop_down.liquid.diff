@@ -1,5 +1,0 @@
-REPLACE
-available_billing_addresses
-WITH
-form.available_addresses
-END

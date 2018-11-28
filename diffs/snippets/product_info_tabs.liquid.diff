@@ -1,5 +1,0 @@
-REPLACE
-{% for quantity_discount in quantity_discounts %}
-WITH
-{% for quantity_discount in product.quantity_discounts %}
-END

@@ -1,42 +1,10 @@
 REPLACE
-{{ 'address_updater.js' | asset_url | script_tag }}
+{{ 'jquery-ui-1.9.2.custom.min.js' | asset_url | script_tag }}
 WITH
 END
 
-REPLACE
-{{ 'reflective_view.js' | asset_url | script_tag }}
+AFTER
+{{ 'jquery.min.js' | asset_url | script_tag }}
 WITH
-END
-
-REPLACE
-{{ 'product_price_updater_callback.js' | asset_url | script_tag }}
-WITH
-END
-
-REPLACE_IGNORE
-#{\s}wishlist_enabled
-WITH
- shop.wishlist_enabled?
-END
-
-ENSURE_NO
-#{\s}wishlist_enabled
-END
-
-REPLACE_IGNORE
-{% form 'search', context_name: 'f', url: '/products' %}
-WITH
-{% form 'search' %}
-END
-
-REPLACE_IGNORE
-{% form_field 'f.text_field', 'keyword', { "class": "input-text clearHint", "placeholder": "Search", "value": "" }  %}
-WITH
-<input type="text" id="s_keyword" name="s[keyword]" class="input-text clearHint" placeholder="Search"/>
-END
-
-REPLACE_IGNORE
-{% form_field 'f.submit', '', { "class": "button" } %}
-WITH
-<input type="submit" value="" class="button">
+{{ 'jquery-migrate-1.4.1.min.js' | asset_url | script_tag }}
 END

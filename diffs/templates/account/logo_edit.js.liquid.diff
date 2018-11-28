@@ -1,0 +1,5 @@
+REPLACE
+controller.prepareDialog($("{{ logo_form | escape_javascript }}"), "Edit logo <span>{{logo.name}}</span>", 'Update', true);
+WITH
+controller.prepareDialog($("{{ logo_form | escape_javascript }}"), "Edit logo \"{{logo.name}}\"", 'Update', true);
+END

@@ -1,0 +1,25 @@
+REPLACE
+.logo-dialog .form .file-input {
+  height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  position: relative;
+  margin-bottom: 10px;
+}
+WITH
+.logo-dialog .form .file-input {
+  min-height: 32px;
+  position: relative;
+  margin-bottom: 10px;
+}
+END
+
+
+REPLACE
+.logo-dialog .form .input.logo-name .error {
+  padding-left: 85px;
+  font-size: 12px;
+}
+WITH
+END
+

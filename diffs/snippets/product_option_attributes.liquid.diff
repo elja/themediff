@@ -1,8 +1,0 @@
-OVERWRITE
-6130b084a29b3429b84b5d13db0eb92b
-WITH
-<div class="attribute">
-  <label>{{ option.friendly_name }}:</label>
-  <span class="value">{{ sub_option.name }}</span>
-</div>
-END

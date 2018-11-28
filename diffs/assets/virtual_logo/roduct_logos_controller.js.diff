@@ -1,0 +1,12 @@
+REPLACE_IGNORE
+this.dialog.showLoading();
+
+data.form = this.dialog.find('form');
+data.submit();
+WITH
+if (data) {
+  this.dialog.showLoading();
+  data.form = this.dialog.find('form');
+  data.submit();
+}
+END

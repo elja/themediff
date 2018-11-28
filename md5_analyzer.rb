@@ -5,23 +5,7 @@ require 'digest'
 require 'json'
 
 COLLECT_MD5 = [
-  # 'templates/cart.liquid',
-  # 'snippets/product_option_attributes.liquid',
-  # 'snippets/product_option_group_attributes.liquid',
-  # 'templates/product.liquid',
-  # 'templates/product.liquid',
-  # 'snippets/line_item_fields.liquid',
-  # 'snippets/line_item_product_options.liquid',
-  'snippets/address_form.liquid',
-  'snippets/product_summary.liquid',
-  'snippets/product_option.liquid',
-  'snippets/product_option_attributes.liquid',
-  'snippets/product_option_group.liquid',
-  'snippets/product_option_group_attributes.liquid',
-  'snippets/line_item_product_options.liquid',
-  # 'snippets/product_option_group_attributes.liquid',
-  # 'snippets/line_item_product_personalizations.liquid',
-  # 'templates/adjustments.liquid',
+  'assets/front-dialog.css.liquid',
 ]
 
 def get_md5(path)

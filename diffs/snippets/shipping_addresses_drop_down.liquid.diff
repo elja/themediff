@@ -1,5 +1,0 @@
-REPLACE
-available_shipping_addresses
-WITH
-form.available_addresses
-END

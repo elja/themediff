@@ -1,33 +1,6 @@
-AFTER_IGNORE
-.payment-method .field input { width: 188px;#{.+} }
+REPLACE
+@import "{{ "jquery-ui-1.9.2.custom.min.css" | asset_url }}";
 WITH
-
-.spreedly-input { width: 188px; height:24px; padding:0 6px; border: 1px solid; color: #666;font-family: Arial, Helvetica;font-size: 14px;margin-bottom: 6px;line-height: 24px;}
-#spreedly-cvv { width: 95px; }
-END
-
-AFTER_IGNORE
-.payment-method .field input { background: url({{ #{[“"']}input-txt-bg.png#{[”"']} | asset_url }})#{.+} }
-WITH
-
-.spreedly-input {background: url({{ "input-txt-bg.png" | asset_url }}) no-repeat 0 0;width: 188px;height:24px;padding:0 6px;color: #666;font-family: Arial, Helvetica;font-size: 14px;margin-bottom: 6px;line-height: 24px;}
-#spreedly-cvv { border-right: 1px solid #666; width: 95px; }
-END
-
-REPLACE_IGNORE
-.checkout-main .error {
-  display: inline-block;
-  vertical-align: 10px;
-  margin: 0
-}
-WITH
-.checkout-main .error {
-  display: inline-block;
-  margin: 0 0 0 5px;
-  line-height: 24px;
-}
-END
-
-ENSURE_EXIST
-#spreedly-cvv
+@import "{{ "jquery-ui.structure.css" | asset_url }}";
+@import "{{ "jquery-ui.custom.min.css" | asset_url }}";
 END

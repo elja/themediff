@@ -1,0 +1,5 @@
+REPLACE
+$(".content-page.two-col").size()
+WITH
+$(".content-page.two-col").length > 0
+END

@@ -1,0 +1,7 @@
+REPLACE_IGNORE
+dialogForm = $("{{ logo_form | escape_javascript }}");
+{% endif %}
+WITH
+dialogForm = $("{{ logo_form | escape_javascript }}");
+{% endunless %}
+END

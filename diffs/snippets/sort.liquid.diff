@@ -1,5 +1,0 @@
-REPLACE
-{% form 'search'#{.+}%}
-WITH
-{% form 'search', products_search %}
-END
