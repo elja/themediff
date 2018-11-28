@@ -17,11 +17,17 @@ parser = DiffParser.parse(diffs_root)
 Dir.glob(themes_root).each do |theme_root|
   next unless File.directory?(theme_root)
 
+  # clean up previous conflicts
+  conflicts = File.join(theme_root, '..', 'conflicts.log')
+  FileUtils.rm(conflicts)
+
   merger = Merger.new(theme_root)
   parser.each do |diff|
     merge = merger.merge!(diff)
 
     if merge.conflicts.empty?
+      next if ENV['DRY_RUN']
+
       file_path = File.join(theme_root, merge.path)
       file = File.open(file_path, 'w+')
       file.write(merge.result)
@@ -29,7 +35,7 @@ Dir.glob(themes_root).each do |theme_root|
     else
       puts "Conflicts Found For: #{theme_root}"
 
-      unless ENV['DRY_RUN']
+      next ENV['DRY_RUN']
         file_path = File.join(theme_root, merge.path)
         file = File.open("#{file_path}.diff", 'w+')
         file.write(merge.result)
