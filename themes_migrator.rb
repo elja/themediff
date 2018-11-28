@@ -19,7 +19,7 @@ Dir.glob(themes_root).each do |theme_root|
 
   # clean up previous conflicts
   conflicts = File.join(theme_root, '..', 'conflicts.log')
-  FileUtils.rm(conflicts)
+  FileUtils.rm(conflicts) if File.exist?(conflicts)
 
   merger = Merger.new(theme_root)
   parser.each do |diff|
