@@ -10,8 +10,10 @@ COLLECT_MD5 = [
 
 def get_md5(path)
   puts "Reading: #{path}"
+
+  content = File.read(path)
+  content = content.presence || ''
   
-  content = File.read(path) || ''
   content.gsub!(/\s+/, '').gsub!(/\n|\r|\s|\t/, '')
   Digest::MD5.hexdigest(content)
 end
