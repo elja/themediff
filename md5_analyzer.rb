@@ -22,12 +22,16 @@ Dir.glob(themes_root).each do |theme_root|
   search_path = File.join(theme_root, '**', '*.liquid')
 
   Dir.glob(search_path).each do |path|
-    relative_path = Pathname.new(path).relative_path_from(theme_root)
+    if File.exist?(path)
+      relative_path = Pathname.new(path).relative_path_from(theme_root)
 
-    if COLLECT_MD5.include?(relative_path.to_s)
-      md5_result[relative_path.to_s] ||= {}
-      md5_result[relative_path.to_s][get_md5(path)] ||= []
-      md5_result[relative_path.to_s][get_md5(path)] << theme_root.to_s
+      if COLLECT_MD5.include?(relative_path.to_s)
+        md5_result[relative_path.to_s] ||= {}
+        md5_result[relative_path.to_s][get_md5(path)] ||= []
+        md5_result[relative_path.to_s][get_md5(path)] << theme_root.to_s
+      end
+    else
+      puts "File Doesn't Exist: #{relative_path}"
     end
   end
 end
