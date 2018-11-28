@@ -35,7 +35,7 @@ Dir.glob(themes_root).each do |theme_root|
     else
       puts "Conflicts Found For: #{theme_root}"
 
-      next ENV['DRY_RUN']
+      unless ENV['DRY_RUN']
         file_path = File.join(theme_root, merge.path)
         file = File.open("#{file_path}.diff", 'w+')
         file.write(merge.result)
