@@ -1,9 +1,9 @@
 REPLACE_IGNORE
-).size() > 0
+.size() > 0
 WITH
-).length > 0
+.length > 0
 END
 
 ENSURE_NO
-size()
+.size()
 END
