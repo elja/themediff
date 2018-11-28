@@ -24,7 +24,10 @@ class MatchReplace
   def initialize(path, file)
     @path = path
     @file = file
-    @content = @file ? File.read(file[:full_path]) : ''
+
+    @content = File.read(file[:full_path]) if @file
+    @content ||= ''
+
     @file[:full_path] = File.basename(@file[:full_path]) if @file && @file[:full_path]
 
     @result = @content.dup
