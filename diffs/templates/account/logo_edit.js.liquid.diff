@@ -1,5 +1,5 @@
 REPLACE
-controller.prepareDialog($("{{ logo_form | escape_javascript }}"), "Edit logo <span>{{logo.name}}</span>", 'Update', true);
+<span>{{logo.name}}</span>
 WITH
-controller.prepareDialog($("{{ logo_form | escape_javascript }}"), "Edit logo \"{{logo.name}}\"", 'Update', true);
+\"{{logo.name}}\"
 END

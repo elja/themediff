@@ -1,5 +1,7 @@
 REPLACE
 @import "{{ "jquery-ui-1.9.2.custom.min.css" | asset_url }}";
+OR
+@import "{{ "jquery-ui-1.9.2.custom.min.css" }}";
 WITH
 @import "{{ "jquery-ui.structure.css" | asset_url }}";
 @import "{{ "jquery-ui.custom.min.css" | asset_url }}";
