@@ -1,6 +1,8 @@
-OVERWRITE
+WHEN
+CASE
 9af27db470f5b6d5d7da129ab7e1d48f
-WITH
+512a4a7b9c60922bc9fb38073cfde47c
+THEN
 .front-dialog {
   border-radius: 0;
   border: 1px solid;
@@ -48,6 +50,105 @@ WITH
   height: 40px;
   line-height: 40px;
   padding: 0 16px;
+  display: inline-block;
+}
+
+.front-dialog .ui-widget-header .ui-dialog-titlebar-close,
+.front-dialog .ui-widget-header .ui-dialog-titlebar-close:hover
+{
+  right: 10px;
+  top: 25px;
+
+  width: 40px;
+  height: 40px;
+
+  background: none;
+  border: 0;
+}
+
+.front-dialog .ui-widget-header .ui-icon-closethick {
+  top: 0;
+  left: 0;
+
+  margin: 0;
+
+  width: 40px;
+  height: 40px;
+
+  background: url({{ "close-dialog-btn.png" | asset_url }}) no-repeat 0 0;
+}
+
+.front-dialog .form .error {
+  font-size: 12px;
+  display: block;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.front-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button.left-btn {
+  float: left;
+}
+
+.front-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button.right-btn {
+  float: right;
+}
+CASE
+565acab7a2d8bc7dafd1a75f327effd8
+THEN
+.front-dialog {
+  border-radius: 0;
+  border: 1px #7f9bab solid;
+  padding: 0;
+}
+
+.front-dialog .ui-dialog-titlebar, .front-dialog .ui-dialog-buttonpane {
+  background: url({{ "dialog-header-bg.png" | asset_url }}) repeat;
+  border-radius: 0;
+
+  line-height: 60px;
+  height: 60px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.front-dialog .ui-dialog-titlebar,
+.front-dialog .ui-dialog-content {
+  border-bottom: 1px solid;
+}
+
+.front-dialog .ui-dialog-content {
+    background: rgb(248, 248, 248);
+}
+
+.front-dialog .ui-dialog-title {
+  font-size: 18px;
+  color: #999999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 355px;
+  white-space: nowrap;
+}
+
+
+.front-dialog .ui-dialog-content,
+.front-dialog .ui-dialog-buttonpane {
+  padding: 5px 0;
+}
+
+.front-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  float: none;
+}
+
+.front-dialog .ui-dialog-buttonpane button,
+.front-dialog .ui-dialog-content button {
+  color: #FFF;
+  font-size: 16px;
+  background: url({{ "green-big-button.png" | asset_url }}) repeat-x 0 -1px;
+  border: 1px solid #2E6E36;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 16px;
   display: inline-block;
 }
 
