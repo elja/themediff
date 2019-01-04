@@ -1,0 +1,11 @@
+REPLACE_IGNORE
+.success(function(data
+WITH
+.done(function(data
+END
+
+REPLACE_IGNORE
+.error(function(jqXHR
+WITH
+.fail(function(jqXHR
+END
